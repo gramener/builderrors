@@ -1,0 +1,22 @@
+ERROR: flake8 errors
+    complexity.py:17:37: E128 continuation line under-indented for visual indent
+    complexity.py:21:21: E128 continuation line under-indented for visual indent
+    complexity.py:123:6: N802 function name 'yearChanged' should be lowercase
+    complexity.py:415:5: E303 too many blank lines (2)
+    complexity.py:428:9: F841 local variable 'row_count_17' is assigned to but never used
+    complexity.py:570:7: E275 missing whitespace after keyword
+    complexity.py:594:13: F841 local variable 'str1_17' is assigned to but never used
+    complexity.py:595:13: F841 local variable 'str2_17' is assigned to but never used
+    complexity.py:607:15: E275 missing whitespace after keyword
+    complexity.py:988:27: E225 missing whitespace around operator
+    debugger.py:1:1: T100 import for pdb found
+    debugger.py:2:1: T100 trace found: pdb.set_trace used
+    debugger.py:2:16: W292 no newline at end of file
+    error.py:1:1: F401 'pathlib' imported but unused
+    error.py:2:1: F401 'nonexistent' imported but unused
+    error.py:6:1: E303 too many blank lines (3)
+    error.py:6:5: F821 undefined name 'math'
+
+---------------------------------------------------------------------
+BUILD FAILED.
+To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com

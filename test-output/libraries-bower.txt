@@ -1,0 +1,17 @@
+ERROR: don't commit libraries
+    bower_components/color-obj/.bower.json
+    bower_components/color-obj/bower.json
+    bower_components/color-obj/dist/Color.js
+    bower_components/color-obj/README.md
+    bower_components/color-obj/src/Color.js
+    bower_components/color-obj/test/Color.spec.js
+
+ERROR: Python + JS code is over 30000 chars
+    Size 48640 > 30000 (minified). Largest files:
+    23346     bower_components/color-obj/test/Color.spec.js
+    12657     bower_components/color-obj/dist/Color.js
+    12637     bower_components/color-obj/src/Color.js
+
+---------------------------------------------------------------------
+BUILD FAILED.
+To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com

@@ -1,0 +1,9 @@
+ERROR: don't commit minified files
+    bootstrap.min.css
+    underscore-min.js
+    underscore.min.js
+    web.pack.js
+
+---------------------------------------------------------------------
+BUILD FAILED.
+To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com

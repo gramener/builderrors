@@ -1,0 +1,201 @@
+#!/usr/bin/env bash
+
+# Parse command line options
+# NOTE: Bandit catches SQL injections at low confidence. So let's leave it on
+BANDIT_CONFIDENCE=${BANDIT_CONFIDENCE:-all}   # Bandit reports only issues of given confidence level or higher
+BANDIT_SEVERITY=${BANDIT_SEVERITY:-all}       # Bandit reports only issues of given severity level or higher
+DUPLICATE_FILESIZE=${DUPLICATE_FILESIZE:-100}             # Max file size allowed for duplicate files
+DUPLICATE_LINES=${DUPLICATE_LINES:-50}                    # Max # of duplicate lines allowed
+CSS_CHARS_ERROR=${CSS_CHARS_ERROR:-10000}     # Max # of minified CSS/SCSS chars allowed
+CODE_CHARS_ERROR=${CODE_CHARS_ERROR:-50000}   # Max # of minified PY/JS chars allowed
+LFS_SIZE=${LFS_SIZE:-1000000}                 # Max file size you can commit without LFS
+RE_MINIFIED='[\.\-](min|pack)\.(js|css)$'     # RegEx for minified files
+
+# Refer https://stackoverflow.com/a/7948533/100904 for getopt usage
+LONGOPTS=skip-config,skip-lib,skip-minified,skip-lfs,skip-eclint,skip-useless,skip-duplicate-files,skip-duplicate-lines,skip-py-filenames,skip-flake8,skip-bandit,skip-eslint,skip-stylelint,skip-htmlhint,skip-css-chars,skip-code-chars,lfs-size:,duplicate-filesize:,duplicate-lines:,bandit-confidence:,bandit-severity:,css-chars-error:,code-chars-error:
+TEMP=$(getopt --options "" --longoptions=$LONGOPTS --name builderrors -- "$@")
+if [ $? != 0 ] ; then echo "Terminating" >&2 ; exit 1 ; fi
+eval set -- "$TEMP"
+while true; do
+  case "$1" in
+    "--skip-config" ) SKIP_CONFIG='--'; shift ;;
+    "--skip-lib" ) SKIP_LIB='--'; shift ;;
+    "--skip-minified" ) SKIP_MINIFIED='--'; shift ;;
+    "--skip-lfs" ) SKIP_LFS='--'; shift ;;
+    "--skip-eclint" ) SKIP_ECLINT='--'; shift ;;
+    "--skip-useless" ) SKIP_USELESS='--'; shift ;;
+    "--skip-duplicate-files" ) SKIP_DUPLICATE_FILES='--'; shift ;;
+    "--skip-duplicate-lines" ) SKIP_DUPLICATE_LINES='--'; shift ;;
+    "--skip-py-filenames" ) SKIP_PY_FILENAMES='--'; shift ;;
+    "--skip-flake8" ) SKIP_FLAKE8='--'; shift ;;
+    "--skip-bandit" ) SKIP_BANDIT='--'; shift ;;
+    "--skip-eslint" ) SKIP_ESLINT='--'; shift ;;
+    "--skip-stylelint" ) SKIP_STYLELINT='--'; shift ;;
+    "--skip-htmlhint" ) SKIP_HTMLHINT='--'; shift ;;
+    "--skip-css-chars" ) SKIP_CSS_CHARS='--'; shift ;;
+    "--skip-code-chars" ) SKIP_CODE_CHARS='--'; shift ;;
+    "--lfs-size" ) LFS_SIZE=$2; shift 2 ;;
+    "--duplicate-filesize" ) DUPLICATE_FILESIZE=$2; shift 2 ;;
+    "--duplicate-lines" ) DUPLICATE_LINES=$2; shift 2 ;;
+    "--bandit-severity" ) BANDIT_SEVERITY=$2; shift 2 ;;
+    "--bandit-confidence" ) BANDIT_CONFIDENCE=$2; shift 2 ;;
+    "--css-chars-error" ) CSS_CHARS_ERROR=$2; shift 2 ;;
+    "--code-chars-error" ) CODE_CHARS_ERROR=$2; shift 2 ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+if [[ -z "$SKIP_CONFIG" ]]; then
+  echo "builderror \\"
+  echo "  ${SKIP_CONFIG:-# --}skip-config \\"
+  echo "  ${SKIP_LIB:-# --}skip-lib \\"
+  echo "  ${SKIP_MINIFIED:-# --}skip-minified \\"
+  echo "  ${SKIP_LFS:-# --}skip-lfs \\"
+  echo "  ${SKIP_ECLINT:-# --}skip-eclint \\"
+  echo "  ${SKIP_USELESS:-# --}skip-useless \\"
+  echo "  ${SKIP_DUPLICATE_FILES:-# --}skip-duplicate-files \\"
+  echo "  ${SKIP_DUPLICATE_LINES:-# --}skip-duplicate-lines \\"
+  echo "  ${SKIP_PY_FILENAMES:-# --}skip-py-filenames \\"
+  echo "  ${SKIP_FLAKE8:-# --}skip-flake8 \\"
+  echo "  ${SKIP_BANDIT:-# --}skip-bandit \\"
+  echo "  ${SKIP_ESLINT:-# --}skip-eslint \\"
+  echo "  ${SKIP_STYLELINT:-# --}skip-stylelint \\"
+  echo "  ${SKIP_HTMLHINT:-# --}skip-htmlhint \\"
+  echo "  ${SKIP_CSS_CHARS:-# --}skip-css-chars \\"
+  echo "  ${SKIP_CODE_CHARS:-# --}skip-code-chars \\"
+  echo "  --lfs-size=$LFS_SIZE \\"
+  echo "  --duplicate-filesize=$DUPLICATE_FILESIZE \\"
+  echo "  --duplicate-lines=$DUPLICATE_LINES \\"
+  echo "  --bandit-confidence=$BANDIT_CONFIDENCE \\"
+  echo "  --bandit-severity=$BANDIT_SEVERITY \\"
+  echo "  --css-chars-error=$CSS_CHARS_ERROR \\"
+  echo "  --code-chars-error=$CODE_CHARS_ERROR \\"
+  echo ""
+fi
+
+SCRIPT_DIR=`dirname "$(realpath "$0")"`
+NODE_DIR="$SCRIPT_DIR/node_modules/.bin"
+
+# By default, we don't have any errors
+EXIT_STATUS=0
+
+check() {
+  SKIP="$1"
+  MSG="$2"
+  OUTPUT="$3"
+  if [[ -z "$SKIP" ]]; then
+    if [[ -n "$OUTPUT" ]]; then
+      echo "$MSG"
+      echo -E "$OUTPUT" | sed "s/^/    /"
+      echo ""
+      EXIT_STATUS=1
+    fi
+  fi
+}
+
+check "$SKIP_LIB" "ERROR: don't commit libraries" \
+  "$(git ls-files | grep -E 'node_modules/|bower_components/' | sort -f)"
+
+check "$SKIP_MINIFIED" "ERROR: don't commit minified files" \
+  "$(git ls-files | grep -E "$RE_MINIFIED" | sort -f)"
+
+# comm -23 prints lines unique to file list #1
+#   #1: git files > 1 MB, sorted
+#   #2: git lfs files, sorted
+check "$SKIP_LFS" "ERROR: use Git LFS for files over $LFS_SIZE chars" \
+  "$(comm -23 <(git ls-tree -r --format '%(objectsize:padded)%x09%(path)' HEAD | awk -F'\t' "\$1 > $LFS_SIZE { print(\$2) }" | sort -f) <(git lfs ls-files -n | sort -f))"
+
+check "$SKIP_USELESS" "ERROR: don't commit useless or generated files" \
+  "$(git ls-files | grep -E '(\.lnk$|^~\$|~$|\.sublime\-|\.ipynb_checkpoints$|\.stackdump$|^thumbs.db$|\.log$)' | sort -f)"
+
+# List commited files  - git ls-tree ...
+# that are big enough  - awk ...
+# Calculate MD5 hash   - xargs md5sum
+# Sort by MD5 hash     - sort
+# Take duplicates      - uniq -w32 -dD
+# Print as groups      - awk '...;sub(/^\*/, "", $2);...'
+#                      -          ^ strip leading * if Cygwin treats file as binary
+check "$SKIP_DUPLICATE_FILES" "ERROR: don't duplicate files" \
+  "$(git ls-tree -r --format '%(objectsize:padded)%x09%(path)' HEAD | awk -F'\t' "\$1 > $DUPLICATE_FILESIZE { print(\$2) }" | tr '\n' '\0' | xargs -0 --no-run-if-empty md5sum | sort -f | uniq -w32 -dD | awk '{if(h!=$1){printf "\n"};sub(/^\*/, "", $2);for (i=2; i<=NF; ++i) printf "%s ", $i;printf "\n";h=$1}')"
+
+check "$SKIP_DUPLICATE_LINES" "ERROR: reduce duplicate lines" \
+  "$(git ls-files | grep -E '\.(js|py|css|scss)$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/jscpd" --min-lines="$DUPLICATE_LINES" 2>&1 | grep '^[a-zA-Z ]')"
+
+if [[ ! -f ".editorconfig" ]]; then
+  cp "$SCRIPT_DIR/.editorconfig" .
+  CREATED_EDITORCONFIG=1
+fi
+# NOTE: eclint on Linux exits with error 255, but not on Windows. xargs exits with an error. We strip that for consistency
+# NOTE: Don't run eclint on minified files. No point, and it bloats errors
+check "$SKIP_ECLINT" "ERROR: follow .editorconfig rules" \
+  "$(git ls-files | grep -E '\.(py|html|js|css|scss|yaml|md)' | grep -v -E "$RE_MINIFIED" | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eclint" check 2>&1 | grep -v '^xargs.*exited with status 255;')"
+if [[ -n "$CREATED_EDITORCONFIG" ]]; then
+  rm .editorconfig
+fi
+
+check "$SKIP_PY_FILENAMES" "ERROR: Python paths must be lower_alphanumeric" \
+  "$(git ls-files | grep '\.py$' | sort -f | grep -e '[^a-z0-9_./]')"
+
+if [[ ! -f ".flake8" ]]; then
+  cp "$SCRIPT_DIR/.flake8" .
+  CREATED_FLAKE8=1
+fi
+check "$SKIP_FLAKE8" "ERROR: flake8 errors" \
+  "$(git ls-files | grep '\.py$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8)"
+if [[ -n "$CREATED_FLAKE8" ]]; then
+  rm .flake8
+fi
+
+check "$SKIP_BANDIT" "ERROR: bandit security errors" \
+  "$(bandit . --recursive --format txt --severity-level $BANDIT_SEVERITY --confidence-level $BANDIT_CONFIDENCE --quiet 2>/dev/null)"
+
+if [[ ! -f ".eslintrc.js" ]]; then
+  cp "$SCRIPT_DIR/.eslintrc.js" .
+  CREATED_ESLINTRC=1
+fi
+check "$SKIP_ESLINT" "ERROR: eslint errors" \
+  "$(git ls-files | grep -E '\.(html|js)$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" --parser-options "{ecmaVersion:'latest'}" --plugin html --plugin template --quiet -f unix --rule 'complexity: [warn, {max: 10}]' 2>/dev/null)"
+if [[ -n "$CREATED_ESLINTRC" ]]; then
+  rm .eslintrc.js
+fi
+
+if [[ ! -f ".stylelintrc.js" ]]; then
+  cp "$SCRIPT_DIR/.stylelintrc.js" .
+  CREATED_STYLELINTRC=1
+fi
+# Stylelint can't process Cygwin paths for basedir. Convert to Windows path
+CYGPATH="$(which cygpath)"
+if [ -x "$CYGPATH" ] ; then
+  SCRIPT_DIR="$(cygpath -aw "$SCRIPT_DIR")"
+fi
+check "$SKIP_STYLELINT" "ERROR: stylelint errors" \
+  "$(git ls-files | grep -E '\.s?css$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/stylelint" --allow-empty-input --config-basedir "$SCRIPT_DIR" --custom-syntax "$SCRIPT_DIR/node_modules/postcss-scss" 2>&1)"
+SCRIPT_DIR=`dirname "$(realpath "$0")"`
+if [[ -n "$CREATED_STYLELINTRC" ]]; then
+  rm .stylelintrc.js
+fi
+
+if [[ ! -f ".htmlhintrc" ]]; then
+  cp "$SCRIPT_DIR/.htmlhintrc" .
+  CREATED_HTMLHINTRC=1
+fi
+check "$SKIP_HTMLHINT" "ERROR: htmlhint errors" \
+  "$(git ls-files | grep '\.html$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/htmlhint" --nocolor --format unix)"
+if [[ -n "$CREATED_HTMLHINTRC" ]]; then
+  rm .htmlhintrc
+fi
+
+check "$SKIP_CSS_CHARS" "ERROR: CSS code is over $CSS_CHARS_ERROR chars" \
+  "$(git ls-files | grep -E '\.s?css$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty "$SCRIPT_DIR/codesize" --error=$CSS_CHARS_ERROR --top=10)"
+
+check "$SKIP_CODE_CHARS" "ERROR: Python + JS code is over $CODE_CHARS_ERROR chars" \
+  "$(git ls-files | grep -E '\.py$|\.js$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty "$SCRIPT_DIR/codesize" --error=$CODE_CHARS_ERROR --top=10)"
+
+if [[ $EXIT_STATUS -ne 0 ]]; then
+  echo "---------------------------------------------------------------------"
+  echo "BUILD FAILED."
+  echo "To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com"
+fi
+
+exit $EXIT_STATUS

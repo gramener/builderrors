@@ -1,0 +1,37 @@
+// To override these rules, create a .htmlhintrc file in your app.
+// See https://htmlhint.com/docs/user-guide/list-rules
+{
+    "alt-require": true,                // Images must have alt tags for accessibility
+    "attr-lowercase": true,             // Keep attrs lowercase. DOM keeps them in lowercase
+    "attr-no-duplication": true,        // Second attribute overrides first. Avoid confusion
+    "space-tab-mixed-disabled": true,
+    "src-not-empty": false,             // Image must have a default src=, even if JS loads it
+    "tag-pair": true,
+    "tagname-lowercase": true,
+    "tagname-specialchars": true,
+    "title-require": true,
+
+    "attr-no-unnecessary-whitespace": false,    // OK to use attr = "value" with spaces
+    "attr-sorted": false,               // OK not to sort attributes
+    "attr-unsafe-chars": false,         // OK for attr values to be weird unicode characters
+    "attr-value-double-quotes": false,  // OK to use single OR double quotes, to wrap other quotes
+    "attr-value-not-empty": false,      // OK for dynamically generated attr values to be empty
+    "attr-value-single-quotes": false,  // OK to use single OR double quotes, to wrap other quotes
+    "attr-whitespace": false,           // OK with values having leading / trailing whitespace
+    "doctype-first": false,             // OK for sub-templates not to have doctype
+    "doctype-html5": false,             // OK for sub-templates not to have doctype
+    "empty-tag-not-self-closed": false, // OK with <br/> as well as <br>
+    "head-script-disabled": false,      // OK with <script> in <head>
+    "href-abs-or-rel": false,           // OK with mixing relative and absolute hrefs
+    "html-lang-require": false,         // OK with no language specified
+    "id-class-ad-disabled": false,      // OK with .ad-* and #ad-* though ad blocks block them
+    "id-class-value": false,            // OK not to have any convention for IDs and classes
+    "id-unique": false,                 // OK for dynamically generated content with duplicate IDs
+    "inline-script-disabled": false,    // OK to use inline scripts
+    "inline-style-disabled": false,     // OK with style="..." for sub-templates
+    "input-requires-label": false,      // OK with dynamically generated inputs without labels
+    "script-disabled": false,           // OK to use scripts
+    "spec-char-escape": false,          // OK for lodash templates to use <% .. %>
+    "style-disabled": false,            // OK with <style> for HTML components
+    "tag-self-close": false             // OK with dynamically generated <div></div>
+}

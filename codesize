@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+# Usage: codesize --error=NUM --top=NUM *.js *.py
+# Raises an error if minified code size exceeds NUM and prints file sizes
+# Prints top NUM files
+
+SCRIPT_DIR=`dirname "$(realpath "$0")"`
+NODE_DIR="$SCRIPT_DIR/node_modules/.bin"
+
+ERROR=50000     # By default, report error if minified code exceeds 50,000 chars
+TOP=10          # Show top 10 files on error
+SIZE=0          # Current code size
+RESULT=""       # Current error report
+NEWLINE=$'\n'
+
+LONGOPTS=error:,top:
+TEMP=$(getopt --options "" --longoptions=$LONGOPTS --name codesize -- "$@")
+if [ $? != 0 ] ; then echo "getopt failed" >&2 ; exit 1 ; fi
+eval set -- "$TEMP"
+while true; do
+  case "$1" in
+    "--error" ) ERROR=$2; shift 2 ;;
+    "--top" ) TOP=$2; shift 2 ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+# Compress each Python file with pyminify and JS file with terser. Check code size excluding comments
+# pyminify writes the compressed file to console, and needs PYTHONIOENCODING=utf-8 to avoid encoding errors
+export PYTHONIOENCODING=utf-8
+
+for FILENAME in "$@"; do
+  if [[ "$FILENAME" == *.py ]]; then
+    CODESIZE=$(pyminify --rename-globals --remove-literal-statements "$FILENAME" | tr -d '\r' | wc -c)
+  elif [[ "$FILENAME" == *.js ]]; then
+    CODESIZE=$("$NODE_DIR/terser" "$FILENAME" --mangle --compress | tr -d '\r' | wc -c)
+  elif [[ "$FILENAME" == *.s?css ]]; then
+    CODESIZE=$("$NODE_DIR/cleancss" -O2 --inline none)
+  fi
+  SIZE=$((SIZE + CODESIZE))
+  RESULT+="$CODESIZE\t$FILENAME\n"
+done
+
+if (( SIZE > ERROR )); then
+  echo "Size $SIZE > $ERROR (minified). Largest files:"
+  echo -e "$RESULT" | sort -k 1nr | head -n "$TOP"
+  exit 1
+fi

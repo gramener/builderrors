@@ -1,0 +1,14 @@
+ERROR: stylelint errors
+
+    style.css
+     15:1  ✖  Unexpected duplicate selector ".app", first used at line 10   no-duplicate-selectors
+     20:1  ✖  Unexpected duplicate selector ".link", first used at line 11  no-duplicate-selectors
+
+    style.scss
+     9:3  ✖  Unexpected duplicate selector "body .footer", first used at line 5  no-duplicate-selectors
+
+    3 problems (3 errors, 0 warnings)
+
+---------------------------------------------------------------------
+BUILD FAILED.
+To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com

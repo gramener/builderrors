@@ -1,0 +1,31 @@
+ERROR: don't duplicate files
+
+    file 1.py
+    file 2.py
+
+    conf1.yaml
+    conf2.yaml
+
+    file 1.js
+    file 2.js
+
+    file1.yaml
+    file2.yaml
+
+ERROR: Python paths must be lower_alphanumeric
+    file 1.py
+    file 2.py
+
+ERROR: flake8 errors
+    file 1.py:1:2: E221 multiple spaces before operator
+    file 2.py:1:2: E221 multiple spaces before operator
+
+ERROR: eslint errors
+    file 1.js:1:10: 'random' is defined but never used. [Error/no-unused-vars]
+    file 2.js:1:10: 'random' is defined but never used. [Error/no-unused-vars]
+
+    2 problems
+
+---------------------------------------------------------------------
+BUILD FAILED.
+To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com

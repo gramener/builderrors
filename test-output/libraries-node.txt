@@ -1,0 +1,10 @@
+ERROR: don't commit libraries
+    node_modules/.package-lock.json
+    node_modules/is-positive/index.js
+    node_modules/is-positive/license
+    node_modules/is-positive/package.json
+    node_modules/is-positive/readme.md
+
+---------------------------------------------------------------------
+BUILD FAILED.
+To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com

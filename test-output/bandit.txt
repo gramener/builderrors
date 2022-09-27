@@ -1,0 +1,36 @@
+ERROR: bandit security errors
+    Run started:2022-09-21 06:30:03.804551
+
+    Test results:
+    >> Issue: [B608:hardcoded_sql_expressions] Possible SQL injection vector through string-based query construction.
+       Severity: Medium   Confidence: Low
+       CWE: CWE-89 (https://cwe.mitre.org/data/definitions/89.html)
+       Location: ./bandit_error.py:5:12
+       More Info: https://bandit.readthedocs.io/en/1.7.4/plugins/b608_hardcoded_sql_expressions.html
+    4   def insecure_query(column, con):
+    5       query = 'SELECT %s from table' % column
+    6       return pd.read_sql(query, con)
+
+    --------------------------------------------------
+
+    Code scanned:
+        Total lines of code: 4
+        Total lines skipped (#nosec): 0
+        Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0
+
+    Run metrics:
+        Total issues (by severity):
+                Undefined: 0
+                Low: 0
+                Medium: 1
+                High: 0
+        Total issues (by confidence):
+                Undefined: 0
+                Low: 1
+                Medium: 0
+                High: 0
+    Files skipped (0):
+
+---------------------------------------------------------------------
+BUILD FAILED.
+To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com

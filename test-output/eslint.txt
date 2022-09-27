@@ -1,0 +1,21 @@
+ERROR: eslint errors
+    index.html:13:9: 'data' is assigned a value but never used. [Error/no-unused-vars]
+    index.html:14:9: 'a' is assigned a value but never used. [Error/no-unused-vars]
+    index.html:14:13: 'nonexistent' is not defined. [Error/no-undef]
+    script.js:1:7: 'x' is assigned a value but never used. [Error/no-unused-vars]
+    script.js:3:5: 'a' is assigned a value but never used. [Error/no-unused-vars]
+    script.js:3:9: 'nonexistent' is not defined. [Error/no-undef]
+    script.js:5:10: 'dosomething3' is defined but never used. [Error/no-unused-vars]
+    script.js:13:1: Expected indentation of 14 spaces but found 18. [Error/indent]
+    script.js:14:1: Expected indentation of 16 spaces but found 20. [Error/indent]
+    script.js:15:1: Expected indentation of 18 spaces but found 20. [Error/indent]
+    script.js:16:1: Expected indentation of 20 spaces but found 22. [Error/indent]
+    script.js:18:1: Expected indentation of 22 spaces but found 24. [Error/indent]
+    script.js:24:10: 'donothing' is defined but never used. [Error/no-unused-vars]
+    script.js:31:10: 'dosomething3' is already defined. [Error/no-redeclare]
+
+    14 problems
+
+---------------------------------------------------------------------
+BUILD FAILED.
+To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com

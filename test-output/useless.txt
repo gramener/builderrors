@@ -1,0 +1,14 @@
+ERROR: don't commit useless or generated files
+    .stackdump
+    .sublime-project/useless.txt
+    .sublime-workspace/useless.txt
+    thumbs.db
+    useless.lnk
+    useless.log
+    useless~
+    ~
+    ~$
+
+---------------------------------------------------------------------
+BUILD FAILED.
+To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com

@@ -1,0 +1,7 @@
+ERROR: Python paths must be lower_alphanumeric
+    has-hyphen.py
+    HasCapitals.py
+
+---------------------------------------------------------------------
+BUILD FAILED.
+To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com

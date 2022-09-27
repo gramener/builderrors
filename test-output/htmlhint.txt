@@ -1,0 +1,10 @@
+ERROR: htmlhint errors
+    index.html:11:7: An alt attribute must be present on <img> elements. [warning/alt-require]
+    index.html:18:46: Tag must be paired, missing: [ </center> ], start tag match failed [ <center> ] on line 18. [error/tag-pair]
+    index.html:20:1: Tag must be paired, missing: [ </center></center></center></center> ], start tag match failed [ <center> ] on line 19. [error/tag-pair]
+
+    3 problems
+
+---------------------------------------------------------------------
+BUILD FAILED.
+To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com

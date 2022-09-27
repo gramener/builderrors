@@ -1,0 +1,6 @@
+ERROR: use Git LFS for files over 1000000 chars
+    large-file.txt
+
+---------------------------------------------------------------------
+BUILD FAILED.
+To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com
