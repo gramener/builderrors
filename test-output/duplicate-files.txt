@@ -3,11 +3,11 @@ ERROR: don't duplicate files
     file 1.py
     file 2.py
 
-    conf1.yaml
-    conf2.yaml
-
     file 1.js
     file 2.js
+
+    conf1.yaml
+    conf2.yaml
 
     file1.yaml
     file2.yaml

@@ -1,0 +1,12 @@
+ERROR: reformat with Python black
+    would reformat test.py
+
+    Oh no! \U0001f4a5 \U0001f494 \U0001f4a5
+    1 file would be reformatted.
+
+ERROR: flake8 errors
+    test.py:2:3: E111 indentation is not a multiple of 4
+
+---------------------------------------------------------------------
+BUILD FAILED.
+To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com

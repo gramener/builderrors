@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 // To override these rules, create a .stylelintrc.js file in your app.
 // See https://stylelint.io/user-guide/rules/list

@@ -1,3 +1,8 @@
+ERROR: reformat with Prettier
+    [warn] style.css
+    [warn] style.scss
+    [warn] Code style issues found in 2 files. Forgot to run Prettier?
+
 ERROR: stylelint errors
 
     style.css

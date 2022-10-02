@@ -28,7 +28,10 @@ EXIT_STATUS=0
 
 # Run builderrors on branch $1 and compare with test-output/$1.txt
 check() {
-  git checkout "$1"
+  BRANCH="$1"; shift
+  echo "Testing $BRANCH..."
+  git checkout --quiet "$BRANCH"
+
   # In the diff below:
   #   --ignore-space-change: when running on git bash, the number of spaces changes
   #   --ignore-tab-expansion: same as above
@@ -42,24 +45,25 @@ check() {
     --ignore-tab-expansion \
     --ignore-trailing-space \
     --ignore-matching-lines="Run started.*" \
-    <(../builderrors --skip-config --duplicate-filesize=0 --duplicate-lines=30 --css-chars-error=10000 --code-chars-error=30000 --lfs-size=1000000 | \
+    <(../builderrors $@ --hide-config --duplicate-filesize=0 --duplicate-lines=30 --css-chars-error=10000 --code-chars-error=30000 --lfs-size=1000000 | \
       sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" |
       sed "s/$PREFIX_VAR//g" |
       sed "s~\.\\\\~\./~g") \
-    "../test-output/$1.txt" || EXIT_STATUS=1
+    "../test-output/$BRANCH.txt" || EXIT_STATUS=1
 }
 
 check libraries-node
-check libraries-bower
+check libraries-bower --skip-prettier
 check minified
 check git-lfs
 check useless
-check duplicate-files
-check duplicate-lines
-check editorconfig
-check python-filenames
-check flake8
-check bandit
+check duplicate-files --skip-prettier --skip-black
+check duplicate-lines --skip-prettier --skip-black
+check prettier
+check black
+check python-filenames --skip-black
+check flake8 --skip-black
+check bandit --skip-black
 check eslint
 check stylelint
 check htmlhint

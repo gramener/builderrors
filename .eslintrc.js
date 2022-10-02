@@ -10,10 +10,4 @@ module.exports = {
   plugins: ["html", "template"],
   // Styles are based on recommended eslint fields, but with specific overrides
   extends: "eslint:recommended",
-  rules: {
-    indent: ["error", 2, { VariableDeclarator: 2 }], // 2-space indentation
-    "linebreak-style": ["error", "unix"], // Force UNIX style line
-    quotes: ["warn", "double"], // Prefer double-quotes style
-    semi: ["warn", "never"], // Prefer no-semicolon style
-  },
-}
+};

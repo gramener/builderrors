@@ -95,18 +95,37 @@ You can re-use the same code
   dictionary that stores all the parameters that vary. Remember: you can use functions as values.
 - Use **function generators** for extreme variations in code. Write a function
   to create and return a new function depending on your variation.
-- Refactor the code and test *very carefully*. (Unit test cases help here.)
+- Refactor the code and test _very carefully_. (Unit test cases help here.)
 - To ignore duplicates up to 100 lines, run `builderrors --duplicate-lines=100`
 - To skip this check, use `builderrors --skip-duplicate-lines` (e.g. if you need duplicate code for test cases)
 
-## ERROR: follow .editorconfig rules
+## ERROR: reformat with Prettier
 
-It's important to have a cross-team cross-editor convenstions on spacing using [.editorconfig](https://editorconfig.org).
+It's important to have consistent formatting for readability. We use [prettier](https://prettier.io).
 
-- Run `npm install -g eclint` to install eclint (one-time)
-- Run `eclint fix <file>` to fix most errors in `<file>`
-- To ignore specific rules, add a [`.editorconfig`](https://editorconfig.org/) file based on the [default](.editorconfig)
-- To skip this check, use `builderrors --skip-eclint` (e.g. if you temporarily need the build to pass)
+Use the [VS Code Prettier - Code Formatter plugin](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+to auto-format your code.
+
+To format manually:
+
+- Run `npm install -g prettier` to install prettier (one-time)
+- Run `prettier --write .` to fix most errors in the current folder (`.`)
+- To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`.prettierrc`](https://prettier.io/docs/en/configuration.html) file
+- To skip this check, use `builderrors --skip-prettier` (e.g. if you temporarily need the build to pass)
+
+## ERROR: reformat with Python black
+
+It's important to have consistent formatting for readability. We use [black](https://black.readthedocs.io/) for Python files.
+
+Use the [VS Code Prettier - Black plugin](https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter)
+to auto-format your code.
+
+To format manually:
+
+- Run `pip install black` to install black (one-time)
+- Run `black .` to fix most errors in the current folder (`.`)
+- To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`pyproject.toml`](https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file) file
+- To skip this check, use `builderrors --skip-prettier` (e.g. if you temporarily need the build to pass)
 
 ## ERROR: Python paths must be lower_alphanumeric
 
@@ -200,31 +219,33 @@ You have too much Python / JavaScript code
 
 `builderrors` is controlled via environment variables and command line parameters. Command line parameters override environment variables;
 
-| Environment variable    | Command line               | Meaning
-|-------------------------|----------------------------|------------------------------|
-| `$SKIP_CONFIG`          | `--skip-config`            | Skip config at start
-| `$SKIP_LIB`             | `--skip-lib`               | Skip [libraries check](#error-dont-commit-libraries)
-| `$SKIP_MINIFIED`        | `--skip-minified`          | Skip [minified file check](#error-dont-commit-minified-files)
-| `$SKIP_LFS`             | `--skip-lfs`               | Skip [Git LFS check](#error-use-git-lfs-for-files-over--chars)
-| `$SKIP_ECLINT`          | `--skip-eclint`            | Skip [.editorconfig check](#error-follow-editorconfig-rules)
-| `$SKIP_USELESS`         | `--skip-useless`           | Skip [useless files check](#error-dont-commit-useless-or-generated-files)
-| `$SKIP_DUPLICATE_FILES` | `--skip-duplicate-files`   | Skip [duplicate files check](#error-dont-duplicate-files)
-| `$SKIP_DUPLICATE_LINES` | `--skip-duplicate-lines`   | Skip [duplicate lines check](#error-reduce-duplicate-lines)
-| `$SKIP_PY_FILENAMES`    | `--skip-py-filenames`      | Skip [Python filename check](#error-python-paths-must-be-lower_alphanumeric)
-| `$SKIP_FLAKE8`          | `--skip-flake8`            | Skip [flake8 check](#error-flake8-errors)
-| `$SKIP_BANDIT`          | `--skip-bandit`            | Skip [bandit check](#error-bandit-security-errors)
-| `$SKIP_ESLINT`          | `--skip-eslint`            | Skip [eslint check](#error-eslint-errors)
-| `$SKIP_STYLELINT`       | `--skip-stylelint`         | Skip [stylelint check](#error-stylelint-errors)
-| `$SKIP_HTMLHINT`        | `--skip-htmlhint`          | Skip [htmlhint check](#error-htmlhint-errors)
-| `$SKIP_CSS_CHARS`       | `--skip-css-chars`         | Skip [CSS size check](#error-css-code-is-over--chars)
-| `$SKIP_CODE_CHARS`      | `--skip-code-chars`        | Skip [code size check](#error-python--js-code-is-over--chars)
-| `$LFS_SIZE`             | `--lfs-size=num`           | Files over `num` bytes should use Git LFS (default: 1,000,000)
-| `$DUPLICATE_FILESIZE`   | `--duplicate-filesize=num` | Files over `num` bytes should not be duplicated (default: 100)
-| `$DUPLICATE_LINES`      | `--duplicate-lines=num`    | Duplicate code over `num` lines are not allowed (default: 50)
-| `$BANDIT_CONFIDENCE`    | `--bandit-confidence=low`  | Show bandit errors with `low` or more confidence. `medium`, `high`, `all` are allowed
-| `$BANDIT_SEVERITY`      | `--bandit-severity=low`    | Show bandit errors with `low` or more severity. `medium`, `high`, `all` are allowed
-| `$CSS_CHARS_ERROR`      | `--css-chars-error=num`    | Minified CSS should be less than `num` bytes (default: 10,000)
-| `$CODE_CHARS_ERROR`     | `--code-chars-error=num`   | Minified Python + JS code should be less than `num` bytes (default: 50,000)
+| Environment variable    | Command line               | Meaning                                                                               |
+| ----------------------- | -------------------------- | ------------------------------------------------------------------------------------- |
+| `$SKIP_CONFIG`          | `--skip-config`            | Skip config at start                                                                  |
+| `$SKIP_LIB`             | `--skip-lib`               | Skip [libraries check](#error-dont-commit-libraries)                                  |
+| `$SKIP_MINIFIED`        | `--skip-minified`          | Skip [minified file check](#error-dont-commit-minified-files)                         |
+| `$SKIP_LFS`             | `--skip-lfs`               | Skip [Git LFS check](#error-use-git-lfs-for-files-over--chars)                        |
+| `$SKIP_PRETTIER`        | `--skip-prettier`          | Skip [Prettier check](#error-reformat-with-prettier)                                  |
+| `$SKIP_USELESS`         | `--skip-useless`           | Skip [useless files check](#error-dont-commit-useless-or-generated-files)             |
+| `$SKIP_DUPLICATE_FILES` | `--skip-duplicate-files`   | Skip [duplicate files check](#error-dont-duplicate-files)                             |
+| `$SKIP_DUPLICATE_LINES` | `--skip-duplicate-lines`   | Skip [duplicate lines check](#error-reduce-duplicate-lines)                           |
+| `$SKIP_PY_FILENAMES`    | `--skip-py-filenames`      | Skip [Python filename check](#error-python-paths-must-be-lower_alphanumeric)          |
+| `$SKIP_BLACK`           | `--skip-black`             | Skip [Python Black check](#error-reformat-with-python-black)                          |
+| `$SKIP_FLAKE8`          | `--skip-flake8`            | Skip [flake8 check](#error-flake8-errors)                                             |
+| `$SKIP_BANDIT`          | `--skip-bandit`            | Skip [bandit check](#error-bandit-security-errors)                                    |
+| `$SKIP_ESLINT`          | `--skip-eslint`            | Skip [eslint check](#error-eslint-errors)                                             |
+| `$SKIP_STYLELINT`       | `--skip-stylelint`         | Skip [stylelint check](#error-stylelint-errors)                                       |
+| `$SKIP_HTMLHINT`        | `--skip-htmlhint`          | Skip [htmlhint check](#error-htmlhint-errors)                                         |
+| `$SKIP_CSS_CHARS`       | `--skip-css-chars`         | Skip [CSS size check](#error-css-code-is-over--chars)                                 |
+| `$SKIP_CODE_CHARS`      | `--skip-code-chars`        | Skip [code size check](#error-python--js-code-is-over--chars)                         |
+| `$LFS_SIZE`             | `--lfs-size=num`           | Files over `num` bytes should use Git LFS (default: 1,000,000)                        |
+| `$DUPLICATE_FILESIZE`   | `--duplicate-filesize=num` | Files over `num` bytes should not be duplicated (default: 100)                        |
+| `$DUPLICATE_LINES`      | `--duplicate-lines=num`    | Duplicate code over `num` lines are not allowed (default: 50)                         |
+| `$BANDIT_CONFIDENCE`    | `--bandit-confidence=low`  | Show bandit errors with `low` or more confidence. `medium`, `high`, `all` are allowed |
+| `$BANDIT_SEVERITY`      | `--bandit-severity=low`    | Show bandit errors with `low` or more severity. `medium`, `high`, `all` are allowed   |
+| `$PY_LINE_LENGTH`       | `--py-line-length=num`     | Max line length of Python code (default: 99)                                          |
+| `$CSS_CHARS_ERROR`      | `--css-chars-error=num`    | Minified CSS should be less than `num` bytes (default: 10,000)                        |
+| `$CODE_CHARS_ERROR`     | `--code-chars-error=num`   | Minified Python + JS code should be less than `num` bytes (default: 50,000)           |
 
 On Gitlab, you can set project [environment variables](https://docs.gitlab.com/ce/ci/variables/)
 under Settings > CI / CD > Variables.
