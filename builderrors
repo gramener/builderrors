@@ -16,7 +16,7 @@ RE_MINIFIED='[\.\-](min|pack)\.(js|css)$'       # RegEx for minified files
 
 # Refer https://stackoverflow.com/a/7948533/100904 for getopt usage
 OPTIONS=v
-LONGOPTS=verbose,skip-lib,skip-minified,skip-lfs,skip-prettier,skip-useless,skip-duplicate-files,skip-duplicate-lines,skip-py-filenames,skip-black,skip-flake8,skip-bandit,skip-eslint,skip-stylelint,skip-htmlhint,skip-css-chars,skip-code-chars,lfs-size:,duplicate-filesize:,duplicate-lines:,py-line-length:,bandit-confidence:,bandit-severity:,css-chars-error:,code-chars-error:
+LONGOPTS=verbose,skip-lib,skip-minified,skip-lfs,skip-prettier,skip-useless,skip-duplicate-files,skip-duplicate-lines,skip-py-filenames,skip-black,skip-flake8,skip-bandit,skip-eslint,skip-eslint-extra,skip-stylelint,skip-htmlhint,skip-css-chars,skip-code-chars,lfs-size:,duplicate-filesize:,duplicate-lines:,py-line-length:,bandit-confidence:,bandit-severity:,css-chars-error:,code-chars-error:
 TEMP=$(getopt --options "$OPTIONS" --longoptions "$LONGOPTS" --name builderrors -- "$@")
 if [ $? != 0 ] ; then echo "Terminating" >&2 ; exit 1 ; fi
 eval set -- "$TEMP"
@@ -35,6 +35,7 @@ while true; do
     "--skip-flake8" ) SKIP_FLAKE8='--'; shift ;;
     "--skip-bandit" ) SKIP_BANDIT='--'; shift ;;
     "--skip-eslint" ) SKIP_ESLINT='--'; shift ;;
+    "--skip-eslint-extra" ) SKIP_ESLINT_EXTRA='--'; shift ;;
     "--skip-stylelint" ) SKIP_STYLELINT='--'; shift ;;
     "--skip-htmlhint" ) SKIP_HTMLHINT='--'; shift ;;
     "--skip-css-chars" ) SKIP_CSS_CHARS='--'; shift ;;
@@ -52,6 +53,10 @@ while true; do
   esac
 done
 
+# Run build error checks in $TARGET_DIR, which is set from environment variable, or command line, or .
+TARGET_DIR=${TARGET_DIR:-$1}
+TARGET_DIR=${TARGET_DIR:-.}
+
 if [[ -n "$VERBOSE" ]]; then
   echo "builderrors   # version ${VERSION} \\"
   echo "  ${VERBOSE:-# --}verbose \\"
@@ -67,6 +72,7 @@ if [[ -n "$VERBOSE" ]]; then
   echo "  ${SKIP_FLAKE8:-# --}skip-flake8 \\"
   echo "  ${SKIP_BANDIT:-# --}skip-bandit \\"
   echo "  ${SKIP_ESLINT:-# --}skip-eslint \\"
+  echo "  ${SKIP_ESLINT_EXTRA:-# --}skip-eslint-extra \\"
   echo "  ${SKIP_STYLELINT:-# --}skip-stylelint \\"
   echo "  ${SKIP_HTMLHINT:-# --}skip-htmlhint \\"
   echo "  ${SKIP_CSS_CHARS:-# --}skip-css-chars \\"
@@ -79,6 +85,7 @@ if [[ -n "$VERBOSE" ]]; then
   echo "  --bandit-severity=$BANDIT_SEVERITY \\"
   echo "  --css-chars-error=$CSS_CHARS_ERROR \\"
   echo "  --code-chars-error=$CODE_CHARS_ERROR \\"
+  echo "  ${TARGET_DIR}"
   echo ""
 fi
 
@@ -100,7 +107,7 @@ check() {
   MSG="$2"
   OUTPUT="$3"
   if [[ -n "$VERBOSE" ]]; then
-    echo ".... check: $MSG" >&2
+    echo ".... checking $MSG" >&2
   fi
   if [[ -z "$SKIP" ]]; then
     if [[ -n "$OUTPUT" ]]; then
@@ -112,6 +119,9 @@ check() {
   fi
 }
 
+# Run tests in $TARGET_DIR
+cd "$TARGET_DIR" 2>&1 >/dev/null
+
 check "$SKIP_LIB" "ERROR: don't commit libraries" \
   "$(git ls-files | grep -E 'node_modules/|bower_components/' | sort -f)"
 
@@ -122,8 +132,9 @@ check "$SKIP_MINIFIED" "ERROR: don't commit minified files" \
 #   #1: git files > 1 MB, sorted
 #   #2: git lfs files, sorted
 # Note: git ls-tree --format is supported only in Git 2.36+ (Apr 2022), so use --long instead
+# Note: comm required lexicographic sorting. So don't use "sort -f". https://unix.stackexchange.com/a/55889/111006
 check "$SKIP_LFS" "ERROR: use Git LFS for files over $LFS_SIZE chars" \
-  "$(comm -23 <(git ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > $LFS_SIZE { print(\$2) }" | sort -f) <(git lfs ls-files -n | sort -f))"
+  "$(LC_ALL=C comm -23 <(git ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > $LFS_SIZE { print(\$2) }" | sort) <(git lfs ls-files -n | sort))"
 
 check "$SKIP_USELESS" "ERROR: don't commit useless or generated files" \
   "$(git ls-files | grep -E '(\.lnk$|^~\$|~$|\.sublime\-|\.ipynb_checkpoints$|\.stackdump$|^thumbs.db$|\.log$)' | sort -f)"
@@ -162,15 +173,11 @@ check "$SKIP_FLAKE8" "ERROR: flake8 errors" \
 check "$SKIP_BANDIT" "ERROR: bandit security errors" \
   "$(bandit . --recursive --format txt --severity-level $BANDIT_SEVERITY --confidence-level $BANDIT_CONFIDENCE --quiet 2>/dev/null)"
 
-if [[ ! -f ".eslintrc.js" ]]; then
-  cp "$SCRIPT_DIR/.eslintrc.js" .
-  CREATED_ESLINTRC=1
+if [[ ! -n "$SKIP_ESLINT_EXTRA" ]]; then
+  ESLINT_EXTRA="--config $WIN_SCRIPT_DIR/.eslintrc.js"
 fi
 check "$SKIP_ESLINT" "ERROR: eslint errors" \
-  "$(git ls-files | grep -E '\.(html|js)$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" --parser-options "{ecmaVersion:'latest'}" --plugin html --plugin template --quiet -f unix --rule 'complexity: [warn, {max: 10}]' 2>&1)"
-if [[ -n "$CREATED_ESLINTRC" ]]; then
-  rm .eslintrc.js
-fi
+  "$(git ls-files | grep -E '\.(html|js)$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" $ESLINT_EXTRA --quiet --format unix 2>&1)"
 
 if [[ ! -f ".stylelintrc.js" ]]; then
   cp "$SCRIPT_DIR/.stylelintrc.js" .

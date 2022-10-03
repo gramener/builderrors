@@ -2,14 +2,34 @@
 
 Run automated checks on repositories to improve code quality.
 
-## Setup
+## Docker usage
+
+From the folder you want check, run this command on Linux:
+
+```shell
+docker run -v $(pwd):/mnt/repo gramener/builderrors
+```
+
+On Windows Command Prompt:
+
+```bat
+docker run -v %cd%:/mnt/repo gramener/builderrors
+```
+
+On Windows PowerShell:
+
+```powershell
+docker run -v ${PWD}:/mnt/repo gramener/builderrors
+```
+
+## Local installation
 
 - [Install Python 3.x](https://www.python.org/downloads/)
 - [Install Node.js](https://nodejs.org/en/)
 - [Install git](https://git-scm.com/download)
 - [Install git-lfs](https://git-lfs.github.com/)
 
-[Clone this repository](https://code.gramener.com/cto/builderrors) and run this from `bash`:
+[Clone this repository](https://code.gramener.com/cto/builderrors) and run this from `bash` or Git Bash:
 
 ```shell
 git clone git@code.gramener.com:cto/builderrors.git
@@ -18,27 +38,72 @@ npm install
 pip install -r requirements.txt
 ```
 
-## Usage
+## It checks only committed files
 
-From a **git repository** with **committed** files, run:
+`builderrors` only runs on a **git repository** with **committed** files.
+
+It **WON'T** check untracked or `.gitignore`d files.
+
+## Options
+
+Usage:
 
 ```shell
-bash /path/to/builderrors/builderrors
+builderrors [OPTIONS] [DIR]
 ```
 
-Remember: It **WON'T** check untracked or `.gitignore`d files.
+Options can be set as environment variables or command line parameters. Command line parameters override environment variables. For example:
+
+```bash
+SKIP_FLAKE8=1 builderrors   # Skips flake8 check
+builderrors --skip-flake8   # Same effect
+```
+
+| Environment variable    | Command line               | Meaning                                                                               |
+| ----------------------- | -------------------------- | ------------------------------------------------------------------------------------- |
+| `$VERBOSE`              | `--verbose`                | Show config used and progress                                                         |
+| `$SKIP_LIB`             | `--skip-lib`               | Skip [libraries check](#error-dont-commit-libraries)                                  |
+| `$SKIP_MINIFIED`        | `--skip-minified`          | Skip [minified file check](#error-dont-commit-minified-files)                         |
+| `$SKIP_LFS`             | `--skip-lfs`               | Skip [Git LFS check](#error-use-git-lfs-for-files-over--chars)                        |
+| `$SKIP_PRETTIER`        | `--skip-prettier`          | Skip [Prettier check](#error-reformat-with-prettier)                                  |
+| `$SKIP_USELESS`         | `--skip-useless`           | Skip [useless files check](#error-dont-commit-useless-or-generated-files)             |
+| `$SKIP_DUPLICATE_FILES` | `--skip-duplicate-files`   | Skip [duplicate files check](#error-dont-duplicate-files)                             |
+| `$SKIP_DUPLICATE_LINES` | `--skip-duplicate-lines`   | Skip [duplicate lines check](#error-reduce-duplicate-lines)                           |
+| `$SKIP_PY_FILENAMES`    | `--skip-py-filenames`      | Skip [Python filename check](#error-python-paths-must-be-lower_alphanumeric)          |
+| `$SKIP_BLACK`           | `--skip-black`             | Skip [Python Black check](#error-reformat-with-python-black)                          |
+| `$SKIP_FLAKE8`          | `--skip-flake8`            | Skip [flake8 check](#error-flake8-errors)                                             |
+| `$SKIP_BANDIT`          | `--skip-bandit`            | Skip [bandit check](#error-bandit-security-errors)                                    |
+| `$SKIP_ESLINT`          | `--skip-eslint`            | Skip [eslint check](#error-eslint-errors)                                             |
+| `$SKIP_ESLINT_EXTRA`    | `--skip-eslint-extra`      | Skip extra [eslint checks](#error-eslint-errors) like HTML and template plugins       |
+| `$SKIP_STYLELINT`       | `--skip-stylelint`         | Skip [stylelint check](#error-stylelint-errors)                                       |
+| `$SKIP_HTMLHINT`        | `--skip-htmlhint`          | Skip [htmlhint check](#error-htmlhint-errors)                                         |
+| `$SKIP_CSS_CHARS`       | `--skip-css-chars`         | Skip [CSS size check](#error-css-code-is-over--chars)                                 |
+| `$SKIP_CODE_CHARS`      | `--skip-code-chars`        | Skip [code size check](#error-python--js-code-is-over--chars)                         |
+| `$LFS_SIZE`             | `--lfs-size=num`           | Files over `num` bytes should use Git LFS (default: 1,000,000)                        |
+| `$DUPLICATE_FILESIZE`   | `--duplicate-filesize=num` | Files over `num` bytes should not be duplicated (default: 100)                        |
+| `$DUPLICATE_LINES`      | `--duplicate-lines=num`    | Duplicate code over `num` lines are not allowed (default: 50)                         |
+| `$BANDIT_CONFIDENCE`    | `--bandit-confidence=low`  | Show bandit errors with `low` or more confidence. `medium`, `high`, `all` are allowed |
+| `$BANDIT_SEVERITY`      | `--bandit-severity=low`    | Show bandit errors with `low` or more severity. `medium`, `high`, `all` are allowed   |
+| `$PY_LINE_LENGTH`       | `--py-line-length=num`     | Max line length of Python code (default: 99)                                          |
+| `$CSS_CHARS_ERROR`      | `--css-chars-error=num`    | Minified CSS should be less than `num` bytes (default: 10,000)                        |
+| `$CODE_CHARS_ERROR`     | `--code-chars-error=num`   | Minified Python + JS code should be less than `num` bytes (default: 50,000)           |
+
+## CI integration
 
 To run on [Gitlab's CI/CD pipeline](https://docs.gitlab.com/ee/ci/pipelines/) on code.gramener.com,
 add a `.gitlab-ci.yml` file with this configuration:
 
 ```yaml
 validate:
-  script: builderrors
+  script: builderrors [options]
 ```
 
-# How to fix
+On Gitlab, you can set project [environment variables](https://docs.gitlab.com/ce/ci/variables/)
+under Settings > CI / CD > Variables.
 
-The [builderrors](builderrors) script reports these errors:
+# How to fix errors
+
+[`builderrors`](builderrors) reports these errors:
 
 ## ERROR: don't commit libraries
 
@@ -214,41 +279,6 @@ You have too much Python / JavaScript code
 - Reduce code using libraries.
 - To allow 80,000 characters, use `builderrors --code-chars-error=80000`
 - To skip this check, use `builderrors --skip-code-chars`
-
-# Options
-
-`builderrors` is controlled via environment variables and command line parameters. Command line parameters override environment variables;
-
-| Environment variable    | Command line               | Meaning                                                                               |
-| ----------------------- | -------------------------- | ------------------------------------------------------------------------------------- |
-| `$SKIP_CONFIG`          | `--skip-config`            | Skip config at start                                                                  |
-| `$SKIP_LIB`             | `--skip-lib`               | Skip [libraries check](#error-dont-commit-libraries)                                  |
-| `$SKIP_MINIFIED`        | `--skip-minified`          | Skip [minified file check](#error-dont-commit-minified-files)                         |
-| `$SKIP_LFS`             | `--skip-lfs`               | Skip [Git LFS check](#error-use-git-lfs-for-files-over--chars)                        |
-| `$SKIP_PRETTIER`        | `--skip-prettier`          | Skip [Prettier check](#error-reformat-with-prettier)                                  |
-| `$SKIP_USELESS`         | `--skip-useless`           | Skip [useless files check](#error-dont-commit-useless-or-generated-files)             |
-| `$SKIP_DUPLICATE_FILES` | `--skip-duplicate-files`   | Skip [duplicate files check](#error-dont-duplicate-files)                             |
-| `$SKIP_DUPLICATE_LINES` | `--skip-duplicate-lines`   | Skip [duplicate lines check](#error-reduce-duplicate-lines)                           |
-| `$SKIP_PY_FILENAMES`    | `--skip-py-filenames`      | Skip [Python filename check](#error-python-paths-must-be-lower_alphanumeric)          |
-| `$SKIP_BLACK`           | `--skip-black`             | Skip [Python Black check](#error-reformat-with-python-black)                          |
-| `$SKIP_FLAKE8`          | `--skip-flake8`            | Skip [flake8 check](#error-flake8-errors)                                             |
-| `$SKIP_BANDIT`          | `--skip-bandit`            | Skip [bandit check](#error-bandit-security-errors)                                    |
-| `$SKIP_ESLINT`          | `--skip-eslint`            | Skip [eslint check](#error-eslint-errors)                                             |
-| `$SKIP_STYLELINT`       | `--skip-stylelint`         | Skip [stylelint check](#error-stylelint-errors)                                       |
-| `$SKIP_HTMLHINT`        | `--skip-htmlhint`          | Skip [htmlhint check](#error-htmlhint-errors)                                         |
-| `$SKIP_CSS_CHARS`       | `--skip-css-chars`         | Skip [CSS size check](#error-css-code-is-over--chars)                                 |
-| `$SKIP_CODE_CHARS`      | `--skip-code-chars`        | Skip [code size check](#error-python--js-code-is-over--chars)                         |
-| `$LFS_SIZE`             | `--lfs-size=num`           | Files over `num` bytes should use Git LFS (default: 1,000,000)                        |
-| `$DUPLICATE_FILESIZE`   | `--duplicate-filesize=num` | Files over `num` bytes should not be duplicated (default: 100)                        |
-| `$DUPLICATE_LINES`      | `--duplicate-lines=num`    | Duplicate code over `num` lines are not allowed (default: 50)                         |
-| `$BANDIT_CONFIDENCE`    | `--bandit-confidence=low`  | Show bandit errors with `low` or more confidence. `medium`, `high`, `all` are allowed |
-| `$BANDIT_SEVERITY`      | `--bandit-severity=low`    | Show bandit errors with `low` or more severity. `medium`, `high`, `all` are allowed   |
-| `$PY_LINE_LENGTH`       | `--py-line-length=num`     | Max line length of Python code (default: 99)                                          |
-| `$CSS_CHARS_ERROR`      | `--css-chars-error=num`    | Minified CSS should be less than `num` bytes (default: 10,000)                        |
-| `$CODE_CHARS_ERROR`     | `--code-chars-error=num`   | Minified Python + JS code should be less than `num` bytes (default: 50,000)           |
-
-On Gitlab, you can set project [environment variables](https://docs.gitlab.com/ce/ci/variables/)
-under Settings > CI / CD > Variables.
 
 # Alternatives
 

@@ -1,13 +1,14 @@
 /* eslint-env node */
 
-// To override these rules, create a .eslintrc.js file in your app.
+// These rules override the configurations in the app. Use --skip-eslint-extra to ignore this
 // See https://eslint.org/docs/user-guide/configuring
 module.exports = {
   parserOptions: {
     ecmaVersion: "latest",
   },
-  // These default plugins are installed in the root gramex director via package.json
   plugins: ["html", "template"],
-  // Styles are based on recommended eslint fields, but with specific overrides
   extends: "eslint:recommended",
+  rules: {
+    complexity: ["warn", { max: 10 }],
+  },
 };

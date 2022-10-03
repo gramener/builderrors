@@ -2,7 +2,7 @@
 
 # Run tests from the same folder as this script
 SCRIPT_DIR=`dirname "$(realpath "$0")"`
-cd $SCRIPT_DIR
+cd "$SCRIPT_DIR"
 
 # Clone or pull the test repo
 # git clone "git@code.gramener.com:s.anand/build-errors-test.git" "build-errors-test" 2> /dev/null || git -C "build-errors-test" pull

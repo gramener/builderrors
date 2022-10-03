@@ -1,0 +1,7 @@
+.git/
+.gitignore
+Dockerfile
+build-errors-test/
+node_modules/
+test-builderrors.sh
+test-output/
