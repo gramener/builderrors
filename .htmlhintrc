@@ -4,16 +4,14 @@
     "alt-require": true,                // Images must have alt tags for accessibility
     "attr-lowercase": true,             // Keep attrs lowercase. DOM keeps them in lowercase
     "attr-no-duplication": true,        // Second attribute overrides first. Avoid confusion
-    "space-tab-mixed-disabled": true,
-    "src-not-empty": false,             // Image must have a default src=, even if JS loads it
-    "tag-pair": true,
-    "tagname-lowercase": true,
-    "tagname-specialchars": true,
-    "title-require": true,
+    "space-tab-mixed-disabled": true,   // Just stick to spaces, don't use tabs
+    "tag-pair": true,                   // Close opened tags. (Disable in complex templates)
+    "tagname-lowercase": true,          // Avoid upper or mixed case tag names
+    "tagname-specialchars": true,       // Use only letters in tag names
 
     "attr-no-unnecessary-whitespace": false,    // OK to use attr = "value" with spaces
     "attr-sorted": false,               // OK not to sort attributes
-    "attr-unsafe-chars": false,         // OK for attr values to be weird unicode characters
+    "attr-unsafe-chars": false,         // OK for attr values to be wierd unicode characters
     "attr-value-double-quotes": false,  // OK to use single OR double quotes, to wrap other quotes
     "attr-value-not-empty": false,      // OK for dynamically generated attr values to be empty
     "attr-value-single-quotes": false,  // OK to use single OR double quotes, to wrap other quotes
@@ -32,6 +30,8 @@
     "input-requires-label": false,      // OK with dynamically generated inputs without labels
     "script-disabled": false,           // OK to use scripts
     "spec-char-escape": false,          // OK for lodash templates to use <% .. %>
+    "src-not-empty": true,              // OK to load src from JS
     "style-disabled": false,            // OK with <style> for HTML components
-    "tag-self-close": false             // OK with dynamically generated <div></div>
+    "tag-self-close": false,            // OK with dynamically generated <div></div>
+    "title-require": true               // OK to load title from sub-templates
 }

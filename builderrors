@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+VERSION=1.0.0
+
 # Parse command line options
 # NOTE: Bandit catches SQL injections at low confidence. So let's leave it on
 BANDIT_CONFIDENCE=${BANDIT_CONFIDENCE:-all}     # Bandit reports only issues of given confidence level or higher
@@ -13,12 +15,14 @@ LFS_SIZE=${LFS_SIZE:-1000000}                   # Max file size you can commit w
 RE_MINIFIED='[\.\-](min|pack)\.(js|css)$'       # RegEx for minified files
 
 # Refer https://stackoverflow.com/a/7948533/100904 for getopt usage
-LONGOPTS=hide-config,skip-lib,skip-minified,skip-lfs,skip-prettier,skip-useless,skip-duplicate-files,skip-duplicate-lines,skip-py-filenames,skip-black,skip-flake8,skip-bandit,skip-eslint,skip-stylelint,skip-htmlhint,skip-css-chars,skip-code-chars,lfs-size:,duplicate-filesize:,duplicate-lines:,py-line-length:,bandit-confidence:,bandit-severity:,css-chars-error:,code-chars-error:
-TEMP=$(getopt --options "" --longoptions=$LONGOPTS --name builderrors -- "$@")
+OPTIONS=v
+LONGOPTS=verbose,skip-lib,skip-minified,skip-lfs,skip-prettier,skip-useless,skip-duplicate-files,skip-duplicate-lines,skip-py-filenames,skip-black,skip-flake8,skip-bandit,skip-eslint,skip-stylelint,skip-htmlhint,skip-css-chars,skip-code-chars,lfs-size:,duplicate-filesize:,duplicate-lines:,py-line-length:,bandit-confidence:,bandit-severity:,css-chars-error:,code-chars-error:
+TEMP=$(getopt --options "$OPTIONS" --longoptions "$LONGOPTS" --name builderrors -- "$@")
 if [ $? != 0 ] ; then echo "Terminating" >&2 ; exit 1 ; fi
 eval set -- "$TEMP"
 while true; do
   case "$1" in
+    "-v" | "--verbose" ) VERBOSE='--'; shift ;;
     "--skip-lib" ) SKIP_LIB='--'; shift ;;
     "--skip-minified" ) SKIP_MINIFIED='--'; shift ;;
     "--skip-lfs" ) SKIP_LFS='--'; shift ;;
@@ -43,14 +47,14 @@ while true; do
     "--bandit-confidence" ) BANDIT_CONFIDENCE=$2; shift 2 ;;
     "--css-chars-error" ) CSS_CHARS_ERROR=$2; shift 2 ;;
     "--code-chars-error" ) CODE_CHARS_ERROR=$2; shift 2 ;;
-    "--hide-config" ) HIDE_CONFIG='--'; shift ;;
     -- ) shift; break ;;
     * ) break ;;
   esac
 done
 
-if [[ -z "$HIDE_CONFIG" ]]; then
-  echo "builderrors \\"
+if [[ -n "$VERBOSE" ]]; then
+  echo "builderrors   # version ${VERSION} \\"
+  echo "  ${VERBOSE:-# --}verbose \\"
   echo "  ${SKIP_LIB:-# --}skip-lib \\"
   echo "  ${SKIP_MINIFIED:-# --}skip-minified \\"
   echo "  ${SKIP_LFS:-# --}skip-lfs \\"
@@ -75,7 +79,6 @@ if [[ -z "$HIDE_CONFIG" ]]; then
   echo "  --bandit-severity=$BANDIT_SEVERITY \\"
   echo "  --css-chars-error=$CSS_CHARS_ERROR \\"
   echo "  --code-chars-error=$CODE_CHARS_ERROR \\"
-  echo "  ${HIDE_CONFIG:-# --}hide-config"
   echo ""
 fi
 
@@ -96,6 +99,9 @@ check() {
   SKIP="$1"
   MSG="$2"
   OUTPUT="$3"
+  if [[ -n "$VERBOSE" ]]; then
+    echo ".... check: $MSG" >&2
+  fi
   if [[ -z "$SKIP" ]]; then
     if [[ -n "$OUTPUT" ]]; then
       echo "$MSG"
@@ -146,17 +152,12 @@ check "$SKIP_BLACK" "ERROR: reformat with Python black" \
 check "$SKIP_PY_FILENAMES" "ERROR: Python paths must be lower_alphanumeric" \
   "$(git ls-files | grep '\.py$' | sort -f | grep -e '[^a-z0-9_./]')"
 
-if [[ ! -f ".flake8" ]]; then
-  cp "$SCRIPT_DIR/.flake8" .
-  CREATED_FLAKE8=1
-fi
-# In flake8, ignore E203 which is not PEP8 compliant
-# Reference: https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#slices
+# flake8: ignore E203 which is not PEP8 compliant
+# https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#slices
+# flake8: ignore W503 which is not PEP8 compliant
+# https://www.flake8rules.com/rules/W503.html
 check "$SKIP_FLAKE8" "ERROR: flake8 errors" \
-  "$(git ls-files | grep '\.py$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203 --max-line-length ${PY_LINE_LENGTH})"
-if [[ -n "$CREATED_FLAKE8" ]]; then
-  rm .flake8
-fi
+  "$(git ls-files | grep '\.py$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,W503 --max-line-length ${PY_LINE_LENGTH})"
 
 check "$SKIP_BANDIT" "ERROR: bandit security errors" \
   "$(bandit . --recursive --format txt --severity-level $BANDIT_SEVERITY --confidence-level $BANDIT_CONFIDENCE --quiet 2>/dev/null)"

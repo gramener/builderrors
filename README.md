@@ -168,7 +168,7 @@ For specific rules:
 
 ## ERROR: eslint errors
 
-[ESLint](https://eslint.org/) reports JavaScript errors.
+[ESLint](https://eslint.org/) reports JavaScript errors in JS and HTML files -- including HTML templates.
 
 - Run `eslint --fix` to automatically fix eslint errors where possible.
 - To ignore a specific line, add a [`// eslint-disable-line`](https://eslint.org/docs/latest/user-guide/configuring/rules#disabling-rules) at the end
@@ -252,7 +252,7 @@ under Settings > CI / CD > Variables.
 
 # Alternatives
 
-More comprehensive multi-linting tools are available at:
+Comprehensive multi-linting tools are available at:
 
 - [Super-Linter](https://github.com/github/super-linter)
 - [MegaLinter Runner](https://github.com/oxsecurity/megalinter)
