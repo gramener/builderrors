@@ -1,6 +1,6 @@
 ERROR: Python paths must be lower_alphanumeric
-    has-hyphen.py
     HasCapitals.py
+    has-hyphen.py
 
 ---------------------------------------------------------------------
 BUILD FAILED.

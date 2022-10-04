@@ -1,8 +1,8 @@
 ERROR: don't commit libraries
     bower_components/color-obj/.bower.json
+    bower_components/color-obj/README.md
     bower_components/color-obj/bower.json
     bower_components/color-obj/dist/Color.js
-    bower_components/color-obj/README.md
     bower_components/color-obj/src/Color.js
     bower_components/color-obj/test/Color.spec.js
 

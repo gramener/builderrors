@@ -52,7 +52,7 @@ check() {
     "../test-output/$BRANCH.txt" || EXIT_STATUS=1
 }
 
-check libraries-node
+# check libraries-node
 check libraries-bower --skip-prettier
 check minified
 check git-lfs

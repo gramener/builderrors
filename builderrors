@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=1.0.0
+VERSION=1.0.1
 
 # Parse command line options
 # NOTE: Bandit catches SQL injections at low confidence. So let's leave it on
@@ -13,6 +13,9 @@ CSS_CHARS_ERROR=${CSS_CHARS_ERROR:-10000}       # Max # of minified CSS/SCSS cha
 CODE_CHARS_ERROR=${CODE_CHARS_ERROR:-50000}     # Max # of minified PY/JS chars allowed
 LFS_SIZE=${LFS_SIZE:-1000000}                   # Max file size you can commit without LFS
 RE_MINIFIED='[\.\-](min|pack)\.(js|css)$'       # RegEx for minified files
+
+# Set consistent sort order
+export LC_ALL=C
 
 # Refer https://stackoverflow.com/a/7948533/100904 for getopt usage
 OPTIONS=v
@@ -123,21 +126,20 @@ check() {
 cd "$TARGET_DIR" 2>&1 >/dev/null
 
 check "$SKIP_LIB" "ERROR: don't commit libraries" \
-  "$(git ls-files | grep -E 'node_modules/|bower_components/' | sort -f)"
+  "$(git ls-files | grep -E 'node_modules/|bower_components/' | sort)"
 
 check "$SKIP_MINIFIED" "ERROR: don't commit minified files" \
-  "$(git ls-files | grep -E "$RE_MINIFIED" | sort -f)"
+  "$(git ls-files | grep -E "$RE_MINIFIED" | sort)"
 
 # comm -23 prints lines unique to file list #1
 #   #1: git files > 1 MB, sorted
 #   #2: git lfs files, sorted
 # Note: git ls-tree --format is supported only in Git 2.36+ (Apr 2022), so use --long instead
-# Note: comm required lexicographic sorting. So don't use "sort -f". https://unix.stackexchange.com/a/55889/111006
 check "$SKIP_LFS" "ERROR: use Git LFS for files over $LFS_SIZE chars" \
-  "$(LC_ALL=C comm -23 <(git ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > $LFS_SIZE { print(\$2) }" | sort) <(git lfs ls-files -n | sort))"
+  "$(comm -23 <(git ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > $LFS_SIZE { print(\$2) }" | sort) <(git lfs ls-files -n | sort))"
 
 check "$SKIP_USELESS" "ERROR: don't commit useless or generated files" \
-  "$(git ls-files | grep -E '(\.lnk$|^~\$|~$|\.sublime\-|\.ipynb_checkpoints$|\.stackdump$|^thumbs.db$|\.log$)' | sort -f)"
+  "$(git ls-files | grep -E '(\.lnk$|^~\$|~$|\.sublime\-|\.ipynb_checkpoints$|\.stackdump$|^thumbs.db$|\.log$)' | sort)"
 
 # List commited files  - git ls-tree ...
 # that are big enough  - awk ...
@@ -148,27 +150,31 @@ check "$SKIP_USELESS" "ERROR: don't commit useless or generated files" \
 #                      -          ^ strip leading * if Cygwin treats file as binary
 # Note: git ls-tree --format is supported only in Git 2.36+ (Apr 2022), so use --long instead
 check "$SKIP_DUPLICATE_FILES" "ERROR: don't duplicate files" \
-  "$(git ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > $DUPLICATE_FILESIZE { print(\$2) }" | tr '\n' '\0' | xargs -0 --no-run-if-empty md5sum | sort -f | uniq -w32 -dD | awk '{if(h!=$1){printf "\n"};sub(/^\*/, "", $2);for (i=2; i<=NF; ++i) printf "%s ", $i;printf "\n";h=$1}')"
+  "$(git ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > $DUPLICATE_FILESIZE { print(\$2) }" | tr '\n' '\0' | xargs -0 --no-run-if-empty md5sum | sort | uniq -w32 -dD | awk '{if(h!=$1){printf "\n"};sub(/^\*/, "", $2);for (i=2; i<=NF; ++i) printf "%s ", $i;printf "\n";h=$1}')"
 
+# jscpd prints a table of results and "Found <nn> clones" and "Detection time: <nn>ms". Ignore these lines at the end using:
+#   grep '^[a-zA-Z]'        # cut out the table
+#   grep -v '^Found '       # remove "Found <nn> clones"
+#   grep -v '^Detection '   # remove "Detection time: <nn>ms"
 check "$SKIP_DUPLICATE_LINES" "ERROR: reduce duplicate lines" \
-  "$(git ls-files | grep -E '\.(js|py|css|scss)$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/jscpd" --min-lines="$DUPLICATE_LINES" 2>&1 | grep '^[a-zA-Z ]')"
+  "$(git ls-files | grep -E '\.(js|py|css|scss)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/jscpd" --min-lines="$DUPLICATE_LINES" 2>&1 | grep '^[a-zA-Z ]' | grep -v '^Found ' | grep -v '^Detection ')"
 
 # NOTE: Don't run prettier on minified files. No point, and it bloats errors
 check "$SKIP_PRETTIER" "ERROR: reformat with Prettier" \
-  "$(git ls-files | grep -E '\.(html|js|jsx|vue|ts|css|scss|sass|yaml|md)$' | grep -v -E "$RE_MINIFIED" | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/prettier" --loglevel=warn --check 2>&1)"
+  "$(git ls-files | grep -E '\.(html|js|jsx|vue|ts|css|scss|sass|yaml|md)$' | grep -v -E "$RE_MINIFIED" | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/prettier" --loglevel=warn --check 2>&1)"
 
 check "$SKIP_BLACK" "ERROR: reformat with Python black" \
-  "$(git ls-files | grep -E '\.py$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty black --check --skip-string-normalization --line-length=${PY_LINE_LENGTH} 2>&1)"
+  "$(git ls-files | grep -E '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty black --check --skip-string-normalization --line-length=${PY_LINE_LENGTH} 2>&1)"
 
 check "$SKIP_PY_FILENAMES" "ERROR: Python paths must be lower_alphanumeric" \
-  "$(git ls-files | grep '\.py$' | sort -f | grep -e '[^a-z0-9_./]')"
+  "$(git ls-files | grep '\.py$' | sort | grep -e '[^a-z0-9_./]')"
 
 # flake8: ignore E203 which is not PEP8 compliant
 # https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#slices
 # flake8: ignore W503 which is not PEP8 compliant
 # https://www.flake8rules.com/rules/W503.html
 check "$SKIP_FLAKE8" "ERROR: flake8 errors" \
-  "$(git ls-files | grep '\.py$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,W503 --max-line-length ${PY_LINE_LENGTH})"
+  "$(git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,W503 --max-line-length ${PY_LINE_LENGTH})"
 
 check "$SKIP_BANDIT" "ERROR: bandit security errors" \
   "$(bandit . --recursive --format txt --severity-level $BANDIT_SEVERITY --confidence-level $BANDIT_CONFIDENCE --quiet 2>/dev/null)"
@@ -177,14 +183,14 @@ if [[ ! -n "$SKIP_ESLINT_EXTRA" ]]; then
   ESLINT_EXTRA="--config $WIN_SCRIPT_DIR/.eslintrc.js"
 fi
 check "$SKIP_ESLINT" "ERROR: eslint errors" \
-  "$(git ls-files | grep -E '\.(html|js)$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" $ESLINT_EXTRA --quiet --format unix 2>&1)"
+  "$(git ls-files | grep -E '\.(html|js)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" $ESLINT_EXTRA --quiet --format unix 2>&1)"
 
 if [[ ! -f ".stylelintrc.js" ]]; then
   cp "$SCRIPT_DIR/.stylelintrc.js" .
   CREATED_STYLELINTRC=1
 fi
 check "$SKIP_STYLELINT" "ERROR: stylelint errors" \
-  "$(git ls-files | grep -E '\.s?css$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/stylelint" --allow-empty-input --config-basedir "$WIN_SCRIPT_DIR" --custom-syntax "$WIN_SCRIPT_DIR/node_modules/postcss-scss" 2>&1)"
+  "$(git ls-files | grep -E '\.s?css$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/stylelint" --allow-empty-input --config-basedir "$WIN_SCRIPT_DIR" --custom-syntax "$WIN_SCRIPT_DIR/node_modules/postcss-scss" 2>&1)"
 if [[ -n "$CREATED_STYLELINTRC" ]]; then
   rm .stylelintrc.js
 fi
@@ -194,16 +200,16 @@ if [[ ! -f ".htmlhintrc" ]]; then
   CREATED_HTMLHINTRC=1
 fi
 check "$SKIP_HTMLHINT" "ERROR: htmlhint errors" \
-  "$(git ls-files | grep '\.html$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/htmlhint" --nocolor --format unix)"
+  "$(git ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/htmlhint" --nocolor --format unix)"
 if [[ -n "$CREATED_HTMLHINTRC" ]]; then
   rm .htmlhintrc
 fi
 
 check "$SKIP_CSS_CHARS" "ERROR: CSS code is over $CSS_CHARS_ERROR chars" \
-  "$(git ls-files | grep -E '\.s?css$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty "$SCRIPT_DIR/codesize" --error=$CSS_CHARS_ERROR --top=10)"
+  "$(git ls-files | grep -E '\.s?css$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$SCRIPT_DIR/codesize" --error=$CSS_CHARS_ERROR --top=10)"
 
 check "$SKIP_CODE_CHARS" "ERROR: Python + JS code is over $CODE_CHARS_ERROR chars" \
-  "$(git ls-files | grep -E '\.py$|\.js$' | sort -f | tr '\n' '\0' | xargs -0 --no-run-if-empty "$SCRIPT_DIR/codesize" --error=$CODE_CHARS_ERROR --top=10)"
+  "$(git ls-files | grep -E '\.py$|\.js$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$SCRIPT_DIR/codesize" --error=$CODE_CHARS_ERROR --top=10)"
 
 if [[ $EXIT_STATUS -ne 0 ]]; then
   echo "---------------------------------------------------------------------"
