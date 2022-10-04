@@ -6,7 +6,7 @@ Run automated checks on repositories to improve code quality.
 
 From the folder you want check, run this command on Linux:
 
-```shell
+```bash
 docker run --rm -it -v $(pwd):/mnt/repo gramener/builderrors
 ```
 
@@ -22,7 +22,7 @@ On Windows PowerShell:
 docker run --rm -it -v ${PWD}:/mnt/repo gramener/builderrors
 ```
 
-## Local installation
+## Local usage
 
 - [Install Python 3.x](https://www.python.org/downloads/)
 - [Install Node.js](https://nodejs.org/en/)
@@ -31,11 +31,17 @@ docker run --rm -it -v ${PWD}:/mnt/repo gramener/builderrors
 
 [Clone this repository](https://code.gramener.com/cto/builderrors) and run this from `bash` or Git Bash:
 
-```shell
+```bash
 git clone git@code.gramener.com:cto/builderrors.git
 cd builderrors
 npm install
 pip install -r requirements.txt
+```
+
+From the folder you want to check, run this from `bash` or Git Bash:
+
+```bash
+bash /path/to/builderrors [OPTIONS]
 ```
 
 ## It checks only committed files
@@ -46,29 +52,24 @@ It **WON'T** check untracked or `.gitignore`d files.
 
 ## Options
 
-Usage:
+You can pass options as command-line parameters. For example:
 
-```shell
-bash /path/to/builderrors [OPTIONS] [DIR]
-```
-
-For example:
-
-```shell
+```bash
 # Skip flake8. Report errors only if minified code characters > 100,000
-bash /path/to/builderrors --skip-flake8 --code-chars-error=100000
+docker run --rm -it -v $(pwd):/mnt/repo gramener/builderrors \
+  builderrors --skip-flake8 --code-chars-error=100000
 
 # Skip Git LFS, eslint and stylelint
 bash /path/to/builderrors --skip-lfs --skip-eslint --skip-stylelint
 ```
 
-Options can also be set as environment variables. (But command line parameters override environment variables.)
+You can also pass options as environment variables. (Command line overrides environment variables.) For example:
 
-For example, run this on Linux (or Git Bash on Windows):
-
-```shell
+```bash
 # Skip flake8. Report errors only if minified code characters > 100,000
-SKIP_FLAKE8=1 CODE_CHARS_ERROR=100000 bash /path/to/builderrors
+docker run --rm -it -v $(pwd):/mnt/repo \
+  -e SKIP_FLAKE8=1 -e CODE_CHARS_ERROR=100000 \
+  builderrors gramener/builderrors
 
 # Skip Git LFS, eslint and stylelint
 SKIP_LFS=1 SKIP_ESLINT=1 SKIP_STYLELINT=1 bash /path/to/builderrors
