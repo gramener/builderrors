@@ -7,19 +7,19 @@ Run automated checks on repositories to improve code quality.
 From the folder you want check, run this command on Linux:
 
 ```shell
-docker run -v $(pwd):/mnt/repo gramener/builderrors
+docker run --rm -it -v $(pwd):/mnt/repo gramener/builderrors
 ```
 
 On Windows Command Prompt:
 
 ```bat
-docker run -v %cd%:/mnt/repo gramener/builderrors
+docker run --rm -it -v %cd%:/mnt/repo gramener/builderrors
 ```
 
 On Windows PowerShell:
 
 ```powershell
-docker run -v ${PWD}:/mnt/repo gramener/builderrors
+docker run --rm -it -v ${PWD}:/mnt/repo gramener/builderrors
 ```
 
 ## Local installation
@@ -49,14 +49,29 @@ It **WON'T** check untracked or `.gitignore`d files.
 Usage:
 
 ```shell
-builderrors [OPTIONS] [DIR]
+bash /path/to/builderrors [OPTIONS] [DIR]
 ```
 
-Options can be set as environment variables or command line parameters. Command line parameters override environment variables. For example:
+For example:
 
-```bash
-SKIP_FLAKE8=1 builderrors   # Skips flake8 check
-builderrors --skip-flake8   # Same effect
+```shell
+# Skip flake8. Report errors only if minified code characters > 100,000
+bash /path/to/builderrors --skip-flake8 --code-chars-error=100000
+
+# Skip Git LFS, eslint and stylelint
+bash /path/to/builderrors --skip-lfs --skip-eslint --skip-stylelint
+```
+
+Options can also be set as environment variables. (But command line parameters override environment variables.)
+
+For example, run this on Linux (or Git Bash on Windows):
+
+```shell
+# Skip flake8. Report errors only if minified code characters > 100,000
+SKIP_FLAKE8=1 CODE_CHARS_ERROR=100000 bash /path/to/builderrors
+
+# Skip Git LFS, eslint and stylelint
+SKIP_LFS=1 SKIP_ESLINT=1 SKIP_STYLELINT=1 bash /path/to/builderrors
 ```
 
 | Environment variable    | Command line               | Meaning                                                                               |
