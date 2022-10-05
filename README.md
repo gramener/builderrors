@@ -192,6 +192,7 @@ To format manually:
 - Run `npm install -g prettier` to install prettier (one-time)
 - Run `prettier --write .` to fix most errors in the current folder (`.`)
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`.prettierrc`](https://prettier.io/docs/en/configuration.html) file
+- To ignore specific files, add a [`.prettierignore`](https://prettier.io/docs/en/ignore.html) file
 - To skip this check, use `builderrors --skip-prettier` (e.g. if you temporarily need the build to pass)
 
 ## ERROR: reformat with Python black
