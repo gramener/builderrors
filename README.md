@@ -2,24 +2,46 @@
 
 Run automated checks on repositories to improve code quality.
 
+## Gitlab CI usage
+
+To run checks on every push with [Gitlab](https://docs.gitlab.com/ee/ci/pipelines/),
+add this on top of your [`.gitlab-ci.yml`](https://docs.gitlab.com/ee/ci/yaml/) file:
+
+```yaml
+validate:
+  script: builderrors [options]
+```
+
+```yaml
+validate:
+  image: gramener/builderrors
+  script: builderrors
+```
+
 ## Docker usage
 
 From the folder you want check, run this command on Linux:
 
+<!--
+  Why use "--rm"? To delete the container after it runs
+  Why use "-it"? Some tools (e.g. jscpd) print colorized output only on interactive terminals.
+  Why use "-v $(pwd):/src"? For container to access current host directory at /src (the workdir)
+-->
+
 ```bash
-docker run --rm -it -v $(pwd):/mnt/repo gramener/builderrors
+docker run --rm -it -v $(pwd):/src gramener/builderrors
 ```
 
 On Windows Command Prompt:
 
 ```bat
-docker run --rm -it -v %cd%:/mnt/repo gramener/builderrors
+docker run --rm -it -v %cd%:/src gramener/builderrors
 ```
 
 On Windows PowerShell:
 
 ```powershell
-docker run --rm -it -v ${PWD}:/mnt/repo gramener/builderrors
+docker run --rm -it -v ${PWD}:/src gramener/builderrors
 ```
 
 ## Local usage
@@ -29,7 +51,7 @@ docker run --rm -it -v ${PWD}:/mnt/repo gramener/builderrors
 - [Install git](https://git-scm.com/download)
 - [Install git-lfs](https://git-lfs.github.com/)
 
-[Clone this repository](https://code.gramener.com/cto/builderrors) and run this from `bash` or Git Bash:
+[`git clone` this repository](https://code.gramener.com/cto/builderrors) and run this from `bash` or Git Bash:
 
 ```bash
 git clone git@code.gramener.com:cto/builderrors.git
@@ -56,7 +78,7 @@ You can pass options as command-line parameters. For example:
 
 ```bash
 # Skip flake8. Report errors only if minified code characters > 100,000
-docker run --rm -it -v $(pwd):/mnt/repo gramener/builderrors \
+docker run --rm -it -v $(pwd):/src gramener/builderrors \
   builderrors --skip-flake8 --code-chars-error=100000
 
 # Skip Git LFS, eslint and stylelint
@@ -67,13 +89,16 @@ You can also pass options as environment variables. (Command line overrides envi
 
 ```bash
 # Skip flake8. Report errors only if minified code characters > 100,000
-docker run --rm -it -v $(pwd):/mnt/repo \
+docker run --rm -it -v $(pwd):/src \
   -e SKIP_FLAKE8=1 -e CODE_CHARS_ERROR=100000 \
   builderrors gramener/builderrors
 
 # Skip Git LFS, eslint and stylelint
 SKIP_LFS=1 SKIP_ESLINT=1 SKIP_STYLELINT=1 bash /path/to/builderrors
 ```
+
+On Gitlab, set [environment variables](https://docs.gitlab.com/ce/ci/variables/)
+under Settings > CI / CD > Variables.
 
 | Environment variable    | Command line               | Meaning                                                                               |
 | ----------------------- | -------------------------- | ------------------------------------------------------------------------------------- |
@@ -103,19 +128,6 @@ SKIP_LFS=1 SKIP_ESLINT=1 SKIP_STYLELINT=1 bash /path/to/builderrors
 | `$PY_LINE_LENGTH`       | `--py-line-length=num`     | Max line length of Python code (default: 99)                                          |
 | `$CSS_CHARS_ERROR`      | `--css-chars-error=num`    | Minified CSS should be less than `num` bytes (default: 10,000)                        |
 | `$CODE_CHARS_ERROR`     | `--code-chars-error=num`   | Minified Python + JS code should be less than `num` bytes (default: 50,000)           |
-
-## CI integration
-
-To run on [Gitlab's CI/CD pipeline](https://docs.gitlab.com/ee/ci/pipelines/) on code.gramener.com,
-add a `.gitlab-ci.yml` file with this configuration:
-
-```yaml
-validate:
-  script: builderrors [options]
-```
-
-On Gitlab, you can set project [environment variables](https://docs.gitlab.com/ce/ci/variables/)
-under Settings > CI / CD > Variables.
 
 # How to fix errors
 
@@ -222,7 +234,7 @@ Otherwise you can't import the file.
 
 - Run `pip install autopep8` and then `autopep8 -iv --max-line-length 99 *.py` to auto-fix the file
 - To ignore a specific line, add [`# noqa`](https://flake8.pycqa.org/en/latest/user/violations.html) at the end
-- To ignore specific rules, add a [`.flake8`](https://flake8.pycqa.org/en/latest/user/configuration.html) file based on the [default](.flake8)
+- To ignore specific rules, add a [`.flake8`](https://flake8.pycqa.org/en/latest/user/configuration.html) file
 - To skip this check, use `builderrors --skip-flake8` (e.g. if you temporarily need the build to pass)
 
 For specific rules:

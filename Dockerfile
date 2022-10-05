@@ -18,6 +18,6 @@ RUN npm install && \
   pip install -r requirements.txt && \
   ln -s -t /usr/bin /usr/share/builderrors/builderrors
 
-# Default command is to run builderrors on /mnt/repo
-WORKDIR /mnt/repo
-CMD ["builderrors"]
+# Default command is to run builderrors on /src
+WORKDIR /src
+ENTRYPOINT ["builderrors"]
