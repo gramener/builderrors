@@ -38,8 +38,9 @@ check() {
   #   --ignore-trailing-space: duplicate-files awk script has a trailing space
   #   --ignore-matching-lines: ignores bandit's report of the batch run time
   #   sed #1: strips color codes from jscpd: https://stackoverflow.com/a/18000433/100904
-  #   sed #2: replace current directory in output of eslint, htmlhint
-  #   sed #3: replace .\file.py with ./file.py for bandit
+  #   sed #2: strip current directory in output of eslint, htmlhint
+  #   sed #3: replace "BUILD FAILED on builderrors version ..." with a standard "BUILD FAILED."
+  #   sed #4: replace .\file.py with ./file.py for bandit
   diff \
     --ignore-space-change \
     --ignore-tab-expansion \
@@ -47,6 +48,7 @@ check() {
     --ignore-matching-lines="Run started.*" \
     <(../builderrors $@ --duplicate-filesize=0 --duplicate-lines=30 --css-chars-error=10000 --code-chars-error=30000 --lfs-size=1000000 | \
       sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" |
+      sed "s/^BUILD FAILED.*/BUILD FAILED./" |
       sed "s/$PREFIX_VAR//g" |
       sed "s~\.\\\\~\./~g") \
     "../test-output/$BRANCH.txt" || EXIT_STATUS=1

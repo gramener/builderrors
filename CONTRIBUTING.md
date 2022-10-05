@@ -7,7 +7,7 @@
 2. Test for errors
 
    ```bash
-   bash test-build-errors.sh
+   bash test-builderrors.sh
    ```
 
 3. Commit and push git repo
