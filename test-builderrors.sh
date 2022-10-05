@@ -52,7 +52,7 @@ check() {
     "../test-output/$BRANCH.txt" || EXIT_STATUS=1
 }
 
-# check libraries-node
+check libraries-node
 check libraries-bower --skip-prettier
 check minified
 check git-lfs
@@ -61,9 +61,9 @@ check duplicate-files --skip-prettier --skip-black
 check duplicate-lines --skip-prettier --skip-black
 check prettier
 check black
-check python-filenames --skip-black
+check python-filenames
 check flake8 --skip-black
-check bandit --skip-black
+check bandit
 check eslint
 check stylelint
 check htmlhint

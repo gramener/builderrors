@@ -1,7 +1,6 @@
 ERROR: reformat with Python black
     would reformat test.py
 
-    Oh no! \U0001f4a5 \U0001f494 \U0001f4a5
     1 file would be reformatted.
 
 ERROR: flake8 errors
