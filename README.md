@@ -9,11 +9,6 @@ add this on top of your [`.gitlab-ci.yml`](https://docs.gitlab.com/ee/ci/yaml/) 
 
 ```yaml
 validate:
-  script: builderrors [options]
-```
-
-```yaml
-validate:
   image: gramener/builderrors
   script: builderrors
 ```
@@ -123,9 +118,9 @@ under Settings > CI / CD > Variables.
 | `$LFS_SIZE`             | `--lfs-size=num`           | Files over `num` bytes should use Git LFS (default: 1,000,000)                        |
 | `$DUPLICATE_FILESIZE`   | `--duplicate-filesize=num` | Files over `num` bytes should not be duplicated (default: 100)                        |
 | `$DUPLICATE_LINES`      | `--duplicate-lines=num`    | Duplicate code over `num` lines are not allowed (default: 50)                         |
+| `$BLACK_LINE_LENGTH`    | `--black-line-length=num`  | Approx line length of Python code used by Black (default: 99)                         |
 | `$BANDIT_CONFIDENCE`    | `--bandit-confidence=low`  | Show bandit errors with `low` or more confidence. `medium`, `high`, `all` are allowed |
 | `$BANDIT_SEVERITY`      | `--bandit-severity=low`    | Show bandit errors with `low` or more severity. `medium`, `high`, `all` are allowed   |
-| `$PY_LINE_LENGTH`       | `--py-line-length=num`     | Max line length of Python code (default: 99)                                          |
 | `$CSS_CHARS_ERROR`      | `--css-chars-error=num`    | Minified CSS should be less than `num` bytes (default: 10,000)                        |
 | `$CODE_CHARS_ERROR`     | `--code-chars-error=num`   | Minified Python + JS code should be less than `num` bytes (default: 50,000)           |
 
@@ -202,7 +197,7 @@ to auto-format your code.
 To format manually:
 
 - Run `npm install -g prettier` to install prettier (one-time)
-- Run `prettier --write .` to fix most errors in the current folder (`.`)
+- Run `npx --yes prettier --write .` to fix most errors in the current folder (`.`)
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`.prettierrc`](https://prettier.io/docs/en/configuration.html) file
 - To ignore specific files, add a [`.prettierignore`](https://prettier.io/docs/en/ignore.html) file
 - To skip this check, use `builderrors --skip-prettier` (e.g. if you temporarily need the build to pass)
@@ -217,7 +212,7 @@ to auto-format your code.
 To format manually:
 
 - Run `pip install black` to install black (one-time)
-- Run `black .` to fix most errors in the current folder (`.`)
+- Run `black --skip-string-normalization --line-length=99 .` to fix all errors. ()
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`pyproject.toml`](https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file) file
 - To skip this check, use `builderrors --skip-prettier` (e.g. if you temporarily need the build to pass)
 
@@ -232,7 +227,8 @@ Otherwise you can't import the file.
 
 [Flake8](https://flake8.pycqa.org//) reports Python errors.
 
-- Run `pip install autopep8` and then `autopep8 -iv --max-line-length 99 *.py` to auto-fix the file
+- Run `pip install autopep8` and then `autopep8 -iv --max-line-length 99 *.py` to auto-fix the file.
+  Then [reformat with `black`](#error-reformat-with-python-black)
 - To ignore a specific line, add [`# noqa`](https://flake8.pycqa.org/en/latest/user/violations.html) at the end
 - To ignore specific rules, add a [`.flake8`](https://flake8.pycqa.org/en/latest/user/configuration.html) file
 - To skip this check, use `builderrors --skip-flake8` (e.g. if you temporarily need the build to pass)

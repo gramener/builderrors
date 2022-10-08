@@ -8,7 +8,7 @@ BANDIT_CONFIDENCE=${BANDIT_CONFIDENCE:-all}     # Bandit reports only issues of 
 BANDIT_SEVERITY=${BANDIT_SEVERITY:-all}         # Bandit reports only issues of given severity level or higher
 DUPLICATE_FILESIZE=${DUPLICATE_FILESIZE:-100}   # Max file size allowed for duplicate files
 DUPLICATE_LINES=${DUPLICATE_LINES:-50}          # Max # of duplicate lines allowed
-PY_LINE_LENGTH=${PY_LINE_LENGTH:-99}            # Max Python line length
+BLACK_LINE_LENGTH=${BLACK_LINE_LENGTH:-99}      # Black line length
 CSS_CHARS_ERROR=${CSS_CHARS_ERROR:-10000}       # Max # of minified CSS/SCSS chars allowed
 CODE_CHARS_ERROR=${CODE_CHARS_ERROR:-50000}     # Max # of minified PY/JS chars allowed
 LFS_SIZE=${LFS_SIZE:-1000000}                   # Max file size you can commit without LFS
@@ -19,7 +19,7 @@ export LC_ALL=C
 
 # Refer https://stackoverflow.com/a/7948533/100904 for getopt usage
 OPTIONS=v
-LONGOPTS=verbose,skip-lib,skip-minified,skip-lfs,skip-prettier,skip-useless,skip-duplicate-files,skip-duplicate-lines,skip-py-filenames,skip-black,skip-flake8,skip-bandit,skip-eslint,skip-eslint-extra,skip-stylelint,skip-htmlhint,skip-css-chars,skip-code-chars,lfs-size:,duplicate-filesize:,duplicate-lines:,py-line-length:,bandit-confidence:,bandit-severity:,css-chars-error:,code-chars-error:
+LONGOPTS=verbose,skip-lib,skip-minified,skip-lfs,skip-prettier,skip-useless,skip-duplicate-files,skip-duplicate-lines,skip-py-filenames,skip-black,skip-flake8,skip-bandit,skip-eslint,skip-eslint-extra,skip-stylelint,skip-htmlhint,skip-css-chars,skip-code-chars,lfs-size:,duplicate-filesize:,duplicate-lines:,black-line-length:,bandit-confidence:,bandit-severity:,css-chars-error:,code-chars-error:
 TEMP=$(getopt --options "$OPTIONS" --longoptions "$LONGOPTS" --name builderrors -- "$@")
 if [ $? != 0 ] ; then echo "Terminating" >&2 ; exit 1 ; fi
 eval set -- "$TEMP"
@@ -46,7 +46,7 @@ while true; do
     "--lfs-size" ) LFS_SIZE=$2; shift 2 ;;
     "--duplicate-filesize" ) DUPLICATE_FILESIZE=$2; shift 2 ;;
     "--duplicate-lines" ) DUPLICATE_LINES=$2; shift 2 ;;
-    "--py-line-length" ) PY_LINE_LENGTH=$2; shift 2 ;;
+    "--black-line-length" ) BLACK_LINE_LENGTH=$2; shift 2 ;;
     "--bandit-severity" ) BANDIT_SEVERITY=$2; shift 2 ;;
     "--bandit-confidence" ) BANDIT_CONFIDENCE=$2; shift 2 ;;
     "--css-chars-error" ) CSS_CHARS_ERROR=$2; shift 2 ;;
@@ -83,7 +83,7 @@ if [[ -n "$VERBOSE" ]]; then
   echo "  --lfs-size=$LFS_SIZE \\"
   echo "  --duplicate-filesize=$DUPLICATE_FILESIZE \\"
   echo "  --duplicate-lines=$DUPLICATE_LINES \\"
-  echo "  --py-line-length=$PY_LINE_LENGTH \\"
+  echo "  --black-line-length=$BLACK_LINE_LENGTH \\"
   echo "  --bandit-confidence=$BANDIT_CONFIDENCE \\"
   echo "  --bandit-severity=$BANDIT_SEVERITY \\"
   echo "  --css-chars-error=$CSS_CHARS_ERROR \\"
@@ -168,23 +168,25 @@ check "$SKIP_PRETTIER" "${ERROR}: reformat with Prettier" \
 
 # black prints "All done!" and "Oh no!" and "<nn> files would be left unchanged." with unicode characters and color. Strip these with "grep -v ..."
 check "$SKIP_BLACK" "${ERROR}: reformat with Python black" \
-  "$(git ls-files | grep -E '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty black --check --skip-string-normalization --line-length=${PY_LINE_LENGTH} 2>&1 | grep -v "^All done!" | grep -v "^Oh no!" | grep -v "would be left unchanged.")"
+  "$(git ls-files | grep -E '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty black --check --skip-string-normalization --line-length=${BLACK_LINE_LENGTH} 2>&1 | grep -v "^All done!" | grep -v "^Oh no!" | grep -v "would be left unchanged.")"
 
 check "$SKIP_PY_FILENAMES" "${ERROR}: Python paths must be lower_alphanumeric" \
   "$(git ls-files | grep '\.py$' | sort | grep -e '[^a-z0-9_./]')"
 
 # flake8: ignore E203 which is not PEP8 compliant
 # https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#slices
+# flake8: ignore E501 which black handles
+# https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
 # flake8: ignore W503 which is not PEP8 compliant
 # https://www.flake8rules.com/rules/W503.html
 check "$SKIP_FLAKE8" "${ERROR}: flake8 errors" \
-  "$(git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,W503 --max-line-length ${PY_LINE_LENGTH})"
+  "$(git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501,W503)"
 
 check "$SKIP_BANDIT" "${ERROR}: bandit security errors" \
   "$(bandit . --recursive --format txt --severity-level $BANDIT_SEVERITY --confidence-level $BANDIT_CONFIDENCE --quiet 2>/dev/null)"
 
 if [[ ! -n "$SKIP_ESLINT_EXTRA" ]]; then
-  ESLINT_EXTRA="--config $WIN_SCRIPT_DIR/.eslintrc.js"
+  ESLINT_EXTRA="--config $WIN_SCRIPT_DIR/.eslintrc.js --resolve-plugins-relative-to ."
 fi
 check "$SKIP_ESLINT" "${ERROR}: eslint errors" \
   "$(git ls-files | grep -E '\.(html|js)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" $ESLINT_EXTRA --quiet --format unix 2>&1)"
