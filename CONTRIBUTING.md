@@ -46,20 +46,20 @@ Here are some we don't plan to add:
    bash test-builderrors.sh
    ```
 
-4. Commit and push git repo
+4. Build and push Docker container
+
+   ```bash
+   export VERSION=1.x.x
+   docker build --tag gramener/builderrors:$VERSION --tag gramener/builderrors:latest .
+   docker run --rm -v `pwd`:/src gramener/builderrors:latest
+   docker push gramener/builderrors --all-tags
+   ```
+
+5. Commit and push git repo
 
    ```bash
    export VERSION=1.x.x
    git commit . -m"DOC: Release $VERSION"
    git tag -a v$VERSION -m"Release $VERSION"
    git push --follow-tags
-   ```
-
-5. Build and push Docker container
-
-   ```bash
-   export VERSION=1.x.x
-   docker build --tag gramener/builderrors:$VERSION --tag gramener/builderrors:latest .
-   docker run --rm -v `pwd`:/mnt/repo gramener/builderrors:latest
-   docker push gramener/builderrors --all-tags
    ```

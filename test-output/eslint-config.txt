@@ -6,7 +6,7 @@ ERROR: reformat with Prettier
 ERROR: eslint errors
     index.html:13:9: 'data' is assigned a value but never used. [Error/no-unused-vars]
     index.html:14:9: 'a' is assigned a value but never used. [Error/no-unused-vars]
-    index.html:14:13: 'nonexistent' is not defined. [Error/no-undef]
+    index.html:14:13: 'missing' is not defined. [Error/no-undef]
     script.js:1:7: 'x' is assigned a value but never used. [Error/no-unused-vars]
     script.js:3:5: 'a' is assigned a value but never used. [Error/no-unused-vars]
     script.js:3:9: 'nonexistent' is not defined. [Error/no-undef]
