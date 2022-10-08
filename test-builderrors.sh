@@ -67,6 +67,7 @@ check python-filenames
 check flake8 --skip-black
 check bandit
 check eslint
+check eslint-config
 check stylelint
 check htmlhint
 

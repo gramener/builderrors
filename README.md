@@ -46,16 +46,16 @@ docker run --rm -it -v ${PWD}:/src gramener/builderrors
 - [Install git](https://git-scm.com/download)
 - [Install git-lfs](https://git-lfs.github.com/)
 
-[`git clone` this repository](https://code.gramener.com/cto/builderrors) and run this from `bash` or Git Bash:
+In `bash` or Git Bash, run:
 
 ```bash
-git clone git@code.gramener.com:cto/builderrors.git
+git clone https://code.gramener.com/cto/builderrors.git
 cd builderrors
 npm install
 pip install -r requirements.txt
 ```
 
-From the folder you want to check, run this from `bash` or Git Bash:
+From your project folder, run this in `bash` or Git Bash:
 
 ```bash
 bash /path/to/builderrors [OPTIONS]
@@ -95,34 +95,34 @@ SKIP_LFS=1 SKIP_ESLINT=1 SKIP_STYLELINT=1 bash /path/to/builderrors
 On Gitlab, set [environment variables](https://docs.gitlab.com/ce/ci/variables/)
 under Settings > CI / CD > Variables.
 
-| Environment variable    | Command line               | Meaning                                                                               |
-| ----------------------- | -------------------------- | ------------------------------------------------------------------------------------- |
-| `$VERBOSE`              | `--verbose`                | Show config used and progress                                                         |
-| `$SKIP_LIB`             | `--skip-lib`               | Skip [libraries check](#error-dont-commit-libraries)                                  |
-| `$SKIP_MINIFIED`        | `--skip-minified`          | Skip [minified file check](#error-dont-commit-minified-files)                         |
-| `$SKIP_LFS`             | `--skip-lfs`               | Skip [Git LFS check](#error-use-git-lfs-for-files-over--chars)                        |
-| `$SKIP_PRETTIER`        | `--skip-prettier`          | Skip [Prettier check](#error-reformat-with-prettier)                                  |
-| `$SKIP_USELESS`         | `--skip-useless`           | Skip [useless files check](#error-dont-commit-useless-or-generated-files)             |
-| `$SKIP_DUPLICATE_FILES` | `--skip-duplicate-files`   | Skip [duplicate files check](#error-dont-duplicate-files)                             |
-| `$SKIP_DUPLICATE_LINES` | `--skip-duplicate-lines`   | Skip [duplicate lines check](#error-reduce-duplicate-lines)                           |
-| `$SKIP_PY_FILENAMES`    | `--skip-py-filenames`      | Skip [Python filename check](#error-python-paths-must-be-lower_alphanumeric)          |
-| `$SKIP_BLACK`           | `--skip-black`             | Skip [Python Black check](#error-reformat-with-python-black)                          |
-| `$SKIP_FLAKE8`          | `--skip-flake8`            | Skip [flake8 check](#error-flake8-errors)                                             |
-| `$SKIP_BANDIT`          | `--skip-bandit`            | Skip [bandit check](#error-bandit-security-errors)                                    |
-| `$SKIP_ESLINT`          | `--skip-eslint`            | Skip [eslint check](#error-eslint-errors)                                             |
-| `$SKIP_ESLINT_EXTRA`    | `--skip-eslint-extra`      | Skip extra [eslint checks](#error-eslint-errors) like HTML and template plugins       |
-| `$SKIP_STYLELINT`       | `--skip-stylelint`         | Skip [stylelint check](#error-stylelint-errors)                                       |
-| `$SKIP_HTMLHINT`        | `--skip-htmlhint`          | Skip [htmlhint check](#error-htmlhint-errors)                                         |
-| `$SKIP_CSS_CHARS`       | `--skip-css-chars`         | Skip [CSS size check](#error-css-code-is-over--chars)                                 |
-| `$SKIP_CODE_CHARS`      | `--skip-code-chars`        | Skip [code size check](#error-python--js-code-is-over--chars)                         |
-| `$LFS_SIZE`             | `--lfs-size=num`           | Files over `num` bytes should use Git LFS (default: 1,000,000)                        |
-| `$DUPLICATE_FILESIZE`   | `--duplicate-filesize=num` | Files over `num` bytes should not be duplicated (default: 100)                        |
-| `$DUPLICATE_LINES`      | `--duplicate-lines=num`    | Duplicate code over `num` lines are not allowed (default: 50)                         |
-| `$BLACK_LINE_LENGTH`    | `--black-line-length=num`  | Approx line length of Python code used by Black (default: 99)                         |
-| `$BANDIT_CONFIDENCE`    | `--bandit-confidence=low`  | Show bandit errors with `low` or more confidence. `medium`, `high`, `all` are allowed |
-| `$BANDIT_SEVERITY`      | `--bandit-severity=low`    | Show bandit errors with `low` or more severity. `medium`, `high`, `all` are allowed   |
-| `$CSS_CHARS_ERROR`      | `--css-chars-error=num`    | Minified CSS should be less than `num` bytes (default: 10,000)                        |
-| `$CODE_CHARS_ERROR`     | `--code-chars-error=num`   | Minified Python + JS code should be less than `num` bytes (default: 50,000)           |
+| Environment variable   | Command line               | Meaning                                                                               |
+| ---------------------- | -------------------------- | ------------------------------------------------------------------------------------- |
+| `VERBOSE`              | `--verbose`                | Show config used and progress                                                         |
+| `SKIP_LIB`             | `--skip-lib`               | Skip [libraries check](#error-dont-commit-libraries)                                  |
+| `SKIP_MINIFIED`        | `--skip-minified`          | Skip [minified file check](#error-dont-commit-minified-files)                         |
+| `SKIP_LFS`             | `--skip-lfs`               | Skip [Git LFS check](#error-use-git-lfs-for-files-over--chars)                        |
+| `SKIP_PRETTIER`        | `--skip-prettier`          | Skip [Prettier check](#error-reformat-with-prettier)                                  |
+| `SKIP_USELESS`         | `--skip-useless`           | Skip [useless files check](#error-dont-commit-useless-or-generated-files)             |
+| `SKIP_DUPLICATE_FILES` | `--skip-duplicate-files`   | Skip [duplicate files check](#error-dont-duplicate-files)                             |
+| `SKIP_DUPLICATE_LINES` | `--skip-duplicate-lines`   | Skip [duplicate lines check](#error-reduce-duplicate-lines)                           |
+| `SKIP_PY_FILENAMES`    | `--skip-py-filenames`      | Skip [Python filename check](#error-python-paths-must-be-lower_alphanumeric)          |
+| `SKIP_BLACK`           | `--skip-black`             | Skip [Python Black check](#error-reformat-with-python-black)                          |
+| `SKIP_FLAKE8`          | `--skip-flake8`            | Skip [flake8 check](#error-flake8-errors)                                             |
+| `SKIP_BANDIT`          | `--skip-bandit`            | Skip [bandit check](#error-bandit-security-errors)                                    |
+| `SKIP_ESLINT`          | `--skip-eslint`            | Skip [eslint check](#error-eslint-errors)                                             |
+| `SKIP_ESLINT_DEFAULT`  | `--skip-eslint-default`    | Skip [default eslint checks](#error-eslint-errors) (HTML & template plugins)          |
+| `SKIP_STYLELINT`       | `--skip-stylelint`         | Skip [stylelint check](#error-stylelint-errors)                                       |
+| `SKIP_HTMLHINT`        | `--skip-htmlhint`          | Skip [htmlhint check](#error-htmlhint-errors)                                         |
+| `SKIP_CSS_CHARS`       | `--skip-css-chars`         | Skip [CSS size check](#error-css-code-is-over--chars)                                 |
+| `SKIP_CODE_CHARS`      | `--skip-code-chars`        | Skip [code size check](#error-python--js-code-is-over--chars)                         |
+| `LFS_SIZE`             | `--lfs-size=num`           | Files over `num` bytes should use Git LFS (default: 1,000,000)                        |
+| `DUPLICATE_FILESIZE`   | `--duplicate-filesize=num` | Files over `num` bytes should not be duplicated (default: 100)                        |
+| `DUPLICATE_LINES`      | `--duplicate-lines=num`    | Duplicate code over `num` lines are not allowed (default: 50)                         |
+| `PY_LINE_LENGTH`       | `--py-line-length=num`     | Approx line length of Python code used by Black (default: 99)                         |
+| `BANDIT_CONFIDENCE`    | `--bandit-confidence=low`  | Show bandit errors with `low` or more confidence. `medium`, `high`, `all` are allowed |
+| `BANDIT_SEVERITY`      | `--bandit-severity=low`    | Show bandit errors with `low` or more severity. `medium`, `high`, `all` are allowed   |
+| `CSS_CHARS_ERROR`      | `--css-chars-error=num`    | Minified CSS should be less than `num` bytes (default: 10,000)                        |
+| `CODE_CHARS_ERROR`     | `--code-chars-error=num`   | Minified Python + JS code should be less than `num` bytes (default: 50,000)           |
 
 # How to fix errors
 
@@ -212,7 +212,7 @@ to auto-format your code.
 To format manually:
 
 - Run `pip install black` to install black (one-time)
-- Run `black --skip-string-normalization --line-length=99 .` to fix all errors. ()
+- Run `black --skip-string-normalization --line-length=99 .` to fix all errors.
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`pyproject.toml`](https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file) file
 - To skip this check, use `builderrors --skip-prettier` (e.g. if you temporarily need the build to pass)
 
@@ -231,6 +231,7 @@ Otherwise you can't import the file.
   Then [reformat with `black`](#error-reformat-with-python-black)
 - To ignore a specific line, add [`# noqa`](https://flake8.pycqa.org/en/latest/user/violations.html) at the end
 - To ignore specific rules, add a [`.flake8`](https://flake8.pycqa.org/en/latest/user/configuration.html) file
+  - Make sure to use `extend-ignore = E203,E501` for consistency with [black](https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#flake8)
 - To skip this check, use `builderrors --skip-flake8` (e.g. if you temporarily need the build to pass)
 
 For specific rules:
