@@ -14,7 +14,7 @@ WORKDIR /usr/share/builderrors
 COPY . .
 
 # Install builderrors
-RUN npm install && \
+RUN npm ci && \
   pip install -r requirements.txt && \
   ln -s -t /usr/bin /usr/share/builderrors/builderrors
 

@@ -43,7 +43,8 @@ Here are some we don't plan to add:
 3. Test for errors
 
    ```bash
-   bash test-builderrors.sh
+   ./builderrors
+   ./test-builderrors.sh
    ```
 
 4. Build and push Docker container
@@ -52,7 +53,8 @@ Here are some we don't plan to add:
    export VERSION=1.x.x
    docker build --tag gramener/builderrors:$VERSION --tag gramener/builderrors:latest .
    docker run --rm -v `pwd`:/src gramener/builderrors:latest
-   docker push gramener/builderrors --all-tags
+   docker push gramener/builderrors:$VERSION
+   docker push gramener/builderrors:latest
    ```
 
 5. Commit and push git repo
