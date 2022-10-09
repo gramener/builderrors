@@ -21,7 +21,7 @@ export LC_ALL=C
 OPTIONS=v
 LONGOPTS=verbose,skip-lib,skip-minified,skip-lfs,skip-prettier,skip-useless,skip-duplicate-files,skip-duplicate-lines,skip-py-filenames,skip-black,skip-flake8,skip-bandit,skip-eslint,skip-eslint-default,skip-stylelint,skip-htmlhint,skip-css-chars,skip-code-chars,lfs-size:,duplicate-filesize:,duplicate-lines:,py-line-length:,bandit-confidence:,bandit-severity:,css-chars-error:,code-chars-error:
 TEMP=$(getopt --options "$OPTIONS" --longoptions "$LONGOPTS" --name builderrors -- "$@")
-if [ $? != 0 ] ; then echo "Terminating" >&2 ; exit 1 ; fi
+if [ $? != 0 ] ; then echo "Could not run: builderrors $@" >&2 ; exit 1 ; fi
 eval set -- "$TEMP"
 while true; do
   case "$1" in
@@ -113,7 +113,7 @@ check() {
   MSG="$2"
   OUTPUT="$3"
   if [[ -n "$VERBOSE" ]]; then
-    echo ".... checking $MSG" >&2
+    echo -e ".... Checking $MSG" >&2
   fi
   if [[ -z "$SKIP" ]]; then
     if [[ -n "$OUTPUT" ]]; then
