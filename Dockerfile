@@ -20,4 +20,6 @@ RUN npm ci && \
 
 # Default command is to run builderrors on /src
 WORKDIR /src
-ENTRYPOINT ["builderrors"]
+
+# Gitlab CI requires CMD, not ENTRYPOINT. It initializes bash and runs the rest of the script
+CMD ["builderrors"]
