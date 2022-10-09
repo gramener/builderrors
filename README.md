@@ -234,7 +234,7 @@ Otherwise you can't import the file.
   - Make sure to use `extend-ignore = E203,E501` for consistency with [black](https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#flake8)
 - To skip this check, use `builderrors --skip-flake8` (e.g. if you temporarily need the build to pass)
 
-For specific rules:
+Common errors:
 
 - **F841**: local variable '...' is assigned to but never used. **Check if you forgot**, else don't assign it
 - **F401**: '...' imported but unused. **Check if you forgot** to use the module. Else don't import it
@@ -266,12 +266,13 @@ For specific rules:
 - To ignore specific rules, add a [`.eslintrc.js`](http://eslint.org/docs/rules/) file based on the [default](.eslintrc.js)
 - To skip this check, use `builderrors --skip-eslint` (e.g. if you temporarily need the build to pass)
 
-For specific errors:
+Common errors:
 
-- **[`no-undef`](http://eslint.org/docs/rules/no-undef)**:
-  Import globals with `/* globals var1, var2, ... */`.
-- **[`no-unused-vars`](http://eslint.org/docs/rules/no-unused-vars)**:
-  Export globals with `/* exported var1, fn1, ... */` (or don't assign to the variable)
+- **[`'x' is not defined. [Error/no-undef]`](http://eslint.org/docs/rules/no-undef)**
+  - [Add in your `.js`](https://eslint.org/docs/latest/user-guide/configuring/language-options#using-configuration-comments-1): `/* globals x, ... */`.
+  - [Add in `.eslintrc.js`](https://eslint.org/docs/latest/user-guide/configuring/language-options#using-configuration-files-1) for libraries like `d3`, `$`, `_`, etc.: `"globals": {"d3": "readonly", ...}`
+- **[`'x' is assigned a value but never used. [Error/no-unused-vars]`](http://eslint.org/docs/rules/no-unused-vars)**
+  - [Add in your `.js`](https://eslint.org/docs/latest/rules/no-unused-vars#exported): `/* exported x, ... */` (or don't assign to the variable)
 
 ## ERROR: stylelint errors
 
