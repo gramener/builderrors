@@ -65,3 +65,9 @@ Here are some we don't plan to add:
    git tag -a v$VERSION -m"Release $VERSION"
    git push --follow-tags
    ```
+
+6. Deploy image on server. On Gitlab CI runners, run:
+
+   ```bash
+   docker pull gramener/builderrors
+   ```
