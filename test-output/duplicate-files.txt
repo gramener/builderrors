@@ -12,15 +12,24 @@ ERROR: don't duplicate files
     file1.yaml
     file2.yaml
 
-ERROR: Python paths must be lower_alphanumeric
+ERROR: format with Prettier: prettier --write '**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}'
+    [warn] conf1.yaml
+    [warn] conf2.yaml
+    [warn] file 1.js
+    [warn] file 2.js
+    [warn] file1.yaml
+    [warn] file2.yaml
+    [warn] Code style issues found in 6 files. Forgot to run Prettier?
+
+ERROR: use lower_alphanumeric Python paths
     file 1.py
     file 2.py
 
-ERROR: flake8 errors
+ERROR: fix flake8 errors
     file 1.py:1:2: E221 multiple spaces before operator
     file 2.py:1:2: E221 multiple spaces before operator
 
-ERROR: eslint errors
+ERROR: fix eslint errors: eslint --fix
     file 1.js:1:10: 'random' is defined but never used. [Error/no-unused-vars]
     file 2.js:1:10: 'random' is defined but never used. [Error/no-unused-vars]
 

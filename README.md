@@ -101,18 +101,18 @@ under Settings > CI / CD > Variables.
 | `SKIP_LIB`             | `--skip-lib`               | Skip [libraries check](#error-dont-commit-libraries)                                  |
 | `SKIP_MINIFIED`        | `--skip-minified`          | Skip [minified file check](#error-dont-commit-minified-files)                         |
 | `SKIP_LFS`             | `--skip-lfs`               | Skip [Git LFS check](#error-use-git-lfs-for-files-over--chars)                        |
-| `SKIP_PRETTIER`        | `--skip-prettier`          | Skip [Prettier check](#error-reformat-with-prettier)                                  |
+| `SKIP_PRETTIER`        | `--skip-prettier`          | Skip [Prettier check](#error-format-with-prettier)                                    |
 | `SKIP_USELESS`         | `--skip-useless`           | Skip [useless files check](#error-dont-commit-useless-or-generated-files)             |
 | `SKIP_DUPLICATE_FILES` | `--skip-duplicate-files`   | Skip [duplicate files check](#error-dont-duplicate-files)                             |
 | `SKIP_DUPLICATE_LINES` | `--skip-duplicate-lines`   | Skip [duplicate lines check](#error-reduce-duplicate-lines)                           |
-| `SKIP_PY_FILENAMES`    | `--skip-py-filenames`      | Skip [Python filename check](#error-python-paths-must-be-lower_alphanumeric)          |
-| `SKIP_BLACK`           | `--skip-black`             | Skip [Python Black check](#error-reformat-with-python-black)                          |
-| `SKIP_FLAKE8`          | `--skip-flake8`            | Skip [flake8 check](#error-flake8-errors)                                             |
-| `SKIP_BANDIT`          | `--skip-bandit`            | Skip [bandit check](#error-bandit-security-errors)                                    |
-| `SKIP_ESLINT`          | `--skip-eslint`            | Skip [eslint check](#error-eslint-errors)                                             |
-| `SKIP_ESLINT_DEFAULT`  | `--skip-eslint-default`    | Skip [default eslint checks](#error-eslint-errors) (HTML & template plugins)          |
-| `SKIP_STYLELINT`       | `--skip-stylelint`         | Skip [stylelint check](#error-stylelint-errors)                                       |
-| `SKIP_HTMLHINT`        | `--skip-htmlhint`          | Skip [htmlhint check](#error-htmlhint-errors)                                         |
+| `SKIP_PY_FILENAMES`    | `--skip-py-filenames`      | Skip [Python filename check](#error-use-lower_alphanumeric-python-paths)              |
+| `SKIP_BLACK`           | `--skip-black`             | Skip [Python Black check](#error-format-with-python-black)                            |
+| `SKIP_FLAKE8`          | `--skip-flake8`            | Skip [flake8 check](#error-fix-flake8-errors)                                         |
+| `SKIP_BANDIT`          | `--skip-bandit`            | Skip [bandit check](#error-fix-bandit-security-errors)                                |
+| `SKIP_ESLINT`          | `--skip-eslint`            | Skip [eslint check](#error-fix-eslint-errors)                                         |
+| `SKIP_ESLINT_DEFAULT`  | `--skip-eslint-default`    | Skip [default eslint checks](#error-fix-eslint-errors) (HTML & template plugins)      |
+| `SKIP_STYLELINT`       | `--skip-stylelint`         | Skip [stylelint check](#error-fix-stylelint-errors)                                   |
+| `SKIP_HTMLHINT`        | `--skip-htmlhint`          | Skip [htmlhint check](#error-fix-htmlhint-errors)                                     |
 | `SKIP_CSS_CHARS`       | `--skip-css-chars`         | Skip [CSS size check](#error-css-code-is-over--chars)                                 |
 | `SKIP_CODE_CHARS`      | `--skip-code-chars`        | Skip [code size check](#error-python--js-code-is-over--chars)                         |
 | `LFS_SIZE`             | `--lfs-size=num`           | Files over `num` bytes should use Git LFS (default: 1,000,000)                        |
@@ -187,21 +187,31 @@ You can re-use the same code
 - To ignore duplicates up to 100 lines, run `builderrors --duplicate-lines=100`
 - To skip this check, use `builderrors --skip-duplicate-lines` (e.g. if you need duplicate code for test cases)
 
-## ERROR: reformat with Prettier
+## ERROR: format with Prettier
 
 It's important to have consistent formatting for readability. We use [prettier](https://prettier.io).
 
 Use the [VS Code Prettier - Code Formatter plugin](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 to auto-format your code.
 
+**Don't format HTML templates** like Tornado / Lodash. [Prettier does not support templates](https://github.com/prettier/prettier/issues/5581)
+
+<!--
+- Go templates have a plugin: https://github.com/NiklasPor/prettier-plugin-go-template
+- Django plugin is incomplete: https://github.com/robertquitt/prettier-plugin-djangohtml
+- Jinja plugin for VS Code: https://github.com/samuelcolvin/jinjahtml-vscode
+- Django plugin for VS Code: https://github.com/vscode-django/vscode-django
+- Unibeautify supports templates: https://github.com/unibeautify/unibeautify
+-->
+
 To format manually:
 
-- For HTML templates (e.g. Tornado, Lodash), add it to a [`.prettierignore`](https://prettier.io/docs/en/ignore.html) file. Prettier cannot handle these
-- Otherwise, run `npx --yes prettier --write <filename>` to fix the file
+- To auto-fix required files, run `npx --yes prettier --write '**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}'`
+- To ignore specific files, add a [`.prettierignore`](https://prettier.io/docs/en/ignore.html) file (e.g. add `*.html`)
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`.prettierrc`](https://prettier.io/docs/en/configuration.html) file
 - To skip this check, use `builderrors --skip-prettier` (e.g. if you temporarily need the build to pass)
 
-## ERROR: reformat with Python black
+## ERROR: format with Python black
 
 It's important to have consistent formatting for readability. We use [black](https://black.readthedocs.io/) for Python files.
 
@@ -210,24 +220,24 @@ to auto-format your code.
 
 To format manually:
 
-- Run `pip install black` to install black (one-time)
-- Run `black --skip-string-normalization --line-length=99 .` to fix all errors.
+- Run `pip install black` (one-time)
+- To auto-fix required files, run `black --skip-string-normalization --line-length=99 .`
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`pyproject.toml`](https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file) file
 - To skip this check, use `builderrors --skip-prettier` (e.g. if you temporarily need the build to pass)
 
-## ERROR: Python paths must be lower_alphanumeric
+## ERROR: use lower_alphanumeric Python paths
 
 Otherwise you can't import the file.
 
 - Rename the Python files using lower case alphanumerics and underscore (`_`)
 - To skip this check, use `builderrors --skip-py-filenames` (e.g. if you won't be importing the module)
 
-## ERROR: flake8 errors
+## ERROR: fix flake8 errors
 
 [Flake8](https://flake8.pycqa.org//) reports Python errors.
 
-- Run `pip install autopep8` and then `autopep8 -iv --max-line-length 99 *.py` to auto-fix the file.
-  Then [reformat with `black`](#error-reformat-with-python-black)
+- Run `pip install autopep8` (one-time)
+- To auto-fix required files, run `autopep8 -iv --max-line-length 99 *.py`. Then [reformat with `black`](#error-format-with-python-black)
 - To ignore a specific line, add [`# noqa`](https://flake8.pycqa.org/en/latest/user/violations.html) at the end
 - To ignore specific rules, add a [`.flake8`](https://flake8.pycqa.org/en/latest/user/configuration.html) file
   - Make sure to use `extend-ignore = E203,E501` for consistency with [black](https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#flake8)
@@ -245,7 +255,7 @@ Common errors:
 - **N806**: variable in function should be lowercase -- rename your variable.
 - **N802** or **N803**: function and argument names should be lowercase.
 
-## ERROR: bandit security errors
+## ERROR: fix bandit security errors
 
 [Bandit](https://bandit.readthedocs.io/) reports security errors in Python.
 
@@ -256,11 +266,11 @@ Common errors:
 - To only report errors with high severity, use `builderrors --bandit-severity=high` (or `medium`)
 - To skip this check, use `builderrors --skip-bandit` (e.g. if there are too many false-positives)
 
-## ERROR: eslint errors
+## ERROR: fix eslint errors
 
 [ESLint](https://eslint.org/) reports JavaScript errors in JS and HTML files -- including HTML templates.
 
-- Run `eslint --fix` to automatically fix eslint errors where possible.
+- To auto-fix required files, run `eslint --fix`.
 - To ignore a specific line, add a [`// eslint-disable-line`](https://eslint.org/docs/latest/user-guide/configuring/rules#disabling-rules) at the end
 - To ignore specific rules, add a [`.eslintrc.js`](http://eslint.org/docs/rules/) file based on the [default](.eslintrc.js)
 - To skip this check, use `builderrors --skip-eslint` (e.g. if you temporarily need the build to pass)
@@ -273,7 +283,7 @@ Common errors:
 - **[`'x' is assigned a value but never used. [Error/no-unused-vars]`](http://eslint.org/docs/rules/no-unused-vars)**
   - [Add in your `.js`](https://eslint.org/docs/latest/rules/no-unused-vars#exported): `/* exported x, ... */` (or don't assign to the variable)
 
-## ERROR: stylelint errors
+## ERROR: fix stylelint errors
 
 [stylelint](https://stylelint.io/) reports CSS and SASS errors.
 
@@ -282,7 +292,7 @@ Common errors:
 - To ignore specific rules, add a [`.stylelintrc.js`](https://stylelint.io/user-guide/configure) file based on the [default](.stylelintrc.js)
 - To skip this check, use `builderrors --skip-stylelint` (e.g. if you're using third-party provided CSS)
 
-## ERROR: htmlhint errors
+## ERROR: fix htmlhint errors
 
 [htmlhint](https://htmlhint.com/) checks HTML and reports errors.
 

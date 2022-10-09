@@ -1,9 +1,9 @@
-ERROR: reformat with Python black
+ERROR: format with Python black: black --skip-string-normalization --line-length=99 .
     would reformat test.py
 
     1 file would be reformatted.
 
-ERROR: flake8 errors
+ERROR: fix flake8 errors
     test.py:2:3: E111 indentation is not a multiple of 4
 
 ---------------------------------------------------------------------

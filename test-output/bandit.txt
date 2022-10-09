@@ -1,4 +1,4 @@
-ERROR: bandit security errors
+ERROR: fix bandit security errors
     Run started:2022-09-21 06:30:03.804551
 
     Test results:

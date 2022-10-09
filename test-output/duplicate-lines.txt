@@ -27,7 +27,7 @@ ERROR: reduce duplicate lines
      - file1.py [135:1 - 861:4] (726 lines, 5820 tokens)
        file2.py [135:1 - 861:4]
 
-ERROR: Python + JS code is over 30000 chars
+ERROR: reduce Python + JS code to 30000 chars
     Size 44985 > 30000 (minified). Largest files:
     9749      file2.py
     9742      file1.py

@@ -1,4 +1,4 @@
-ERROR: Python paths must be lower_alphanumeric
+ERROR: use lower_alphanumeric Python paths
     HasCapitals.py
     has-hyphen.py
 

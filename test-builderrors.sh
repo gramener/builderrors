@@ -54,17 +54,18 @@ check() {
     "../test-output/$BRANCH.txt" || EXIT_STATUS=1
 }
 
+# Note: Black file order is unpredictable. Skip black when there are multiple .py files
 check libraries-node
-check libraries-bower --skip-prettier
+check libraries-bower
 check minified
 check git-lfs
 check useless
-check duplicate-files --skip-prettier --skip-black
-check duplicate-lines --skip-prettier --skip-black
+check duplicate-files --skip-black
+check duplicate-lines --skip-black
 check prettier
 check black
 check python-filenames
-check flake8 --skip-black
+check flake8
 check bandit
 check eslint
 check eslint-config
