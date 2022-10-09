@@ -236,12 +236,12 @@ Otherwise you can't import the file.
 
 Common errors:
 
-- **F841**: local variable '...' is assigned to but never used. **Check if you forgot**, else don't assign it
-- **F401**: '...' imported but unused. **Check if you forgot** to use the module. Else don't import it
-- **F821**: undefined name ... You used an uninitialized variable. That's wrong.
-- **F811**: redefinition of unused '...'. You assigned a variable and never used it. Then you're reassigning it. Or re-importing. Look carefully.
-- **B901**: blind except: statement. Trap **specific** exceptions. Blind exceptions can trap even syntax errors and confuse you later.
-- **F601**: dictionary key '...' repeated with different values. e.g. `{'x': 1, 'x': 2}`. That's wrong.
+- **F841**: local variable 'x' is assigned to but never used. **Check if you forgot**, else don't assign it
+- **F401**: 'x' imported but unused. **Check if you forgot** to use the module. Else don't import it
+- **F821**: undefined name 'x' You used an uninitialized variable. That's wrong.
+- **F811**: redefinition of unused 'x'. You assigned a variable and never used it. Then you're reassigning it. Or re-importing. Look carefully.
+- **B901** or **B902**: blind except: statement. Trap **specific** exceptions. Blind exceptions can trap even syntax errors and confuse you later.
+- **F601**: dictionary key 'x' repeated with different values. e.g. `{'x': 1, 'x': 2}`. That's wrong.
 - **T001** or **T003**: print found -- just remove `print` in production code.
 - **N806**: variable in function should be lowercase -- rename your variable.
 - **N802** or **N803**: function and argument names should be lowercase.
