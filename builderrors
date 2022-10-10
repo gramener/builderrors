@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=1.0.5
+VERSION=1.0.6
 
 # Parse command line options
 # NOTE: Bandit catches SQL injections at low confidence. So let's leave it on
