@@ -1,10 +1,3 @@
-ERROR: format with Python black: black --skip-string-normalization --line-length=99 .
-    would reformat debugger.py
-    would reformat error.py
-    would reformat complexity.py
-
-    3 files would be reformatted.
-
 ERROR: fix flake8 errors
     complexity.py:17:37: E128 continuation line under-indented for visual indent
     complexity.py:21:21: E128 continuation line under-indented for visual indent

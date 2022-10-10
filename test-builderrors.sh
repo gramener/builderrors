@@ -30,6 +30,7 @@ EXIT_STATUS=0
 check() {
   BRANCH="$1"; shift
   echo "Testing $BRANCH..."
+  git -c core.longPaths=true clean -fd > /dev/null
   git checkout --quiet "$BRANCH"
 
   # In the diff below:
@@ -54,7 +55,7 @@ check() {
     "../test-output/$BRANCH.txt" || EXIT_STATUS=1
 }
 
-# Note: Black file order is unpredictable. Skip black when there are multiple .py files
+# Note: Black file order is unpredictable. So --skip-black when there are multiple .py files
 check libraries-node
 check libraries-bower
 check minified
@@ -65,7 +66,7 @@ check duplicate-lines --skip-black
 check prettier
 check black
 check python-filenames
-check flake8
+check flake8 --skip-black
 check bandit
 check eslint
 check eslint-config

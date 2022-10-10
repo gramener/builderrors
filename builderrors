@@ -194,16 +194,21 @@ check "$SKIP_FLAKE8" "fix flake8 errors" \
 check "$SKIP_BANDIT" "fix bandit security errors" \
   "$(bandit . --recursive --format txt --severity-level $BANDIT_SEVERITY --confidence-level $BANDIT_CONFIDENCE --quiet 2>/dev/null)"
 
-# If user says skip default ESLINT checks, or there's already a config specified, don't use the eslint from root
-if [[ ! -n "$SKIP_ESLINT_DEFAULT" ]] && [[ $("$NODE_DIR/eslint" --resolve-plugins-relative-to . --print-config *.js 2>/dev/null | wc -c) -eq "0" ]]; then
+# If user didn't skip default ESLINT checks, and there's no .eslintrc.*, use eslint from root
+if [[ ! -n "$SKIP_ESLINT_DEFAULT" ]] && ! compgen -G ".eslintrc.*" > /dev/null; then
   # When using default config, resolve plugins relative to builderrors
   ESLINT_OPTIONS="--config $WIN_SCRIPT_DIR/.eslintrc.js"
 else
   # When using project config, resolve plugins relative current directory
+  npm install > /dev/null
+  CREATED_NODE_MODULES=1
   ESLINT_OPTIONS="--resolve-plugins-relative-to ."
 fi
 check "$SKIP_ESLINT" "fix eslint errors: ${GREEN}eslint --fix${CLEAR}" \
   "$(git ls-files | grep -E '\.(html|js)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" $ESLINT_OPTIONS --quiet --format unix 2>&1)"
+if [[ -n "$CREATED_NODE_MODULES" ]]; then
+  git -c core.longPaths=true clean -fd > /dev/null
+fi
 
 if [[ ! -f ".stylelintrc.js" ]]; then
   cp "$SCRIPT_DIR/.stylelintrc.js" .
