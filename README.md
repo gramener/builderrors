@@ -13,6 +13,16 @@ validate:
   script: builderrors
 ```
 
+## Migrate from Gramex < 1.84
+
+If you used `gramex init` from [gramex] < 1.84, change the following:
+
+- Delete `.editorconfig`, `.htmllintrc` and `.stylelintrc.js`
+- If you have an `.eslintrc.*`, remove rules for `indent`, `linebreak-style`, `quotes` and `semi`.
+  [`prettier`](#error-format-with-prettier) handles formatting
+- If you have a `.flake8`, add `extend-ignore = E203,E501`.
+  [`black`](#error-format-with-python-black) handles formatting
+
 ## Docker usage
 
 From the folder you want check, run this command on Linux:
@@ -46,7 +56,7 @@ docker run --rm -it -v ${PWD}:/src gramener/builderrors
 - [Install git](https://git-scm.com/download)
 - [Install git-lfs](https://git-lfs.github.com/)
 
-In `bash` or Git Bash, run:
+In `bash` or Git Bash, from any folder (e.g. `C:/projects/`) run this:
 
 ```bash
 git clone https://code.gramener.com/cto/builderrors.git
@@ -55,11 +65,17 @@ npm install
 pip install -r requirements.txt
 ```
 
-From your project folder, run this in `bash` or Git Bash:
+From the folder *you want to test*, run this in `bash` or Git Bash:
 
 ```bash
-bash /path/to/builderrors [OPTIONS]
+bash /wherever-you-installed/builderrors
 ```
+
+How to fix errors:
+
+- `Cannot uninstall 'PyYAML'. It is a distutils installed project ...`: Run [`pip install --ignore-installed PyYAML`](https://stackoverflow.com/a/53534728/100904) first.
+- `'bash' is not recognized as an internal or external command`: Run in bash or Git bash, not the Command Prompt or PowerShell
+- `flake8: No such file or directory` or `pyminify: command not found`: Ensure you can run `python`, `node` and `git` in the same `bash` shell, and re-install
 
 ## It checks only committed files
 
@@ -151,8 +167,15 @@ Git stores copies of every version. LFS stores pointers instead
 
 - Install [Git LFS](https://git-lfs.github.com/)
 - Run `git lfs install` on your repo
-- Run `git lfs track <large-file>` on each of these large files
-- Commit and push again
+- For each large file(s), run these commands on `bash` or Git bash: [see help](https://git-lfs.github.com/)
+  ```bash
+  git rm your-large-file.ext          # Remove and commit
+  git commit -m"Remove your-large-file.txt"
+  git lfs track your-large-file.ext   # Use Git LFS for your file(s)
+  # Copy your-large-file.ext back
+  git add your-large-file.ext         # Add and commit
+  git commit -m"Use LFS for your-large-file.txt`
+  ```
 - To skip this check, use `builderrors --skip-lfs` (e.g. if you can't use LFS)
 
 ## ERROR: don't commit useless or generated files
@@ -206,7 +229,7 @@ to auto-format your code.
 
 To format manually:
 
-- To auto-fix required files, run `npx --yes prettier --write '**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}'`
+- To auto-fix required files, run `npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"`
 - To ignore specific files, add a [`.prettierignore`](https://prettier.io/docs/en/ignore.html) file (e.g. add `*.html`)
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`.prettierrc`](https://prettier.io/docs/en/configuration.html) file
 - To skip this check, use `builderrors --skip-prettier` (e.g. if you temporarily need the build to pass)
