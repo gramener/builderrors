@@ -15,13 +15,30 @@ validate:
 
 ## Migrate from Gramex < 1.84
 
-If you used `gramex init` from [gramex] < 1.84, change the following:
+If you used `gramex init` from [gramex](https://github.com/gramener/gramex) before version 1.84, change the following:
 
 - Delete `.editorconfig`, `.htmllintrc` and `.stylelintrc.js`
 - If you have an `.eslintrc.*`, remove rules for `indent`, `linebreak-style`, `quotes` and `semi`.
   [`prettier`](#error-format-with-prettier) handles formatting
-- If you have a `.flake8`, add `extend-ignore = E203,E501`.
+- If you have a `.flake8` or [equivalent](https://flake8.pycqa.org/en/latest/user/configuration.html), add `extend-ignore = E203,E501`.
   [`black`](#error-format-with-python-black) handles formatting
+
+## BitBucket Pipelines usage
+
+To run checks on every push with [BitBucket](https://bitbucket.org/product/features/pipelines),
+add this on top of your [`bitbucket-pipelines.yml`](https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/):
+
+```yaml
+clone:
+  lfs: true
+
+pipelines:
+  default:
+    - step:
+        name: validate
+        image: gramener/builderrors
+        script: builderrors
+```
 
 ## Docker usage
 
