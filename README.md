@@ -2,6 +2,29 @@
 
 Run automated checks on repositories to improve code quality.
 
+- You can install and run it in
+  - [Gitlab CI](#gitlab-ci-usage)
+  - [BitBucket Pipelines](#bitbucket-pipelines-usage)
+  - [Docker](#docker-usage)
+  - [Local](#local-usage)
+- Here are instructions on how to fix each error:
+  - [ERROR: don't commit libraries](#error-dont-commit-libraries)
+  - [ERROR: don't commit minified files](#error-dont-commit-minified-files)
+  - [ERROR: use Git LFS for files over ... chars](#error-use-git-lfs-for-files-over--chars)
+  - [ERROR: don't commit useless or generated files](#error-dont-commit-useless-or-generated-files)
+  - [ERROR: don't duplicate files](#error-dont-duplicate-files)
+  - [ERROR: reduce duplicate lines](#error-reduce-duplicate-lines)
+  - [ERROR: format with Prettier](#error-format-with-prettier)
+  - [ERROR: format with Python black](#error-format-with-python-black)
+  - [ERROR: use lower_alphanumeric Python paths](#error-use-lower_alphanumeric-python-paths)
+  - [ERROR: fix flake8 errors](#error-fix-flake8-errors)
+  - [ERROR: fix bandit security errors](#error-fix-bandit-security-errors)
+  - [ERROR: fix eslint errors](#error-fix-eslint-errors)
+  - [ERROR: fix stylelint errors](#error-fix-stylelint-errors)
+  - [ERROR: fix htmlhint errors](#error-fix-htmlhint-errors)
+  - [ERROR: CSS code is over ... chars](#error-css-code-is-over--chars)
+  - [ERROR: Python + JS code is over ... chars](#error-python--js-code-is-over--chars)
+
 ## Gitlab CI usage
 
 To run checks on every push with [Gitlab](https://docs.gitlab.com/ee/ci/pipelines/),
@@ -82,7 +105,7 @@ npm install
 pip install -r requirements.txt
 ```
 
-From the folder *you want to test*, run this in `bash` or Git Bash:
+From the folder _you want to test_, run this in `bash` or Git Bash:
 
 ```bash
 bash /wherever-you-installed/builderrors
