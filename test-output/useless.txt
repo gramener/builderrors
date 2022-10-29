@@ -1,3 +1,4 @@
+
 ERROR: don't commit useless or generated files
     .stackdump
     .sublime-project/useless.txt

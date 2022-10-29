@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=1.0.6
+VERSION=1.0.7
 
 # Parse command line options
 # NOTE: Bandit catches SQL injections at low confidence. So let's leave it on
@@ -125,6 +125,7 @@ check() {
   if [[ -z "$SKIP" ]]; then
     if [[ -n "$OUTPUT" ]]; then
       # Print "ERROR:" in red, and then the message
+      printf "\n"
       echo -e "${RED}ERROR${CLEAR}: $MSG"
       echo -E "$OUTPUT" | sed "s/^/    /"
       echo ""

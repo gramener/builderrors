@@ -34,10 +34,10 @@ Here are some we don't plan to add:
 
 1. Update `VERSION=` in [builderrors](builderrors)
 
-2. Upgrade npm packages. Ensure there are no `npm audit` issues
+2. Upgrade npm packages if there are `npm audit` issues. **Test after upgrade!**
 
    ```bash
-   npm upgrade
+   npm audit || npm upgrade
    ```
 
 3. Test for errors
@@ -66,7 +66,7 @@ Here are some we don't plan to add:
    git push --follow-tags
    ```
 
-6. Deploy image on server. On Gitlab CI runners, run:
+6. Deploy image on servers. For example, on Gitlab CI runners, run:
 
    ```bash
    docker pull gramener/builderrors
