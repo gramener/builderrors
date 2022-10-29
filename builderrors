@@ -211,6 +211,8 @@ if [[ -n "$CREATED_NODE_MODULES" ]]; then
   git -c core.longPaths=true clean -fd > /dev/null
 fi
 
+# stylelint uses v8-compile-cache. Disable it since there's nothing to cache on CI
+export DISABLE_V8_COMPILE_CACHE=1
 if [[ ! -f ".stylelintrc.js" ]]; then
   cp "$SCRIPT_DIR/.stylelintrc.js" .
   CREATED_STYLELINTRC=1
