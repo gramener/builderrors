@@ -4,6 +4,7 @@ flake8                # 5.0.4
 flake8-blind-except   # 0.2.1
 flake8-print          # 5.0.0
 flake8-debugger       # 4.1.2
+flake8-2020           # 1.7.0
 pep8-naming           # 0.13.2
 python-minifier       # 2.6.0
 bandit                # 1.7.4
