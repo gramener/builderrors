@@ -6,6 +6,7 @@ Run automated checks on repositories to improve code quality.
   - [Gitlab CI](#gitlab-ci-usage)
   - [BitBucket Pipelines](#bitbucket-pipelines-usage)
   - [Docker](#docker-usage)
+  - [Jenkins](#jenkins-usage)
   - [Local](#local-usage)
 - Here are instructions on how to fix each error:
   - [ERROR: don't commit libraries](#error-dont-commit-libraries)
@@ -87,6 +88,26 @@ On Windows PowerShell:
 
 ```powershell
 docker run --rm -it -v ${PWD}:/src gramener/builderrors
+```
+
+## Jenkins usage
+
+To run checks on every push with [Jenkins pipelines](https://www.jenkins.io/doc/book/pipeline/),
+add this to your [`Jenkinsfile`](https://www.jenkins.io/doc/book/pipeline/jenkinsfile/) file:
+
+```jenkinsfile
+pipeline {
+    agent {
+        docker { image 'gramener/builderrors' }
+    }
+    stages {
+        stage('Validate') {
+            steps {
+                sh 'builderrors'
+            }
+        }
+    }
+}
 ```
 
 ## Local usage
