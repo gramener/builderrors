@@ -208,7 +208,7 @@ check "ERROR" "$SKIP_FLAKE8" "fix flake8 errors" \
   "$(git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501)"
 
 check "ERROR" "$SKIP_BANDIT" "fix bandit security errors" \
-  "$(bandit . --recursive --format txt --severity-level $BANDIT_SEVERITY --confidence-level $BANDIT_CONFIDENCE --quiet 2>/dev/null)"
+  "$(git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty bandit --format txt --severity-level $BANDIT_SEVERITY --confidence-level $BANDIT_CONFIDENCE --quiet 2>/dev/null)"
 
 # If user didn't skip default ESLINT checks, and there's no .eslintrc.*, use eslint from root
 if [[ ! -n "$SKIP_ESLINT_DEFAULT" ]] && ! compgen -G ".eslintrc.*" > /dev/null; then

@@ -6,7 +6,7 @@ ERROR: fix bandit security errors
     >> Issue: [B608:hardcoded_sql_expressions] Possible SQL injection vector through string-based query construction.
        Severity: Medium   Confidence: Low
        CWE: CWE-89 (https://cwe.mitre.org/data/definitions/89.html)
-       Location: ./bandit_error.py:5:12
+       Location: bandit_error.py:5:12
        More Info: https://bandit.readthedocs.io/en/1.7.4/plugins/b608_hardcoded_sql_expressions.html
     4   def insecure_query(column, con):
     5       query = 'SELECT %s from table' % column
