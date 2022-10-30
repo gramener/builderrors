@@ -272,6 +272,7 @@ if [[ $EXIT_STATUS -ne 0 ]]; then
 else
   echo -e "${GREEN}---------------------------------------------------------------------${CLEAR}"
   echo -e "${GREEN}BUILD PASSED on builderrors v$VERSION${CLEAR}"
+  echo -e "${GREEN}https://code.gramener.com/cto/builderrors${CLEAR}"
 fi
 
 exit $EXIT_STATUS

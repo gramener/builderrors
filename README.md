@@ -27,7 +27,6 @@ Run automated checks on repositories to improve code quality.
   - [ERROR: Python + JS code is over ... chars](#error-python--js-code-is-over--chars)
   - [WARNING: fix flake8 extra checks](#warning-fix-flake8-extra-checks)
 
-
 ## Gitlab CI usage
 
 To run checks on every push with [Gitlab](https://docs.gitlab.com/ee/ci/pipelines/),
@@ -325,7 +324,7 @@ Otherwise you can't import the file.
 - To auto-fix errors, run `autopep8 -iv --max-line-length 99 *.py`.
   - This requires `pip install autopep8` (one-time)
   - [Reformat with `black`](#error-format-with-python-black) when done
-- To ignore a specific line, add [`# noqa: <error-number>`](https://flake8.pycqa.org/en/latest/user/violations.html) at the end, e.g. `print("\n")  # noqa: T201`
+- To ignore a specific line, add [`# noqa: <error-number>`](https://flake8.pycqa.org/en/latest/user/violations.html) at the end, e.g. `print("\n") # noqa: T201`
 - To ignore specific rules, add a [`.flake8`](https://flake8.pycqa.org/en/latest/user/configuration.html) file
   - Make sure to use `extend-ignore = E203,E501` for consistency with [black](https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#flake8)
 - To skip this check, use `builderrors --skip-flake8` (e.g. if you temporarily need the build to pass)

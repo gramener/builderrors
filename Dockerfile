@@ -1,4 +1,4 @@
-# Use a standard Python + Docker image from https://github.com/nikolaik/docker-python-nodejs
+# Use a standard Python + Node image from https://github.com/nikolaik/docker-python-nodejs
 FROM nikolaik/python-nodejs:python3.10-nodejs18-bullseye
 
 # Install Git LFS
