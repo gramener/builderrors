@@ -43,10 +43,10 @@ validate:
 If you used `gramex init` from [gramex](https://github.com/gramener/gramex) before version 1.84, change the following:
 
 - Delete `.editorconfig`, `.htmllintrc` and `.stylelintrc.js`
-- If you have an `.eslintrc.*`, remove rules for `indent`, `linebreak-style`, `quotes` and `semi`.
-  [`prettier`](#error-format-with-prettier) handles formatting
-- If you have a `.flake8` or [equivalent](https://flake8.pycqa.org/en/latest/user/configuration.html), add `extend-ignore = E203,E501`.
+- If you have a `.flake8` or [equivalent](https://flake8.pycqa.org/en/latest/user/configuration.html), add `extend-ignore=E203,E501`.
   [`black`](#error-format-with-python-black) handles formatting
+- If you have an `.eslintrc.*`, remove rules for `indent`, `linebreak-style`, `quotes` and `semi`. [`prettier`](#error-format-with-prettier) handles formatting
+- If you don't have an `.eslintrc.*`, copy [`.eslintrc.js`](.eslintrc.js) and run `npm install --save-dev eslint eslint-plugin-html eslint-plugin-template`
 
 ## BitBucket Pipelines usage
 
@@ -224,11 +224,13 @@ Minified files are not source code and shouldn't be version-controlled. They're 
 
 ## ERROR: use Git LFS for files over ... chars
 
+
 Git stores copies of every version. LFS stores pointers instead
 
 - Install [Git LFS](https://git-lfs.github.com/)
 - Run `git lfs install` on your repo
 - For each large file(s), run these commands on `bash` or Git bash: [see help](https://git-lfs.github.com/)
+  <!-- Dummy comment to avoid MD031/blanks-around-fences -->
   ```bash
   git rm your-large-file.ext          # Remove and commit
   git commit -m"Remove your-large-file.txt"
@@ -237,6 +239,7 @@ Git stores copies of every version. LFS stores pointers instead
   git add your-large-file.ext         # Add and commit
   git commit -m"Use LFS for your-large-file.txt`
   ```
+  <!-- Dummy comment to avoid MD031/blanks-around-fences -->
 - To skip this check, use `builderrors --skip-lfs` (e.g. if you can't use LFS)
 
 ## ERROR: don't commit useless or generated files
@@ -326,7 +329,7 @@ Otherwise you can't import the file.
   - [Reformat with `black`](#error-format-with-python-black) when done
 - To ignore a specific line, add [`# noqa: <error-number>`](https://flake8.pycqa.org/en/latest/user/violations.html) at the end, e.g. `print("\n") # noqa: T201`
 - To ignore specific rules, add a [`.flake8`](https://flake8.pycqa.org/en/latest/user/configuration.html) file
-  - Make sure to use `extend-ignore = E203,E501` for consistency with [black](https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#flake8)
+  - Make sure to use `extend-ignore=E203,E501` for consistency with [black](https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#flake8)
 - To skip this check, use `builderrors --skip-flake8` (e.g. if you temporarily need the build to pass)
 
 <!-- DO NOT LIST COMMON ERRORS. It wastes space. It's self-explanatory. People can refer it online.
