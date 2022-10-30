@@ -6,3 +6,4 @@ build-errors-test/
 node_modules/
 test-builderrors.sh
 test-output/
+venv-*/
