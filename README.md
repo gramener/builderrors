@@ -25,6 +25,8 @@ Run automated checks on repositories to improve code quality.
   - [ERROR: fix htmlhint errors](#error-fix-htmlhint-errors)
   - [ERROR: CSS code is over ... chars](#error-css-code-is-over--chars)
   - [ERROR: Python + JS code is over ... chars](#error-python--js-code-is-over--chars)
+  - [WARNING: fix flake8 extra checks](#warning-fix-flake8-extra-checks)
+
 
 ## Gitlab CI usage
 
@@ -122,8 +124,7 @@ In `bash` or Git Bash, from any folder (e.g. `C:/projects/`) run this:
 ```bash
 git clone https://code.gramener.com/cto/builderrors.git
 cd builderrors
-npm install
-pip install -r requirements.txt
+bash setup.sh
 ```
 
 From the folder _you want to test_, run this in `bash` or Git Bash:
@@ -288,9 +289,7 @@ to auto-format your code.
 - Unibeautify supports templates: https://github.com/unibeautify/unibeautify
 -->
 
-To format manually:
-
-- To auto-fix required files, run `npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"`
+- To auto-fix errors, run `npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"`
 - To ignore specific files, add a [`.prettierignore`](https://prettier.io/docs/en/ignore.html) file (e.g. add `*.html`)
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`.prettierrc`](https://prettier.io/docs/en/configuration.html) file
 - To skip this check, use `builderrors --skip-prettier` (e.g. if you temporarily need the build to pass)
@@ -302,10 +301,8 @@ It's important to have consistent formatting for readability. We use [black](htt
 Use the [VS Code Prettier - Black plugin](https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter)
 to auto-format your code.
 
-To format manually:
-
-- Run `pip install black` (one-time)
-- To auto-fix required files, run `black --skip-string-normalization --line-length=99 .`
+- To auto-fix errors, `black --skip-string-normalization --line-length=99 .`
+  - This requires `pip install black` (one-time)
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`pyproject.toml`](https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file) file
 - To skip this check, use `builderrors --skip-prettier` (e.g. if you temporarily need the build to pass)
 
@@ -318,14 +315,22 @@ Otherwise you can't import the file.
 
 ## ERROR: fix flake8 errors
 
-[Flake8](https://flake8.pycqa.org//) reports Python errors.
+[Flake8](https://flake8.pycqa.org//) reports Python errors with the
+[flake8-blind-except](https://pypi.org/package/flake8-blind-except),
+[flake8-print](https://pypi.org/package/flake8-print),
+[flake8-debugger](https://pypi.org/package/flake8-debugger),
+[flake8-2020](https://pypi.org/package/flake8-2020), and
+[pep8-naming](https://pypi.org/package/pep8-naming) plugins.
 
-- Run `pip install autopep8` (one-time)
-- To auto-fix required files, run `autopep8 -iv --max-line-length 99 *.py`. Then [reformat with `black`](#error-format-with-python-black)
-- To ignore a specific line, add [`# noqa`](https://flake8.pycqa.org/en/latest/user/violations.html) at the end
+- To auto-fix errors, run `autopep8 -iv --max-line-length 99 *.py`.
+  - This requires `pip install autopep8` (one-time)
+  - [Reformat with `black`](#error-format-with-python-black) when done
+- To ignore a specific line, add [`# noqa: <error-number>`](https://flake8.pycqa.org/en/latest/user/violations.html) at the end, e.g. `print("\n")  # noqa: T201`
 - To ignore specific rules, add a [`.flake8`](https://flake8.pycqa.org/en/latest/user/configuration.html) file
   - Make sure to use `extend-ignore = E203,E501` for consistency with [black](https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#flake8)
 - To skip this check, use `builderrors --skip-flake8` (e.g. if you temporarily need the build to pass)
+
+<!-- DO NOT LIST COMMON ERRORS. It wastes space. It's self-explanatory. People can refer it online.
 
 Common errors:
 
@@ -338,6 +343,43 @@ Common errors:
 - **T001** or **T003**: print found -- just remove `print` in production code.
 - **N806**: variable in function should be lowercase -- rename your variable.
 - **N802** or **N803**: function and argument names should be lowercase.
+
+-->
+
+## WARNING: fix flake8 extra checks
+
+[Flake8](https://flake8.pycqa.org//) reports Python warnings based on experimental plugins. These are **OPTIONAL but GOOD** to fix.
+
+- [flake8-bugbear](https://pypi.org/package/flake8-bugbear): catches potential bugs
+- [flake8-comprehensions](https://pypi.org/package/flake8-comprehensions): simplifies list comprehensions
+- [flake8-eradicate](https://pypi.org/package/flake8-eradicate): reports commented code
+- [flake8-simplify](https://pypi.org/package/flake8-simplify): suggests code simplifications
+
+You can fix these exactly like [flake8 errors](#error-fix-flake8-errors).
+
+<!-- DO NOT LIST COMMON ERRORS. It wastes space. It's self-explanatory. People can refer it online.
+
+Common errors:
+
+- **B001**: Do not use bare `except:`, it also catches unexpected events like memory errors, interrupts, system exit, and so on.  Prefer `except Exception:`.  If you're sure what you're doing, be explicit and write `except BaseException:`.
+- **B006**: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
+- **B007**: Loop control variable 'index' not used within the loop body. If this is intended, start the name with an underscore.
+- **C401**: Unnecessary generator - rewrite as a set comprehension.
+- **C402**: Unnecessary generator - rewrite as a dict comprehension.
+- **C403**: Unnecessary list comprehension - rewrite as a set comprehension.
+- **C408**: Unnecessary dict call - rewrite as a literal.
+- **C414**: Unnecessary list call within sorted().
+- **C416**: Unnecessary list comprehension - rewrite using list().
+- **C417**: Unnecessary use of map - use a list comprehension instead.
+- **E800**: Found commented out code
+- **SIM102**: Use a single if-statement instead of nested if-statements
+- **SIM105**: Use 'contextlib.suppress(...)'
+- **SIM114**: Use logical or ((a == b) or (c == d)) and a single body
+- **SIM118**: Use 'x in dict' instead of 'x in dict.keys()'
+- **SIM201**: Use 'i != 0' instead of 'not i == 0'
+- **SIM203**: Use 'table not in meta' instead of 'not table in meta'
+
+-->
 
 ## ERROR: fix bandit security errors
 
@@ -354,7 +396,7 @@ Common errors:
 
 [ESLint](https://eslint.org/) reports JavaScript errors in JS and HTML files -- including HTML templates.
 
-- To auto-fix required files, run `eslint --fix`.
+- To auto-fix errors, run `eslint --fix`.
 - To ignore a specific line, add a [`// eslint-disable-line`](https://eslint.org/docs/latest/user-guide/configuring/rules#disabling-rules) at the end
 - To ignore specific rules, add a [`.eslintrc.js`](http://eslint.org/docs/rules/) file based on the [default](.eslintrc.js)
 - To skip this check, use `builderrors --skip-eslint` (e.g. if you temporarily need the build to pass)
@@ -373,7 +415,8 @@ Common errors:
 
 - Re-write the code based on advice from stylelint
 - To ignore a specific line, add a [`/* stylelint-disable-line */`](https://stylelint.io/user-guide/ignore-code) at the end
-- To ignore specific rules, add a [`.stylelintrc.js`](https://stylelint.io/user-guide/configure) file based on the [default](.stylelintrc.js)
+- To ignore specific rules, add a [`.stylelintrc.js`](https://stylelint.io/user-guide/configure) file based on the [default](.stylelintrc.js). For example:
+  - `"selector-no-unknown": null` allows styling custom web components
 - To skip this check, use `builderrors --skip-stylelint` (e.g. if you're using third-party provided CSS)
 
 ## ERROR: fix htmlhint errors
