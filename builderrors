@@ -194,7 +194,7 @@ check "ERROR" "$SKIP_PRETTIER" "format with Prettier: ${GREEN}npx prettier --wri
   "$(git ls-files | grep -E '\.(js|jsx|vue|ts|css|scss|sass|yaml|md)$' | grep -v -E "$RE_MINIFIED" | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/prettier" --loglevel=warn --check 2>&1)"
 
 # black prints "All done!" and "Oh no!" and "<nn> files would be left unchanged." with unicode characters and color. Strip these with "grep -v ..."
-check "ERROR" "$SKIP_BLACK" "format with Python black: ${GREEN}black --skip-string-normalization --line-length=99 .${CLEAR}" \
+check "ERROR" "$SKIP_BLACK" "format with Python black: ${GREEN}black . --skip-string-normalization --line-length=99${CLEAR}" \
   "$(git ls-files | grep -E '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty black --check --skip-string-normalization --line-length=${PY_LINE_LENGTH} 2>&1 | grep -v "^All done!" | grep -v "^Oh no!" | grep -v "would be left unchanged.")"
 
 check "ERROR" "$SKIP_PY_FILENAMES" "use lower_alphanumeric Python paths" \
@@ -220,7 +220,7 @@ else
   CREATED_NODE_MODULES=1
   ESLINT_OPTIONS="--resolve-plugins-relative-to ."
 fi
-check "ERROR" "$SKIP_ESLINT" "fix eslint errors: ${GREEN}eslint --fix${CLEAR}" \
+check "ERROR" "$SKIP_ESLINT" "fix eslint errors: ${GREEN}npx eslint --fix${CLEAR}" \
   "$(git ls-files | grep -E '\.(html|js)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" $ESLINT_OPTIONS --quiet --format unix 2>&1)"
 if [[ -n "$CREATED_NODE_MODULES" ]]; then
   git -c core.longPaths=true clean -fd > /dev/null

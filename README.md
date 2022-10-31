@@ -26,6 +26,8 @@ Run automated checks on repositories to improve code quality.
   - [ERROR: CSS code is over ... chars](#error-css-code-is-over--chars)
   - [ERROR: Python + JS code is over ... chars](#error-python--js-code-is-over--chars)
   - [WARNING: fix flake8 extra checks](#warning-fix-flake8-extra-checks)
+- [Troubleshooting](#troubleshooting)
+- [Alternatives](#alternatives)
 
 ## Gitlab CI usage
 
@@ -224,7 +226,6 @@ Minified files are not source code and shouldn't be version-controlled. They're 
 
 ## ERROR: use Git LFS for files over ... chars
 
-
 Git stores copies of every version. LFS stores pointers instead
 
 - Install [Git LFS](https://git-lfs.github.com/)
@@ -303,7 +304,7 @@ It's important to have consistent formatting for readability. We use [black](htt
 Use the [VS Code Prettier - Black plugin](https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter)
 to auto-format your code.
 
-- To auto-fix errors, `black --skip-string-normalization --line-length=99 .`
+- To auto-fix errors, `black . --skip-string-normalization --line-length=99`
   - This requires `pip install black` (one-time)
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`pyproject.toml`](https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file) file
 - To skip this check, use `builderrors --skip-prettier` (e.g. if you temporarily need the build to pass)
@@ -398,9 +399,9 @@ Common errors:
 
 [ESLint](https://eslint.org/) reports JavaScript errors in JS and HTML files -- including HTML templates.
 
-- To auto-fix errors, run `eslint --fix`.
+- To auto-fix errors, run `npx eslint --fix`.
 - To ignore a specific line, add a [`// eslint-disable-line`](https://eslint.org/docs/latest/user-guide/configuring/rules#disabling-rules) at the end
-- To ignore specific rules, add a [`.eslintrc.js`](http://eslint.org/docs/rules/) file based on the [default](.eslintrc.js)
+- To ignore specific rules, add a [`.eslintrc.js`](http://eslint.org/docs/rules/) based on the [default](.eslintrc.js)
 - To skip this check, use `builderrors --skip-eslint` (e.g. if you temporarily need the build to pass)
 
 Common errors:
@@ -444,6 +445,11 @@ You have too much Python / JavaScript code
 - Reduce code using libraries.
 - To allow 80,000 characters, use `builderrors --code-chars-error=80000`
 - To skip this check, use `builderrors --skip-code-chars`
+
+# Troubleshooting
+
+- If `black is not recognized as an internal or external command`, run `pip install black`
+- If `pip install black` raises a `PermissionError` or `WARNING: Failed to write executable - trying to use .deleteme logic`, use `pip install --user black` instead
 
 # Alternatives
 

@@ -1,5 +1,5 @@
 
-ERROR: format with Python black: black --skip-string-normalization --line-length=99 .
+ERROR: format with Python black: black . --skip-string-normalization --line-length=99
     would reformat test.py
 
     1 file would be reformatted.

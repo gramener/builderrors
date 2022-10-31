@@ -4,7 +4,7 @@ ERROR: format with Prettier: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,
     [warn] Code style issues found in the above file. Forgot to run Prettier?
 
 
-ERROR: fix eslint errors: eslint --fix
+ERROR: fix eslint errors: npx eslint --fix
     index.html:13:9: 'data' is assigned a value but never used. [Error/no-unused-vars]
     index.html:14:9: 'a' is assigned a value but never used. [Error/no-unused-vars]
     index.html:14:13: 'missing' is not defined. [Error/no-undef]

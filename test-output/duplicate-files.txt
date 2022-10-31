@@ -34,7 +34,7 @@ ERROR: fix flake8 errors
     file 2.py:1:2: E221 multiple spaces before operator
 
 
-ERROR: fix eslint errors: eslint --fix
+ERROR: fix eslint errors: npx eslint --fix
     file 1.js:1:10: 'random' is defined but never used. [Error/no-unused-vars]
     file 2.js:1:10: 'random' is defined but never used. [Error/no-unused-vars]
 
