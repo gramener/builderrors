@@ -25,6 +25,7 @@ Run automated checks on repositories to improve code quality.
   - [ERROR: fix htmlhint errors](#error-fix-htmlhint-errors)
   - [ERROR: CSS code is over ... chars](#error-css-code-is-over--chars)
   - [ERROR: Python + JS code is over ... chars](#error-python--js-code-is-over--chars)
+  - [WARNING: fix npm audit](#warning-fix-npm-audit)
   - [WARNING: fix flake8 extra checks](#warning-fix-flake8-extra-checks)
 - [Troubleshooting](#troubleshooting)
 - [Alternatives](#alternatives)
@@ -45,7 +46,7 @@ validate:
 If you used `gramex init` from [gramex](https://github.com/gramener/gramex) before version 1.84, change the following:
 
 - Delete `.editorconfig`, `.htmllintrc` and `.stylelintrc.js`
-- If you have a `.flake8` or [equivalent](https://flake8.pycqa.org/en/latest/user/configuration.html), add `extend-ignore=E203,E501`.
+- If you have a `.flake8` or [equivalent](https://flake8.pycqa.org/en/latest/user/configuration.html), add `extend-ignore=E203,E501`
   [`black`](#error-format-with-python-black) handles formatting
 - If you have an `.eslintrc.*`, remove rules for `indent`, `linebreak-style`, `quotes` and `semi`. [`prettier`](#error-format-with-prettier) handles formatting
 - If you don't have an `.eslintrc.*`, copy [`.eslintrc.js`](.eslintrc.js) and run `npm install --save-dev eslint eslint-plugin-html eslint-plugin-template`
@@ -73,7 +74,7 @@ From the folder you want check, run this command on Linux:
 
 <!--
   Why use "--rm"? To delete the container after it runs
-  Why use "-it"? Some tools (e.g. jscpd) print colorized output only on interactive terminals.
+  Why use "-it"? Some tools (e.g. jscpd) print colorized output only on interactive terminals
   Why use "-v $(pwd):/src"? For container to access current host directory at /src (the workdir)
 -->
 
@@ -136,7 +137,7 @@ bash /wherever-you-installed/builderrors
 
 How to fix errors:
 
-- `Cannot uninstall 'PyYAML'. It is a distutils installed project ...`: Run [`pip install --ignore-installed PyYAML`](https://stackoverflow.com/a/53534728/100904) first.
+- `Cannot uninstall 'PyYAML'. It is a distutils installed project ...`: Run [`pip install --ignore-installed PyYAML`](https://stackoverflow.com/a/53534728/100904) first
 - `'bash' is not recognized as an internal or external command`: Run in bash or Git bash, not the Command Prompt or PowerShell
 - `flake8: No such file or directory` or `pyminify: command not found`: Ensure you can run `python`, `node` and `git` in the same `bash` shell, and re-install
 
@@ -268,10 +269,10 @@ You can re-use the same code
 - Use **functions** for code repeated in different places (either in the same file or different files)
 - Use **function parameters** to handle minor variations in the repetition
 - Use **data structures** for larger variations. For example, create an array or
-  dictionary that stores all the parameters that vary. Remember: you can use functions as values.
+  dictionary that stores all the parameters that vary. Remember: you can use functions as values
 - Use **function generators** for extreme variations in code. Write a function
-  to create and return a new function depending on your variation.
-- Refactor the code and test _very carefully_. (Unit test cases help here.)
+  to create and return a new function depending on your variation
+- Refactor the code and test _very carefully_. (Unit test cases help here)
 - To ignore duplicates up to 100 lines, run `builderrors --duplicate-lines=100`
 - To skip this check, use `builderrors --skip-duplicate-lines` (e.g. if you need duplicate code for test cases)
 
@@ -325,7 +326,7 @@ Otherwise you can't import the file.
 [flake8-2020](https://pypi.org/package/flake8-2020), and
 [pep8-naming](https://pypi.org/package/pep8-naming) plugins.
 
-- To auto-fix errors, run `autopep8 -iv --max-line-length 99 *.py`.
+- To auto-fix errors, run `autopep8 -iv --max-line-length 99 *.py`
   - This requires `pip install autopep8` (one-time)
   - [Reformat with `black`](#error-format-with-python-black) when done
 - To ignore a specific line, add [`# noqa: <error-number>`](https://flake8.pycqa.org/en/latest/user/violations.html) at the end, e.g. `print("\n") # noqa: T201`
@@ -339,15 +340,23 @@ Common errors:
 
 - **F841**: local variable 'x' is assigned to but never used. **Check if you forgot**, else don't assign it
 - **F401**: 'x' imported but unused. **Check if you forgot** to use the module. Else don't import it
-- **F821**: undefined name 'x' You used an uninitialized variable. That's wrong.
-- **F811**: redefinition of unused 'x'. You assigned a variable and never used it. Then you're reassigning it. Or re-importing. Look carefully.
-- **B901** or **B902**: blind except: statement. Trap **specific** exceptions. Blind exceptions can trap even syntax errors and confuse you later.
-- **F601**: dictionary key 'x' repeated with different values. e.g. `{'x': 1, 'x': 2}`. That's wrong.
-- **T001** or **T003**: print found -- just remove `print` in production code.
-- **N806**: variable in function should be lowercase -- rename your variable.
-- **N802** or **N803**: function and argument names should be lowercase.
+- **F821**: undefined name 'x' You used an uninitialized variable. That's wrong
+- **F811**: redefinition of unused 'x'. You assigned a variable and never used it. Then you're reassigning it. Or re-importing. Look carefully
+- **B901** or **B902**: blind except: statement. Trap **specific** exceptions. Blind exceptions can trap even syntax errors and confuse you later
+- **F601**: dictionary key 'x' repeated with different values. e.g. `{'x': 1, 'x': 2}`. That's wrong
+- **T001** or **T003**: print found -- just remove `print` in production code
+- **N806**: variable in function should be lowercase -- rename your variable
+- **N802** or **N803**: function and argument names should be lowercase
 
 -->
+
+## WARNING: fix npm audit
+
+[`npm audit`](https://docs.npmjs.com/cli/v8/commands/npm-audit) checks for JavaScript package vulnerabilities.
+
+- To auto-fix errors, run `npm audit fix`
+- To upgrade all packages to the latest compatible version, run `npm upgrade`
+- Change package versions manually and retry
 
 ## WARNING: fix flake8 extra checks
 
@@ -364,16 +373,16 @@ You can fix these exactly like [flake8 errors](#error-fix-flake8-errors).
 
 Common errors:
 
-- **B001**: Do not use bare `except:`, it also catches unexpected events like memory errors, interrupts, system exit, and so on.  Prefer `except Exception:`.  If you're sure what you're doing, be explicit and write `except BaseException:`.
-- **B006**: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
-- **B007**: Loop control variable 'index' not used within the loop body. If this is intended, start the name with an underscore.
-- **C401**: Unnecessary generator - rewrite as a set comprehension.
-- **C402**: Unnecessary generator - rewrite as a dict comprehension.
-- **C403**: Unnecessary list comprehension - rewrite as a set comprehension.
-- **C408**: Unnecessary dict call - rewrite as a literal.
-- **C414**: Unnecessary list call within sorted().
-- **C416**: Unnecessary list comprehension - rewrite using list().
-- **C417**: Unnecessary use of map - use a list comprehension instead.
+- **B001**: Do not use bare `except:`, it also catches unexpected events like memory errors, interrupts, system exit, and so on.  Prefer `except Exception:`.  If you're sure what you're doing, be explicit and write `except BaseException:`
+- **B006**: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them
+- **B007**: Loop control variable 'index' not used within the loop body. If this is intended, start the name with an underscore
+- **C401**: Unnecessary generator - rewrite as a set comprehension
+- **C402**: Unnecessary generator - rewrite as a dict comprehension
+- **C403**: Unnecessary list comprehension - rewrite as a set comprehension
+- **C408**: Unnecessary dict call - rewrite as a literal
+- **C414**: Unnecessary list call within sorted()
+- **C416**: Unnecessary list comprehension - rewrite using list()
+- **C417**: Unnecessary use of map - use a list comprehension instead
 - **E800**: Found commented out code
 - **SIM102**: Use a single if-statement instead of nested if-statements
 - **SIM105**: Use 'contextlib.suppress(...)'
@@ -388,7 +397,7 @@ Common errors:
 
 [Bandit](https://bandit.readthedocs.io/) reports security errors in Python.
 
-- Re-write the code based on advice from bandit.
+- Re-write the code based on advice from bandit
 - To ignore a specific line, add a [`# nosec`](https://bandit.readthedocs.io/en/latest/config.html#exclusions) at the end
 - To ignore specific rules, add a [`.bandit`](https://bandit.readthedocs.io/en/latest/config.html#bandit-settings) file
 - To only report errors with high confidence, use `builderrors --bandit-confidence=high` (or `medium`)
@@ -399,7 +408,7 @@ Common errors:
 
 [ESLint](https://eslint.org/) reports JavaScript errors in JS and HTML files -- including HTML templates.
 
-- To auto-fix errors, run `npx eslint --fix`.
+- To auto-fix errors, run `npx eslint --fix`
 - To ignore a specific line, add a [`// eslint-disable-line`](https://eslint.org/docs/latest/user-guide/configuring/rules#disabling-rules) at the end
 - To ignore specific rules, add a [`.eslintrc.js`](http://eslint.org/docs/rules/) based on the [default](.eslintrc.js)
 - To skip this check, use `builderrors --skip-eslint` (e.g. if you temporarily need the build to pass)
@@ -434,7 +443,7 @@ Common errors:
 
 You have too much CSS code, even after minifying with [clean-css](https://www.npmjs.com/package/clean-css-cli).
 
-- Reduce CSS code using libraries.
+- Reduce CSS code using libraries
 - To allow 20,000 characters, use `builderrors --css-chars-error=10000`
 - To skip this check, use `builderrors --skip-css-chars`
 
@@ -442,7 +451,7 @@ You have too much CSS code, even after minifying with [clean-css](https://www.np
 
 You have too much Python / JavaScript code
 
-- Reduce code using libraries.
+- Reduce code using libraries
 - To allow 80,000 characters, use `builderrors --code-chars-error=80000`
 - To skip this check, use `builderrors --skip-code-chars`
 

@@ -19,7 +19,7 @@ export LC_ALL=C
 
 # Refer https://stackoverflow.com/a/7948533/100904 for getopt usage
 OPTIONS=v
-LONGOPTS=verbose,skip-lib,skip-minified,skip-lfs,skip-prettier,skip-useless,skip-duplicate-files,skip-duplicate-lines,skip-py-filenames,skip-black,skip-flake8,skip-bandit,skip-eslint,skip-eslint-default,skip-stylelint,skip-htmlhint,skip-css-chars,skip-code-chars,skip-flake8-extra,lfs-size:,duplicate-filesize:,duplicate-lines:,py-line-length:,bandit-confidence:,bandit-severity:,css-chars-error:,code-chars-error:
+LONGOPTS=verbose,skip-lib,skip-minified,skip-lfs,skip-prettier,skip-useless,skip-duplicate-files,skip-duplicate-lines,skip-py-filenames,skip-black,skip-flake8,skip-bandit,skip-eslint,skip-eslint-default,skip-stylelint,skip-htmlhint,skip-css-chars,skip-code-chars,skip-npm-audit,skip-flake8-extra,lfs-size:,duplicate-filesize:,duplicate-lines:,py-line-length:,bandit-confidence:,bandit-severity:,css-chars-error:,code-chars-error:
 TEMP=$(getopt --options "$OPTIONS" --longoptions "$LONGOPTS" --name builderrors -- "$@")
 if [ $? != 0 ] ; then echo "Could not run: builderrors $@" >&2 ; exit 1 ; fi
 eval set -- "$TEMP"
@@ -43,6 +43,7 @@ while true; do
     "--skip-htmlhint" ) SKIP_HTMLHINT='--'; shift ;;
     "--skip-css-chars" ) SKIP_CSS_CHARS='--'; shift ;;
     "--skip-code-chars" ) SKIP_CODE_CHARS='--'; shift ;;
+    "--skip-npm-audit" ) SKIP_NPM_AUDIT='--'; shift ;;
     "--skip-flake8-extra" ) SKIP_FLAKE8_EXTRA='--'; shift ;;
     "--lfs-size" ) LFS_SIZE=$2; shift 2 ;;
     "--duplicate-filesize" ) DUPLICATE_FILESIZE=$2; shift 2 ;;
@@ -81,6 +82,7 @@ if [[ -n "$VERBOSE" ]]; then
   echo "  ${SKIP_HTMLHINT:-# --}skip-htmlhint \\"
   echo "  ${SKIP_CSS_CHARS:-# --}skip-css-chars \\"
   echo "  ${SKIP_CODE_CHARS:-# --}skip-code-chars \\"
+  echo "  ${SKIP_NPM_AUDIT:-# --}skip-npm-audit \\"
   echo "  ${SKIP_FLAKE8_EXTRA:-# --}skip-flake8-extra \\"
   echo "  --lfs-size=$LFS_SIZE \\"
   echo "  --duplicate-filesize=$DUPLICATE_FILESIZE \\"
@@ -259,6 +261,11 @@ if [[ -f "${SCRIPT_DIR}/venv-extra/bin/activate" ]]; then
   source "${SCRIPT_DIR}/venv-extra/bin/activate"
 elif [[ -f "${SCRIPT_DIR}/venv-extra/Scripts/activate" ]]; then
   source "${SCRIPT_DIR}/venv-extra/Scripts/activate"
+fi
+
+if [[ -f "package-lock.json" ]]; then
+  check "WARNING" "$SKIP_NPM_AUDIT" "fix npm audit: ${GREEN}npm audit fix${CLEAR}" \
+    "$(npm audit | grep -v 'found 0 vulnerabilities')"
 fi
 
 check "WARNING" "$SKIP_FLAKE8_EXTRA" "fix flake8 extra checks" \

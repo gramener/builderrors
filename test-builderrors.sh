@@ -74,6 +74,7 @@ check eslint-config
 check stylelint
 check htmlhint
 check flake8-extra --skip-bandit --skip-flake8  # Test --skip-* flags and that build passes
+check npm-audit
 
 # Exit code 1 if ANY of the outputs had an error
 exit $EXIT_STATUS
