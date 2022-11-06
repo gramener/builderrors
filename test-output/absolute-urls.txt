@@ -1,0 +1,9 @@
+
+WARNING: avoid absolute URLs
+      <link rel="stylesheet" href = "/style2.css">
+      <img src = "/icon2.png" alt="">
+      <a href = "/login">Login</a>
+
+---------------------------------------------------------------------
+BUILD PASSED.
+https://code.gramener.com/cto/builderrors

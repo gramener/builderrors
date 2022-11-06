@@ -19,7 +19,7 @@ export LC_ALL=C
 
 # Refer https://stackoverflow.com/a/7948533/100904 for getopt usage
 OPTIONS=v
-LONGOPTS=verbose,skip-lib,skip-minified,skip-lfs,skip-prettier,skip-useless,skip-duplicate-files,skip-duplicate-lines,skip-py-filenames,skip-black,skip-flake8,skip-bandit,skip-eslint,skip-eslint-default,skip-stylelint,skip-htmlhint,skip-css-chars,skip-code-chars,skip-npm-audit,skip-flake8-extra,lfs-size:,duplicate-filesize:,duplicate-lines:,py-line-length:,bandit-confidence:,bandit-severity:,css-chars-error:,code-chars-error:
+LONGOPTS=verbose,skip-lib,skip-minified,skip-lfs,skip-prettier,skip-useless,skip-duplicate-files,skip-duplicate-lines,skip-py-filenames,skip-black,skip-flake8,skip-bandit,skip-eslint,skip-eslint-default,skip-stylelint,skip-htmlhint,skip-css-chars,skip-code-chars,skip-npm-audit,skip-flake8-extra,skip-absolute-urls,lfs-size:,duplicate-filesize:,duplicate-lines:,py-line-length:,bandit-confidence:,bandit-severity:,css-chars-error:,code-chars-error:
 TEMP=$(getopt --options "$OPTIONS" --longoptions "$LONGOPTS" --name builderrors -- "$@")
 if [ $? != 0 ] ; then echo "Could not run: builderrors $@" >&2 ; exit 1 ; fi
 eval set -- "$TEMP"
@@ -45,6 +45,7 @@ while true; do
     "--skip-code-chars" ) SKIP_CODE_CHARS='--'; shift ;;
     "--skip-npm-audit" ) SKIP_NPM_AUDIT='--'; shift ;;
     "--skip-flake8-extra" ) SKIP_FLAKE8_EXTRA='--'; shift ;;
+    "--skip-absolute-urls" ) SKIP_ABSOLUTE_URLS='--'; shift ;;
     "--lfs-size" ) LFS_SIZE=$2; shift 2 ;;
     "--duplicate-filesize" ) DUPLICATE_FILESIZE=$2; shift 2 ;;
     "--duplicate-lines" ) DUPLICATE_LINES=$2; shift 2 ;;
@@ -84,6 +85,7 @@ if [[ -n "$VERBOSE" ]]; then
   echo "  ${SKIP_CODE_CHARS:-# --}skip-code-chars \\"
   echo "  ${SKIP_NPM_AUDIT:-# --}skip-npm-audit \\"
   echo "  ${SKIP_FLAKE8_EXTRA:-# --}skip-flake8-extra \\"
+  echo "  ${SKIP_ABSOLUTE_URLS:-# --}skip-absolute-urls \\"
   echo "  --lfs-size=$LFS_SIZE \\"
   echo "  --duplicate-filesize=$DUPLICATE_FILESIZE \\"
   echo "  --duplicate-lines=$DUPLICATE_LINES \\"
@@ -270,6 +272,9 @@ fi
 
 check "WARNING" "$SKIP_FLAKE8_EXTRA" "fix flake8 extra checks" \
   "$(git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501)"
+
+check "WARNING" "$SKIP_ABSOLUTE_URLS" "avoid absolute URLs" \
+  "$(git ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty grep -e 'href\s*=\s*"/' -e 'src\s*=\s*"/')"
 
 # If ANY of the ERRORS above failed, exit with an error message
 if [[ $EXIT_STATUS -ne 0 ]]; then

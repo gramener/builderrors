@@ -178,23 +178,26 @@ under Settings > CI / CD > Variables.
 | Environment variable   | Command line               | Meaning                                                                               |
 | ---------------------- | -------------------------- | ------------------------------------------------------------------------------------- |
 | `VERBOSE`              | `--verbose`                | Show config used and progress                                                         |
-| `SKIP_LIB`             | `--skip-lib`               | Skip [libraries check](#error-dont-commit-libraries)                                  |
-| `SKIP_MINIFIED`        | `--skip-minified`          | Skip [minified file check](#error-dont-commit-minified-files)                         |
-| `SKIP_LFS`             | `--skip-lfs`               | Skip [Git LFS check](#error-use-git-lfs-for-files-over--chars)                        |
-| `SKIP_PRETTIER`        | `--skip-prettier`          | Skip [Prettier check](#error-format-with-prettier)                                    |
-| `SKIP_USELESS`         | `--skip-useless`           | Skip [useless files check](#error-dont-commit-useless-or-generated-files)             |
-| `SKIP_DUPLICATE_FILES` | `--skip-duplicate-files`   | Skip [duplicate files check](#error-dont-duplicate-files)                             |
-| `SKIP_DUPLICATE_LINES` | `--skip-duplicate-lines`   | Skip [duplicate lines check](#error-reduce-duplicate-lines)                           |
-| `SKIP_PY_FILENAMES`    | `--skip-py-filenames`      | Skip [Python filename check](#error-use-lower_alphanumeric-python-paths)              |
-| `SKIP_BLACK`           | `--skip-black`             | Skip [Python Black check](#error-format-with-python-black)                            |
-| `SKIP_FLAKE8`          | `--skip-flake8`            | Skip [flake8 check](#error-fix-flake8-errors)                                         |
-| `SKIP_BANDIT`          | `--skip-bandit`            | Skip [bandit check](#error-fix-bandit-security-errors)                                |
-| `SKIP_ESLINT`          | `--skip-eslint`            | Skip [eslint check](#error-fix-eslint-errors)                                         |
-| `SKIP_ESLINT_DEFAULT`  | `--skip-eslint-default`    | Skip [default eslint checks](#error-fix-eslint-errors) (HTML & template plugins)      |
-| `SKIP_STYLELINT`       | `--skip-stylelint`         | Skip [stylelint check](#error-fix-stylelint-errors)                                   |
-| `SKIP_HTMLHINT`        | `--skip-htmlhint`          | Skip [htmlhint check](#error-fix-htmlhint-errors)                                     |
-| `SKIP_CSS_CHARS`       | `--skip-css-chars`         | Skip [CSS size check](#error-css-code-is-over--chars)                                 |
-| `SKIP_CODE_CHARS`      | `--skip-code-chars`        | Skip [code size check](#error-python--js-code-is-over--chars)                         |
+| `SKIP_LIB`             | `--skip-lib`               | Skip [libraries check](#error-dont-commit-libraries) error                            |
+| `SKIP_MINIFIED`        | `--skip-minified`          | Skip [minified file check](#error-dont-commit-minified-files) error                   |
+| `SKIP_LFS`             | `--skip-lfs`               | Skip [Git LFS check](#error-use-git-lfs-for-files-over--chars) error                  |
+| `SKIP_PRETTIER`        | `--skip-prettier`          | Skip [Prettier check](#error-format-with-prettier) error                              |
+| `SKIP_USELESS`         | `--skip-useless`           | Skip [useless files check](#error-dont-commit-useless-or-generated-files) error       |
+| `SKIP_DUPLICATE_FILES` | `--skip-duplicate-files`   | Skip [duplicate files check](#error-dont-duplicate-files) error                       |
+| `SKIP_DUPLICATE_LINES` | `--skip-duplicate-lines`   | Skip [duplicate lines check](#error-reduce-duplicate-lines) error                     |
+| `SKIP_PY_FILENAMES`    | `--skip-py-filenames`      | Skip [Python filename check](#error-use-lower_alphanumeric-python-paths) error        |
+| `SKIP_BLACK`           | `--skip-black`             | Skip [Python Black check](#error-format-with-python-black) error                      |
+| `SKIP_FLAKE8`          | `--skip-flake8`            | Skip [flake8 check](#error-fix-flake8-errors) error                                   |
+| `SKIP_BANDIT`          | `--skip-bandit`            | Skip [bandit check](#error-fix-bandit-security-errors) error                          |
+| `SKIP_ESLINT`          | `--skip-eslint`            | Skip [eslint check](#error-fix-eslint-errors) error                                   |
+| `SKIP_ESLINT_DEFAULT`  | `--skip-eslint-default`    | Skip [eslint extra checks](#error-fix-eslint-errors) (HTML & template plugins)        |
+| `SKIP_STYLELINT`       | `--skip-stylelint`         | Skip [stylelint check](#error-fix-stylelint-errors) error                             |
+| `SKIP_HTMLHINT`        | `--skip-htmlhint`          | Skip [htmlhint check](#error-fix-htmlhint-errors) error                               |
+| `SKIP_CSS_CHARS`       | `--skip-css-chars`         | Skip [CSS size check](#error-css-code-is-over--chars) error                           |
+| `SKIP_CODE_CHARS`      | `--skip-code-chars`        | Skip [code size check](#error-python--js-code-is-over--chars) error                   |
+| `SKIP_NPM_AUDIT`       | `--skip-npm-audit`         | Skip [npm audit check](#warning-fix-npm-audit) warning                                |
+| `SKIP_FLAKE8_EXTRA`    | `--skip-flake8-extra`      | Skip [flake8 extra check](#warning-fix-flake8-extra-checks) warning                   |
+| `SKIP_ABSOLUTE_URLS`   | `--skip-absolute-urls`     | Skip [absolute URLs check](#warning-avoid-absolute-urls) warning                      |
 | `LFS_SIZE`             | `--lfs-size=num`           | Files over `num` bytes should use Git LFS (default: 1,000,000)                        |
 | `DUPLICATE_FILESIZE`   | `--duplicate-filesize=num` | Files over `num` bytes should not be duplicated (default: 100)                        |
 | `DUPLICATE_LINES`      | `--duplicate-lines=num`    | Duplicate code over `num` lines are not allowed (default: 50)                         |
@@ -392,6 +395,15 @@ Common errors:
 - **SIM203**: Use 'table not in meta' instead of 'not table in meta'
 
 -->
+
+## WARNING: avoid absolute URLs
+
+Avoid URLs that begin with `/`, e.g. `<a href="/login">` or `<img src="/assets/icon.png">`. If the
+application is deployed at a different path (e.g. at `https://example.org/app/` instead of
+`https://example.org/`), these links will break.
+
+Change URLs to relative paths,
+e.g. `<a href="../login">` or `<a href="login">` or `<img src="../assets/icon.png">`.
 
 ## ERROR: fix bandit security errors
 
