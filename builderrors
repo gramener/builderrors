@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=1.1.1
+VERSION=1.1.2
 
 # Default options
 # NOTE: Bandit catches SQL injections only at low confidence. So default confidence to all, not medium/high
