@@ -1,10 +1,16 @@
 
-ERROR: format with Prettier: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"
+ERROR (prettier) re-format JS/CSS with Prettier
+HELP https://github.com/gramener/builderrors/#prettier
+To fix, run: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"
+
     [warn] script.js
     [warn] Code style issues found in the above file. Forgot to run Prettier?
 
 
-ERROR: fix eslint errors: npx eslint --fix
+ERROR (eslint) fix eslint errors
+HELP https://github.com/gramener/builderrors/#eslint
+To fix, run: npx eslint --fix
+
     index.html:13:9: 'data' is assigned a value but never used. [Error/no-unused-vars]
     index.html:14:9: 'a' is assigned a value but never used. [Error/no-unused-vars]
     index.html:14:13: 'nonexistent' is not defined. [Error/no-undef]
@@ -19,4 +25,4 @@ ERROR: fix eslint errors: npx eslint --fix
 
 ---------------------------------------------------------------------
 BUILD FAILED.
-To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com
+HELP https://github.com/gramener/builderrors

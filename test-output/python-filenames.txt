@@ -1,8 +1,10 @@
 
-ERROR: use lower_alphanumeric Python paths
+ERROR (py-filenames) use lower_alphanumeric Python paths
+HELP https://github.com/gramener/builderrors/#py-filenames
+
     HasCapitals.py
     has-hyphen.py
 
 ---------------------------------------------------------------------
 BUILD FAILED.
-To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com
+HELP https://github.com/gramener/builderrors

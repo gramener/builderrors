@@ -1,5 +1,7 @@
 
-ERROR: don't duplicate files
+ERROR (duplicate-files) delete duplicate files
+HELP https://github.com/gramener/builderrors/#duplicate-files
+
 
     file 1.py
     file 2.py
@@ -14,7 +16,10 @@ ERROR: don't duplicate files
     file2.yaml
 
 
-ERROR: format with Prettier: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"
+ERROR (prettier) re-format JS/CSS with Prettier
+HELP https://github.com/gramener/builderrors/#prettier
+To fix, run: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"
+
     [warn] conf1.yaml
     [warn] conf2.yaml
     [warn] file 1.js
@@ -24,17 +29,24 @@ ERROR: format with Prettier: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,
     [warn] Code style issues found in 6 files. Forgot to run Prettier?
 
 
-ERROR: use lower_alphanumeric Python paths
+ERROR (py-filenames) use lower_alphanumeric Python paths
+HELP https://github.com/gramener/builderrors/#py-filenames
+
     file 1.py
     file 2.py
 
 
-ERROR: fix flake8 errors
+ERROR (flake8) fix flake8 errors
+HELP https://github.com/gramener/builderrors/#flake8
+
     file 1.py:1:2: E221 multiple spaces before operator
     file 2.py:1:2: E221 multiple spaces before operator
 
 
-ERROR: fix eslint errors: npx eslint --fix
+ERROR (eslint) fix eslint errors
+HELP https://github.com/gramener/builderrors/#eslint
+To fix, run: npx eslint --fix
+
     file 1.js:1:10: 'random' is defined but never used. [Error/no-unused-vars]
     file 2.js:1:10: 'random' is defined but never used. [Error/no-unused-vars]
 
@@ -42,4 +54,4 @@ ERROR: fix eslint errors: npx eslint --fix
 
 ---------------------------------------------------------------------
 BUILD FAILED.
-To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com
+HELP https://github.com/gramener/builderrors

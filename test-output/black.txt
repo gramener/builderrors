@@ -1,17 +1,24 @@
 
-ERROR: format with Python black: black . --skip-string-normalization --line-length=99
+ERROR (black) format with Python black
+HELP https://github.com/gramener/builderrors/#black
+To fix, run: black . --skip-string-normalization --line-length=99
+
     would reformat test.py
 
     1 file would be reformatted.
 
 
-ERROR: fix flake8 errors
+ERROR (flake8) fix flake8 errors
+HELP https://github.com/gramener/builderrors/#flake8
+
     test.py:2:3: E111 indentation is not a multiple of 4
 
 
-WARNING: fix flake8 extra checks
+WARNING (flake8-extra) fix flake8 extra checks
+HELP https://github.com/gramener/builderrors/#flake8-extra
+
     test.py:2:3: E111 indentation is not a multiple of 4
 
 ---------------------------------------------------------------------
 BUILD FAILED.
-To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com
+HELP https://github.com/gramener/builderrors

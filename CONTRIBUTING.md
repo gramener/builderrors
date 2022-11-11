@@ -2,7 +2,7 @@
 
 ## More tests
 
-If you have more tests to suggest, please raise an [issue](https://code.gramener.com/cto/builderrors/-/issues). Here are some we're considering:
+If you have more tests to suggest, please raise an [issue](https://github.com/gramener/builderrors/issues). Here are some we're considering:
 
 - Flake8 plugins
   - [flake8-annotations](https://pypi.org/project/flake8-annotations) ⭐116
@@ -91,6 +91,7 @@ Here are some we don't plan to add:
    git tag -a v$VERSION -m"Release $VERSION"
    git push --follow-tags
    ```
+    <!-- git push gitlab master --follow-tags  # For https://code.gramener.com/cto/builderrors -->
 
 6. Deploy image on servers. For example, on Gitlab CI runners, run:
 

@@ -1,5 +1,7 @@
 
-ERROR: reduce duplicate lines
+ERROR (duplicate-lines) reduce duplicate lines
+HELP https://github.com/gramener/builderrors/#duplicate-lines
+
     Clone found (python):
      - file5.py [2:1 - 942:18] (940 lines, 4044 tokens)
        file6.py [2:1 - 942:18]
@@ -29,7 +31,9 @@ ERROR: reduce duplicate lines
        file2.py [135:1 - 861:4]
 
 
-ERROR: reduce Python + JS code to 30000 chars
+ERROR (code-chars) reduce PY/JS code (max: 30000 chars)
+HELP https://github.com/gramener/builderrors/#code-chars
+
     Size 44985 > 30000 (minified). Largest files:
     9749      file2.py
     9742      file1.py
@@ -39,7 +43,9 @@ ERROR: reduce Python + JS code to 30000 chars
     6295      file6.py
 
 
-WARNING: fix flake8 extra checks
+WARNING (flake8-extra) fix flake8 extra checks
+HELP https://github.com/gramener/builderrors/#flake8-extra
+
     file1.py:58:22: B006 Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
     file1.py:58:31: B006 Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
     file1.py:176:23: B006 Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
@@ -73,4 +79,4 @@ WARNING: fix flake8 extra checks
 
 ---------------------------------------------------------------------
 BUILD FAILED.
-To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com
+HELP https://github.com/gramener/builderrors

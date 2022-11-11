@@ -1,5 +1,8 @@
 
-WARNING: fix npm audit: npm audit fix
+WARNING (npm-audit) fix npm audit
+HELP https://github.com/gramener/builderrors/#npm-audit
+To fix, run: npm audit fix
+
     # npm audit report
 
     axios  <=0.21.1
@@ -82,4 +85,4 @@ WARNING: fix npm audit: npm audit fix
 
 ---------------------------------------------------------------------
 BUILD PASSED.
-https://code.gramener.com/cto/builderrors
+HELP https://github.com/gramener/builderrors

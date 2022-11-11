@@ -1,8 +1,11 @@
 
-ERROR: format with Prettier: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"
+ERROR (prettier) re-format JS/CSS with Prettier
+HELP https://github.com/gramener/builderrors/#prettier
+To fix, run: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"
+
     [warn] test.js
     [warn] Code style issues found in the above file. Forgot to run Prettier?
 
 ---------------------------------------------------------------------
 BUILD FAILED.
-To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com
+HELP https://github.com/gramener/builderrors

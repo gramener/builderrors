@@ -9,25 +9,25 @@ Run automated checks on repositories to improve code quality.
   - [Jenkins](#jenkins-usage)
   - [Local](#local-usage)
 - Here are instructions on how to fix each error:
-  - [ERROR: don't commit libraries](#error-dont-commit-libraries)
-  - [ERROR: don't commit minified files](#error-dont-commit-minified-files)
-  - [ERROR: use Git LFS for files over ... chars](#error-use-git-lfs-for-files-over--chars)
-  - [ERROR: don't commit useless or generated files](#error-dont-commit-useless-or-generated-files)
-  - [ERROR: don't duplicate files](#error-dont-duplicate-files)
-  - [ERROR: reduce duplicate lines](#error-reduce-duplicate-lines)
-  - [ERROR: format with Prettier](#error-format-with-prettier)
-  - [ERROR: format with Python black](#error-format-with-python-black)
-  - [ERROR: use lower_alphanumeric Python paths](#error-use-lower_alphanumeric-python-paths)
-  - [ERROR: fix flake8 errors](#error-fix-flake8-errors)
-  - [ERROR: fix bandit security errors](#error-fix-bandit-security-errors)
-  - [ERROR: fix eslint errors](#error-fix-eslint-errors)
-  - [ERROR: fix stylelint errors](#error-fix-stylelint-errors)
-  - [ERROR: fix htmlhint errors](#error-fix-htmlhint-errors)
-  - [ERROR: CSS code is over ... chars](#error-css-code-is-over--chars)
-  - [ERROR: Python + JS code is over ... chars](#error-python--js-code-is-over--chars)
-  - [WARNING: fix npm audit](#warning-fix-npm-audit)
-  - [WARNING: fix flake8 extra checks](#warning-fix-flake8-extra-checks)
-- [Troubleshooting](#troubleshooting)
+  - [ERROR (lib) don't commit libraries](#lib)
+  - [ERROR (minified) don't commit minified files](#minified)
+  - [ERROR (lfs) use Git LFS for large files](#lfs)
+  - [ERROR (useless) don't commit useless/generated files](#useless)
+  - [ERROR (duplicate-files) delete duplicate files](#duplicate-files)
+  - [ERROR (duplicate-lines) reduce duplicate lines](#duplicate-lines)
+  - [ERROR (prettier) re-format JS/CSS with Prettier](#prettier)
+  - [ERROR (black) re-format Python with Black](#black)
+  - [ERROR (py-filenames) use lower_alpha Python paths](#py-filenames)
+  - [ERROR (flake8) fix Python errors](#flake8)
+  - [ERROR (bandit) fix Python security errors](#bandit)
+  - [ERROR (eslint) fix JavaScript errors](#eslint)
+  - [ERROR (stylelint) fix CSS errors](#stylelint)
+  - [ERROR (htmlhint) fix HTML errors](#htmlhint)
+  - [ERROR (css-chars): reduce CSS code](#css-chars)
+  - [ERROR (code-chars) reduce PY/JS code](#code-chars)
+  - [WARNING (npm-audit) avoid unsafe npm packages](#npm-audit)
+  - [WARNING (flake8-extra) improve Python code](#flake8-extra)
+  - [WARNING (absolute-urls) avoid absolute URLs](#absolute-urls)
 - [Alternatives](#alternatives)
 
 ## Gitlab CI usage
@@ -48,7 +48,7 @@ If you used `gramex init` from [gramex](https://github.com/gramener/gramex) befo
 - Delete `.editorconfig`, `.htmllintrc` and `.stylelintrc.js`
 - Copy this [`.eslintrc.js`](.eslintrc.js) and run `npm install --save-dev eslint eslint-plugin-html eslint-plugin-template`
 - If you have a `.flake8` or [equivalent](https://flake8.pycqa.org/en/latest/user/configuration.html), add `extend-ignore=E203,E501`.
-  [`black`](#error-format-with-python-black) handles formatting
+  [`black`](#formatg
 
 ## BitBucket Pipelines usage
 
@@ -123,7 +123,7 @@ pipeline {
 In `bash` or Git Bash, from any folder (e.g. `C:/projects/`) run this:
 
 ```bash
-git clone https://code.gramener.com/cto/builderrors.git
+git clone https://github.com/gramener/builderrors
 cd builderrors
 bash setup.sh
 ```
@@ -177,23 +177,23 @@ under Settings > CI / CD > Variables.
 | Environment variable   | Command line               | Meaning                                                                               |
 | ---------------------- | -------------------------- | ------------------------------------------------------------------------------------- |
 | `VERBOSE`              | `--verbose`                | Show config used and progress                                                         |
-| `SKIP_LIB`             | `--skip-lib`               | Skip [libraries check](#error-dont-commit-libraries) error                            |
-| `SKIP_MINIFIED`        | `--skip-minified`          | Skip [minified file check](#error-dont-commit-minified-files) error                   |
-| `SKIP_LFS`             | `--skip-lfs`               | Skip [Git LFS check](#error-use-git-lfs-for-files-over--chars) error                  |
-| `SKIP_PRETTIER`        | `--skip-prettier`          | Skip [Prettier check](#error-format-with-prettier) error                              |
-| `SKIP_USELESS`         | `--skip-useless`           | Skip [useless files check](#error-dont-commit-useless-or-generated-files) error       |
-| `SKIP_DUPLICATE_FILES` | `--skip-duplicate-files`   | Skip [duplicate files check](#error-dont-duplicate-files) error                       |
-| `SKIP_DUPLICATE_LINES` | `--skip-duplicate-lines`   | Skip [duplicate lines check](#error-reduce-duplicate-lines) error                     |
-| `SKIP_PY_FILENAMES`    | `--skip-py-filenames`      | Skip [Python filename check](#error-use-lower_alphanumeric-python-paths) error        |
-| `SKIP_BLACK`           | `--skip-black`             | Skip [Python Black check](#error-format-with-python-black) error                      |
-| `SKIP_FLAKE8`          | `--skip-flake8`            | Skip [flake8 check](#error-fix-flake8-errors) error                                   |
-| `SKIP_BANDIT`          | `--skip-bandit`            | Skip [bandit check](#error-fix-bandit-security-errors) error                          |
-| `SKIP_ESLINT`          | `--skip-eslint`            | Skip [eslint check](#error-fix-eslint-errors) error                                   |
-| `SKIP_ESLINT_DEFAULT`  | `--skip-eslint-default`    | Skip [eslint extra checks](#error-fix-eslint-errors) (HTML & template plugins)        |
-| `SKIP_STYLELINT`       | `--skip-stylelint`         | Skip [stylelint check](#error-fix-stylelint-errors) error                             |
-| `SKIP_HTMLHINT`        | `--skip-htmlhint`          | Skip [htmlhint check](#error-fix-htmlhint-errors) error                               |
-| `SKIP_CSS_CHARS`       | `--skip-css-chars`         | Skip [CSS size check](#error-css-code-is-over--chars) error                           |
-| `SKIP_CODE_CHARS`      | `--skip-code-chars`        | Skip [code size check](#error-python--js-code-is-over--chars) error                   |
+| `SKIP_LIB`             | `--skip-lib`               | Skip [libraries check](#dont                                                          |
+| `SKIP_MINIFIED`        | `--skip-minified`          | Skip [minified file check](#dont                                                      |
+| `SKIP_LFS`             | `--skip-lfs`               | Skip [Git LFS check](#use                                                             |
+| `SKIP_PRETTIER`        | `--skip-prettier`          | Skip [Prettier check](#format                                                         |
+| `SKIP_USELESS`         | `--skip-useless`           | Skip [useless files check](#dont                                                      |
+| `SKIP_DUPLICATE_FILES` | `--skip-duplicate-files`   | Skip [duplicate files check](#dont                                                    |
+| `SKIP_DUPLICATE_LINES` | `--skip-duplicate-lines`   | Skip [duplicate lines check](#reduce                                                  |
+| `SKIP_PY_FILENAMES`    | `--skip-py-filenames`      | Skip [Python filename check](#use                                                     |
+| `SKIP_BLACK`           | `--skip-black`             | Skip [Python Black check](#format                                                     |
+| `SKIP_FLAKE8`          | `--skip-flake8`            | Skip [flake8 check](#fix                                                              |
+| `SKIP_BANDIT`          | `--skip-bandit`            | Skip [bandit check](#fix                                                              |
+| `SKIP_ESLINT`          | `--skip-eslint`            | Skip [eslint check](#fix                                                              |
+| `SKIP_ESLINT_DEFAULT`  | `--skip-eslint-default`    | Skip [eslint extra checks](#fix                                                       |
+| `SKIP_STYLELINT`       | `--skip-stylelint`         | Skip [stylelint check](#fix                                                           |
+| `SKIP_HTMLHINT`        | `--skip-htmlhint`          | Skip [htmlhint check](#fix                                                            |
+| `SKIP_CSS_CHARS`       | `--skip-css-chars`         | Skip [CSS size check](#css                                                            |
+| `SKIP_CODE_CHARS`      | `--skip-code-chars`        | Skip [code size check](#python                                                        |
 | `SKIP_NPM_AUDIT`       | `--skip-npm-audit`         | Skip [npm audit check](#warning-fix-npm-audit) warning                                |
 | `SKIP_FLAKE8_EXTRA`    | `--skip-flake8-extra`      | Skip [flake8 extra check](#warning-fix-flake8-extra-checks) warning                   |
 | `SKIP_ABSOLUTE_URLS`   | `--skip-absolute-urls`     | Skip [absolute URLs check](#warning-avoid-absolute-urls) warning                      |
@@ -210,7 +210,11 @@ under Settings > CI / CD > Variables.
 
 [`builderrors`](builderrors) reports these errors:
 
-## ERROR: don't commit libraries
+## `lib`
+
+```text
+ERROR (lib) don't commit libraries
+```
 
 `node_modules` (or `bower_components`) should be installed via `npm install` in each environment
 
@@ -218,7 +222,11 @@ under Settings > CI / CD > Variables.
 - Add `bower_components/` and `node_modules/` to your `.gitignore`
 - To skip this check, use `builderrors --skip-libraries` (e.g. to share a git repo for offline installation)
 
-## ERROR: don't commit minified files
+## `minified`
+
+```text
+ERROR (minified) don't commit minified files
+```
 
 Minified files are not source code and shouldn't be version-controlled. They're generated
 
@@ -227,7 +235,11 @@ Minified files are not source code and shouldn't be version-controlled. They're 
 - Change URLs to point to the package (e.g. `node_modules/<lib>/dist/<lib>.min.js`)
 - To skip this check, use `builderrors --skip-minified` (e.g. if the package is not on npm)
 
-## ERROR: use Git LFS for files over ... chars
+## `lfs`
+
+```text
+ERROR (lfs) use Git LFS for large files
+```
 
 Git stores copies of every version. LFS stores pointers instead
 
@@ -246,7 +258,11 @@ Git stores copies of every version. LFS stores pointers instead
   <!-- Dummy comment to avoid MD031/blanks-around-fences -->
 - To skip this check, use `builderrors --skip-lfs` (e.g. if you can't use LFS)
 
-## ERROR: don't commit useless or generated files
+## `useless`
+
+```text
+ERROR (useless) don't commit useless/generated files
+```
 
 Thumbnails (`thumbs.db`), backups (`*~`), etc don't need to be committed. Nor logs (`*.log`)
 
@@ -254,7 +270,11 @@ Thumbnails (`thumbs.db`), backups (`*~`), etc don't need to be committed. Nor lo
 - Add `<useless.file>` to your `.gitignore`
 - To skip this check, use `builderrors --skip-useless` (e.g. if you DO need to commit `.log` files)
 
-## ERROR: don't duplicate files
+## `duplicate-files`
+
+```text
+ERROR (duplicate-files) delete duplicate files
+```
 
 You can re-use the same file
 
@@ -263,7 +283,11 @@ You can re-use the same file
 - To allow duplicate files less than 1000 bytes, run `builderrors --duplicate-filesize=1000`
 - To skip this check, use `builderrors --skip-duplicate-files` (e.g. if you need duplicate files for test cases)
 
-## ERROR: reduce duplicate lines
+## `duplicate-lines`
+
+```text
+ERROR (duplicate-lines) reduce duplicate lines
+```
 
 You can re-use the same code
 
@@ -278,7 +302,11 @@ You can re-use the same code
 - To ignore duplicates up to 100 lines, run `builderrors --duplicate-lines=100`
 - To skip this check, use `builderrors --skip-duplicate-lines` (e.g. if you need duplicate code for test cases)
 
-## ERROR: format with Prettier
+## `prettier`
+
+```text
+ERROR (prettier) re-format JS/CSS with Prettier
+```
 
 It's important to have consistent formatting for readability. We use [prettier](https://prettier.io).
 
@@ -295,32 +323,51 @@ to auto-format your code.
 - Unibeautify supports templates: https://github.com/unibeautify/unibeautify
 -->
 
-- To auto-fix errors, run `npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"`
+- To auto-fix, run `npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"`
 - To ignore specific files, add a [`.prettierignore`](https://prettier.io/docs/en/ignore.html) file (e.g. add `*.html`)
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`.prettierrc`](https://prettier.io/docs/en/configuration.html) file
 - To skip this check, use `builderrors --skip-prettier` (e.g. if you temporarily need the build to pass)
 
-## ERROR: format with Python black
+## `black`
+
+```text
+ERROR (black) re-format Python with Black
+```
 
 It's important to have consistent formatting for readability. We use [black](https://black.readthedocs.io/) for Python files.
 
 Use the [VS Code Prettier - Black plugin](https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter)
 to auto-format your code.
 
-- To auto-fix errors
-  - Run `pip install black` (one-time)
-  - Run `black . --skip-string-normalization --line-length=99`
+- To auto-fix, run:
+  - `pip install black` (one-time)
+  - `black . --skip-string-normalization --line-length=99`
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`pyproject.toml`](https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file) file
 - To skip this check, use `builderrors --skip-black` (e.g. if you temporarily need the build to pass)
 
-## ERROR: use lower_alphanumeric Python paths
+Troubleshooting:
 
-Otherwise you can't import the file.
+- `black is not recognized as an internal or external command`
+  - **FIX**: `pip install black`
+- `pip install black` raises a `PermissionError`
+  - **FIX**: `pip install --user black` instead of `pip install black`
+
+## `py-filenames`
+
+```text
+ERROR (py-filenames) use lower_alpha Python paths
+```
+
+You can't import a Python file unless it has alphanumeric letters. Using lowercase is the convention.
 
 - Rename the Python files using lower case alphanumerics and underscore (`_`)
 - To skip this check, use `builderrors --skip-py-filenames` (e.g. if you won't be importing the module)
 
-## ERROR: fix flake8 errors
+## `flake8`
+
+```text
+ERROR (flake8) fix Python errors
+```
 
 [Flake8](https://flake8.pycqa.org//) reports Python errors with the
 [flake8-blind-except](https://pypi.org/package/flake8-blind-except),
@@ -329,10 +376,6 @@ Otherwise you can't import the file.
 [flake8-2020](https://pypi.org/package/flake8-2020), and
 [pep8-naming](https://pypi.org/package/pep8-naming) plugins.
 
-- To auto-fix errors
-  - Run `pip install autopep8 black` (one-time)
-  - Run `autopep8 -iv --max-line-length 99 *.py`
-  - Run `black . --skip-string-normalization --line-length=99`
 - To ignore a specific line, add [`# noqa: <error-number>`](https://flake8.pycqa.org/en/latest/user/violations.html) at the end, e.g. `print("\n") # noqa: T201`
 - To ignore specific rules, add a [`.flake8`](https://flake8.pycqa.org/en/latest/user/configuration.html) file
   - Make sure to use `extend-ignore=E203,E501` for consistency with [black](https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#flake8)
@@ -354,15 +397,109 @@ Common errors:
 
 -->
 
-## WARNING: fix npm audit
+## `bandit`
+
+```text
+ERROR (bandit) fix Python security errors
+```
+
+[Bandit](https://bandit.readthedocs.io/) reports security errors in Python.
+
+- Re-write the code based on advice from bandit
+- To ignore a specific line, add a [`# nosec`](https://bandit.readthedocs.io/en/latest/config.html#exclusions) at the end
+- To ignore specific rules, add a [`.bandit`](https://bandit.readthedocs.io/en/latest/config.html#bandit-settings) file
+- To only report errors with high confidence, use `builderrors --bandit-confidence=high` (or `medium`)
+- To only report errors with high severity, use `builderrors --bandit-severity=high` (or `medium`)
+- To skip this check, use `builderrors --skip-bandit` (e.g. if there are too many false-positives)
+
+## `eslint`
+
+```text
+ERROR (eslint) fix JavaScript errors
+```
+
+[ESLint](https://eslint.org/) reports JavaScript errors in JS and HTML files -- including HTML templates.
+
+- To auto-fix, run `npx eslint --fix`
+- To ignore a specific line, add a [`// eslint-disable-line`](https://eslint.org/docs/latest/user-guide/configuring/rules#disabling-rules) at the end
+- To ignore specific rules, add a [`.eslintrc.js`](http://eslint.org/docs/rules/) based on the [default](.eslintrc.js)
+- To skip this check, use `builderrors --skip-eslint` (e.g. if you temporarily need the build to pass)
+
+Common errors:
+
+- **[`'x' is not defined. [Error/no-undef]`](http://eslint.org/docs/rules/no-undef)**
+  - [Add in your `.js`](https://eslint.org/docs/latest/user-guide/configuring/language-options#using-configuration-comments-1): `/* globals x, ... */`.
+  - [Add in `.eslintrc.js`](https://eslint.org/docs/latest/user-guide/configuring/language-options#using-configuration-files-1) for libraries like `d3`, `$`, `_`, etc.: `"globals": {"d3": "readonly", ...}`
+- **[`'x' is assigned a value but never used. [Error/no-unused-vars]`](http://eslint.org/docs/rules/no-unused-vars)**
+  - [Add in your `.js`](https://eslint.org/docs/latest/rules/no-unused-vars#exported): `/* exported x, ... */` (or don't assign to the variable)
+
+## `stylelint`
+
+```text
+ERROR (stylelint) fix CSS errors
+```
+
+[stylelint](https://stylelint.io/) reports CSS and SASS errors.
+
+- Re-write the code based on advice from stylelint
+- To ignore a specific line, add a [`/* stylelint-disable-line */`](https://stylelint.io/user-guide/ignore-code) at the end
+- To ignore specific rules, add a [`.stylelintrc.js`](https://stylelint.io/user-guide/configure) file based on the [default](.stylelintrc.js). For example:
+  - `"selector-no-unknown": null` allows styling custom web components
+- To skip this check, use `builderrors --skip-stylelint` (e.g. if you're using third-party provided CSS)
+
+## `htmlhint`
+
+```text
+ERROR (htmlhint) fix HTML errors
+```
+
+[htmlhint](https://htmlhint.com/) checks HTML and reports errors.
+
+- Re-write the code based on advice from htmlhint
+- To ignore specific rules, add a [`.htmlhintrc`](https://htmlhint.com/docs/user-guide/getting-started) file based on the [default](.htmlhintrc)
+- To skip this check, use `builderrors --skip-htmllint` (e.g. if you're building a Lodash template library)
+
+## `css-chars`
+
+```text
+ERROR (css-chars): reduce CSS code
+```
+
+You have too much CSS code, even after minifying with [clean-css](https://www.npmjs.com/package/clean-css-cli).
+
+- Reduce CSS code using libraries
+- To allow 20,000 characters, use `builderrors --css-chars-error=10000`
+- To skip this check, use `builderrors --skip-css-chars`
+
+## `code-chars`
+
+```text
+ERROR (code-chars) reduce PY/JS code
+```
+
+You have too much Python / JavaScript code
+
+- Reduce code using libraries
+- To allow 80,000 characters, use `builderrors --code-chars-error=80000`
+- To skip this check, use `builderrors --skip-code-chars`
+
+## `npm-audit`
+
+```text
+WARNING (npm-audit) avoid unsafe npm packages
+```
 
 [`npm audit`](https://docs.npmjs.com/cli/v8/commands/npm-audit) checks for JavaScript package vulnerabilities.
 
-- To auto-fix errors, run `npm audit fix`
+- To auto-fix, run `npm audit fix`
 - To upgrade all packages to the latest compatible version, run `npm upgrade`
 - Change package versions manually and retry
 
-## WARNING: fix flake8 extra checks
+## `flake8-extra`
+
+```text
+WARNING (flake8-extra) improve Python code
+```
 
 [Flake8](https://flake8.pycqa.org//) reports Python warnings based on experimental plugins. These are **OPTIONAL but GOOD** to fix.
 
@@ -371,7 +508,7 @@ Common errors:
 - [flake8-eradicate](https://pypi.org/package/flake8-eradicate): reports commented code
 - [flake8-simplify](https://pypi.org/package/flake8-simplify): suggests code simplifications
 
-You can fix these exactly like [flake8 errors](#error-fix-flake8-errors).
+You can fix these exactly like [flake8 errors](#fix.
 
 <!-- DO NOT LIST COMMON ERRORS. It wastes space. It's self-explanatory. People can refer it online.
 
@@ -397,7 +534,11 @@ Common errors:
 
 -->
 
-## WARNING: avoid absolute URLs
+## `absolute-urls`
+
+```text
+WARNING (absolute-urls) avoid absolute URLs
+```
 
 Avoid URLs that begin with `/`, e.g. `<a href="/login">` or `<img src="/assets/icon.png">`. If the
 application is deployed at a different path (e.g. at `https://example.org/app/` instead of
@@ -405,73 +546,6 @@ application is deployed at a different path (e.g. at `https://example.org/app/` 
 
 Change URLs to relative paths,
 e.g. `<a href="../login">` or `<a href="login">` or `<img src="../assets/icon.png">`.
-
-## ERROR: fix bandit security errors
-
-[Bandit](https://bandit.readthedocs.io/) reports security errors in Python.
-
-- Re-write the code based on advice from bandit
-- To ignore a specific line, add a [`# nosec`](https://bandit.readthedocs.io/en/latest/config.html#exclusions) at the end
-- To ignore specific rules, add a [`.bandit`](https://bandit.readthedocs.io/en/latest/config.html#bandit-settings) file
-- To only report errors with high confidence, use `builderrors --bandit-confidence=high` (or `medium`)
-- To only report errors with high severity, use `builderrors --bandit-severity=high` (or `medium`)
-- To skip this check, use `builderrors --skip-bandit` (e.g. if there are too many false-positives)
-
-## ERROR: fix eslint errors
-
-[ESLint](https://eslint.org/) reports JavaScript errors in JS and HTML files -- including HTML templates.
-
-- To auto-fix errors, run `npx eslint --fix`
-- To ignore a specific line, add a [`// eslint-disable-line`](https://eslint.org/docs/latest/user-guide/configuring/rules#disabling-rules) at the end
-- To ignore specific rules, add a [`.eslintrc.js`](http://eslint.org/docs/rules/) based on the [default](.eslintrc.js)
-- To skip this check, use `builderrors --skip-eslint` (e.g. if you temporarily need the build to pass)
-
-Common errors:
-
-- **[`'x' is not defined. [Error/no-undef]`](http://eslint.org/docs/rules/no-undef)**
-  - [Add in your `.js`](https://eslint.org/docs/latest/user-guide/configuring/language-options#using-configuration-comments-1): `/* globals x, ... */`.
-  - [Add in `.eslintrc.js`](https://eslint.org/docs/latest/user-guide/configuring/language-options#using-configuration-files-1) for libraries like `d3`, `$`, `_`, etc.: `"globals": {"d3": "readonly", ...}`
-- **[`'x' is assigned a value but never used. [Error/no-unused-vars]`](http://eslint.org/docs/rules/no-unused-vars)**
-  - [Add in your `.js`](https://eslint.org/docs/latest/rules/no-unused-vars#exported): `/* exported x, ... */` (or don't assign to the variable)
-
-## ERROR: fix stylelint errors
-
-[stylelint](https://stylelint.io/) reports CSS and SASS errors.
-
-- Re-write the code based on advice from stylelint
-- To ignore a specific line, add a [`/* stylelint-disable-line */`](https://stylelint.io/user-guide/ignore-code) at the end
-- To ignore specific rules, add a [`.stylelintrc.js`](https://stylelint.io/user-guide/configure) file based on the [default](.stylelintrc.js). For example:
-  - `"selector-no-unknown": null` allows styling custom web components
-- To skip this check, use `builderrors --skip-stylelint` (e.g. if you're using third-party provided CSS)
-
-## ERROR: fix htmlhint errors
-
-[htmlhint](https://htmlhint.com/) checks HTML and reports errors.
-
-- Re-write the code based on advice from htmlhint
-- To ignore specific rules, add a [`.htmlhintrc`](https://htmlhint.com/docs/user-guide/getting-started) file based on the [default](.htmlhintrc)
-- To skip this check, use `builderrors --skip-htmllint` (e.g. if you're building a Lodash template library)
-
-## ERROR: CSS code is over ... chars
-
-You have too much CSS code, even after minifying with [clean-css](https://www.npmjs.com/package/clean-css-cli).
-
-- Reduce CSS code using libraries
-- To allow 20,000 characters, use `builderrors --css-chars-error=10000`
-- To skip this check, use `builderrors --skip-css-chars`
-
-## ERROR: Python + JS code is over ... chars
-
-You have too much Python / JavaScript code
-
-- Reduce code using libraries
-- To allow 80,000 characters, use `builderrors --code-chars-error=80000`
-- To skip this check, use `builderrors --skip-code-chars`
-
-# Troubleshooting
-
-- If `black is not recognized as an internal or external command`, run `pip install black`
-- If `pip install black` raises a `PermissionError` or `WARNING: Failed to write executable - trying to use .deleteme logic`, use `pip install --user black` instead
 
 # Alternatives
 

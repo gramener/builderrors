@@ -1,5 +1,7 @@
 
-ERROR: don't commit libraries
+ERROR (lib) don't commit libraries
+HELP https://github.com/gramener/builderrors/#lib
+
     node_modules/.package-lock.json
     node_modules/is-positive/index.js
     node_modules/is-positive/license
@@ -7,9 +9,12 @@ ERROR: don't commit libraries
     node_modules/is-positive/readme.md
 
 
-ERROR: format with Prettier: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"
+ERROR (prettier) re-format JS/CSS with Prettier
+HELP https://github.com/gramener/builderrors/#prettier
+To fix, run: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"
+
     [error] No matching files. Patterns: node_modules/is-positive/index.js node_modules/is-positive/readme.md
 
 ---------------------------------------------------------------------
 BUILD FAILED.
-To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com
+HELP https://github.com/gramener/builderrors

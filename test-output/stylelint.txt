@@ -1,11 +1,16 @@
 
-ERROR: format with Prettier: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"
+ERROR (prettier) re-format JS/CSS with Prettier
+HELP https://github.com/gramener/builderrors/#prettier
+To fix, run: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"
+
     [warn] style.css
     [warn] style.scss
     [warn] Code style issues found in 2 files. Forgot to run Prettier?
 
 
-ERROR: fix stylelint errors
+ERROR (stylelint) fix stylelint errors
+HELP https://github.com/gramener/builderrors/#stylelint
+
 
     style.css
      15:1  ✖  Unexpected duplicate selector ".app", first used at line 10   no-duplicate-selectors
@@ -18,4 +23,4 @@ ERROR: fix stylelint errors
 
 ---------------------------------------------------------------------
 BUILD FAILED.
-To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com
+HELP https://github.com/gramener/builderrors

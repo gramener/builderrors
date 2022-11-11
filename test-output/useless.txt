@@ -1,5 +1,7 @@
 
-ERROR: don't commit useless or generated files
+ERROR (useless) don't commit useless/generated files
+HELP https://github.com/gramener/builderrors/#useless
+
     .stackdump
     .sublime-project/useless.txt
     .sublime-workspace/useless.txt
@@ -12,4 +14,4 @@ ERROR: don't commit useless or generated files
 
 ---------------------------------------------------------------------
 BUILD FAILED.
-To fix, see https://code.gramener.com/cto/builderrors or mail cto@gramener.com
+HELP https://github.com/gramener/builderrors

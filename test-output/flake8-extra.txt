@@ -1,5 +1,7 @@
 
-WARNING: fix flake8 extra checks
+WARNING (flake8-extra) fix flake8 extra checks
+HELP https://github.com/gramener/builderrors/#flake8-extra
+
     error.py:1:17: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
     error.py:2:5: SIM102 Use a single if-statement instead of nested if-statements
     error.py:4:13: SIM105 Use 'contextlib.suppress(Exception)'
@@ -12,4 +14,4 @@ WARNING: fix flake8 extra checks
 
 ---------------------------------------------------------------------
 BUILD PASSED.
-https://code.gramener.com/cto/builderrors
+HELP https://github.com/gramener/builderrors

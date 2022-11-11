@@ -1,9 +1,11 @@
 
-WARNING: avoid absolute URLs
+WARNING (absolute-urls) avoid absolute URLs
+HELP https://github.com/gramener/builderrors/#absolute-urls
+
       <link rel="stylesheet" href = "/style2.css">
       <img src = "/icon2.png" alt="">
       <a href = "/login">Login</a>
 
 ---------------------------------------------------------------------
 BUILD PASSED.
-https://code.gramener.com/cto/builderrors
+HELP https://github.com/gramener/builderrors
