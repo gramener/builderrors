@@ -46,10 +46,9 @@ validate:
 If you used `gramex init` from [gramex](https://github.com/gramener/gramex) before version 1.84, change the following:
 
 - Delete `.editorconfig`, `.htmllintrc` and `.stylelintrc.js`
-- If you have a `.flake8` or [equivalent](https://flake8.pycqa.org/en/latest/user/configuration.html), add `extend-ignore=E203,E501`
+- Copy this [`.eslintrc.js`](.eslintrc.js) and run `npm install --save-dev eslint eslint-plugin-html eslint-plugin-template`
+- If you have a `.flake8` or [equivalent](https://flake8.pycqa.org/en/latest/user/configuration.html), add `extend-ignore=E203,E501`.
   [`black`](#error-format-with-python-black) handles formatting
-- If you have an `.eslintrc.*`, remove rules for `indent`, `linebreak-style`, `quotes` and `semi`. [`prettier`](#error-format-with-prettier) handles formatting
-- If you don't have an `.eslintrc.*`, copy [`.eslintrc.js`](.eslintrc.js) and run `npm install --save-dev eslint eslint-plugin-html eslint-plugin-template`
 
 ## BitBucket Pipelines usage
 
@@ -75,11 +74,11 @@ From the folder you want check, run this command on Linux:
 <!--
   Why use "--rm"? To delete the container after it runs
   Why use "-it"? Some tools (e.g. jscpd) print colorized output only on interactive terminals
-  Why use "-v $(pwd):/src"? For container to access current host directory at /src (the workdir)
+  Why use "-v `pwd`:/src"? For container to access current host directory at /src (the workdir)
 -->
 
 ```bash
-docker run --rm -it -v $(pwd):/src gramener/builderrors
+docker run --rm -it -v `pwd`:/src gramener/builderrors
 ```
 
 On Windows Command Prompt:
@@ -135,7 +134,7 @@ From the folder _you want to test_, run this in `bash` or Git Bash:
 bash /wherever-you-installed/builderrors
 ```
 
-How to fix errors:
+How to fix install errors:
 
 - `Cannot uninstall 'PyYAML'. It is a distutils installed project ...`: Run [`pip install --ignore-installed PyYAML`](https://stackoverflow.com/a/53534728/100904) first
 - `'bash' is not recognized as an internal or external command`: Run in bash or Git bash, not the Command Prompt or PowerShell
@@ -308,10 +307,11 @@ It's important to have consistent formatting for readability. We use [black](htt
 Use the [VS Code Prettier - Black plugin](https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter)
 to auto-format your code.
 
-- To auto-fix errors, `black . --skip-string-normalization --line-length=99`
-  - This requires `pip install black` (one-time)
+- To auto-fix errors
+  - Run `pip install black` (one-time)
+  - Run `black . --skip-string-normalization --line-length=99`
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`pyproject.toml`](https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file) file
-- To skip this check, use `builderrors --skip-prettier` (e.g. if you temporarily need the build to pass)
+- To skip this check, use `builderrors --skip-black` (e.g. if you temporarily need the build to pass)
 
 ## ERROR: use lower_alphanumeric Python paths
 
@@ -329,9 +329,10 @@ Otherwise you can't import the file.
 [flake8-2020](https://pypi.org/package/flake8-2020), and
 [pep8-naming](https://pypi.org/package/pep8-naming) plugins.
 
-- To auto-fix errors, run `autopep8 -iv --max-line-length 99 *.py`
-  - This requires `pip install autopep8` (one-time)
-  - [Reformat with `black`](#error-format-with-python-black) when done
+- To auto-fix errors
+  - Run `pip install autopep8 black` (one-time)
+  - Run `autopep8 -iv --max-line-length 99 *.py`
+  - Run `black . --skip-string-normalization --line-length=99`
 - To ignore a specific line, add [`# noqa: <error-number>`](https://flake8.pycqa.org/en/latest/user/violations.html) at the end, e.g. `print("\n") # noqa: T201`
 - To ignore specific rules, add a [`.flake8`](https://flake8.pycqa.org/en/latest/user/configuration.html) file
   - Make sure to use `extend-ignore=E203,E501` for consistency with [black](https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#flake8)

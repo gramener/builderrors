@@ -135,12 +135,11 @@ check() {
     if [[ -n "$OUTPUT" ]]; then
       # If it's an error check, print "ERROR:" in red, and exit later with error.
       # If it's a warning, print the type in brown, don't set exit status as error.
-      printf "\n"
       if [[ "$TYPE" == "ERROR" ]]; then
-        echo -e "${RED}$TYPE${CLEAR}: $MSG"
+        echo -e "\n${RED}$TYPE${CLEAR}: $MSG"
         EXIT_STATUS=1
       else
-        echo -e "${BROWN}$TYPE${CLEAR}: $MSG"
+        echo -e "\n${BROWN}$TYPE${CLEAR}: $MSG"
       fi
       echo -E "$OUTPUT" | sed "s/^/    /"
       echo ""
@@ -220,7 +219,7 @@ if [[ ! -n "$SKIP_ESLINT_DEFAULT" ]] && ! compgen -G ".eslintrc.*" > /dev/null; 
   ESLINT_OPTIONS="--config $WIN_SCRIPT_DIR/.eslintrc.js"
 else
   # When using project config, resolve plugins relative current directory
-  npm install > /dev/null
+  npm install > /dev/null 2>&1
   CREATED_NODE_MODULES=1
   ESLINT_OPTIONS="--resolve-plugins-relative-to ."
 fi
@@ -267,7 +266,7 @@ fi
 
 if [[ -f "package-lock.json" ]]; then
   check "WARNING" "$SKIP_NPM_AUDIT" "fix npm audit: ${GREEN}npm audit fix${CLEAR}" \
-    "$(npm audit | grep -v 'found 0 vulnerabilities')"
+    "$(npm audit --prefer-offline --progress=false | grep -v 'found 0 vulnerabilities')"
 fi
 
 check "WARNING" "$SKIP_FLAKE8_EXTRA" "fix flake8 extra checks" \
