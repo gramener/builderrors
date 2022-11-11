@@ -91,6 +91,7 @@ Here are some we don't plan to add:
    git tag -a v$VERSION -m"Release $VERSION"
    git push --follow-tags
    ```
+
     <!-- git push gitlab master --follow-tags  # For https://code.gramener.com/cto/builderrors -->
 
 6. Deploy image on servers. For example, on Gitlab CI runners, run:
