@@ -125,25 +125,22 @@ CLEAR="\033[0m"
 #   If there's an error, it sets $EXIT_STATUS to 1
 check() {
   TYPE="$1"
-  SKIP="$2"
-  MSG="$3"
-  OUTPUT="$4"
+  MSG="$2"
+  OUTPUT="$3"
   if [[ -n "$VERBOSE" ]]; then
     echo -e ".... Checking $MSG" >&2
   fi
-  if [[ -z "$SKIP" ]]; then
-    if [[ -n "$OUTPUT" ]]; then
-      # If it's an error check, print "ERROR:" in red, and exit later with error.
-      # If it's a warning, print the type in brown, don't set exit status as error.
-      if [[ "$TYPE" == "ERROR" ]]; then
-        echo -e "\n${RED}$TYPE${CLEAR}: $MSG"
-        EXIT_STATUS=1
-      else
-        echo -e "\n${BROWN}$TYPE${CLEAR}: $MSG"
-      fi
-      echo -E "$OUTPUT" | sed "s/^/    /"
-      echo ""
+  if [[ -n "$OUTPUT" ]]; then
+    # If it's an error check, print "ERROR:" in red, and exit later with error.
+    # If it's a warning, print the type in brown, don't set exit status as error.
+    if [[ "$TYPE" == "ERROR" ]]; then
+      echo -e "\n${RED}$TYPE${CLEAR}: $MSG"
+      EXIT_STATUS=1
+    else
+      echo -e "\n${BROWN}$TYPE${CLEAR}: $MSG"
     fi
+    echo -E "$OUTPUT" | sed "s/^/    /"
+    echo ""
   fi
 }
 
@@ -157,123 +154,161 @@ fi
 # Run tests in $TARGET_DIR
 cd "$TARGET_DIR" 2>&1 >/dev/null
 
-check "ERROR" "$SKIP_LIB" "don't commit libraries" \
-  "$(git ls-files | grep -E 'node_modules/|bower_components/' | sort)"
-
-check "ERROR" "$SKIP_MINIFIED" "don't commit minified files" \
-  "$(git ls-files | grep -E "$RE_MINIFIED" | sort)"
-
-# comm -23 prints lines unique to file list #1
-#   #1: git files > 1 MB, sorted
-#   #2: git lfs files, sorted
-# Note: git ls-tree --format is supported only in Git 2.36+ (Apr 2022), so use --long instead
-check "ERROR" "$SKIP_LFS" "use Git LFS for files over $LFS_SIZE chars" \
-  "$(comm -23 <(git ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > $LFS_SIZE { print(\$2) }" | sort) <(git lfs ls-files -n | sort))"
-
-check "ERROR" "$SKIP_USELESS" "don't commit useless or generated files" \
-  "$(git ls-files | grep -E '(\.lnk$|^~\$|~$|\.sublime\-|\.ipynb_checkpoints$|\.stackdump$|^thumbs.db$|\.log$)' | sort)"
-
-# List commited files  - git ls-tree ...
-# that are big enough  - awk ...
-# Calculate MD5 hash   - xargs md5sum
-# Sort by MD5 hash     - sort
-# Take duplicates      - uniq -w32 -dD
-# Print as groups      - awk '...;sub(/^\*/, "", $2);...'
-#                      -          ^ strip leading * if Cygwin treats file as binary
-# Note: git ls-tree --format is supported only in Git 2.36+ (Apr 2022), so use --long instead
-check "ERROR" "$SKIP_DUPLICATE_FILES" "don't duplicate files" \
-  "$(git ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > $DUPLICATE_FILESIZE { print(\$2) }" | tr '\n' '\0' | xargs -0 --no-run-if-empty md5sum | sort | uniq -w32 -dD | awk '{if(h!=$1){printf "\n"};sub(/^\*/, "", $2);for (i=2; i<=NF; ++i) printf "%s ", $i;printf "\n";h=$1}')"
-
-# jscpd prints a table of results and "Found <nn> clones" and "Detection time: <nn>ms". Ignore these lines at the end using:
-#   grep '^[a-zA-Z]'        # cut out the table
-#   grep -v '^Found '       # remove "Found <nn> clones"
-#   grep -v '^Detection '   # remove "Detection time: <nn>ms"
-check "ERROR" "$SKIP_DUPLICATE_LINES" "reduce duplicate lines" \
-  "$(git ls-files | grep -E '\.(js|py|css|scss)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/jscpd" --min-lines="$DUPLICATE_LINES" 2>&1 | grep '^[a-zA-Z ]' | grep -v '^Found ' | grep -v '^Detection ')"
-
-# NOTE: Don't run prettier on minified files. No point, and it bloats errors
-# NOTE: Don't run prettier on HTML files. It does not handle Tornado / Lodash templates
-check "ERROR" "$SKIP_PRETTIER" "format with Prettier: ${GREEN}npx prettier --write \"**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}\"${CLEAR}" \
-  "$(git ls-files | grep -E '\.(js|jsx|vue|ts|css|scss|sass|yaml|md)$' | grep -v -E "$RE_MINIFIED" | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/prettier" --loglevel=warn --check 2>&1)"
-
-# black prints "All done!" and "Oh no!" and "<nn> files would be left unchanged." with unicode characters and color. Strip these with "grep -v ..."
-check "ERROR" "$SKIP_BLACK" "format with Python black: ${GREEN}black . --skip-string-normalization --line-length=99${CLEAR}" \
-  "$(git ls-files | grep -E '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty black --check --skip-string-normalization --line-length=${PY_LINE_LENGTH} 2>&1 | grep -v "^All done!" | grep -v "^Oh no!" | grep -v "would be left unchanged.")"
-
-check "ERROR" "$SKIP_PY_FILENAMES" "use lower_alphanumeric Python paths" \
-  "$(git ls-files | grep '\.py$' | sort | grep -e '[^a-z0-9_./]')"
-
-# flake8: ignore E203 which is not PEP8 compliant
-# https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#slices
-# flake8: ignore E501 which black handles
-# https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
-check "ERROR" "$SKIP_FLAKE8" "fix flake8 errors" \
-  "$(git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501)"
-
-check "ERROR" "$SKIP_BANDIT" "fix bandit security errors" \
-  "$(git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty bandit --format txt --severity-level $BANDIT_SEVERITY --confidence-level $BANDIT_CONFIDENCE --quiet 2>/dev/null)"
-
-# If user didn't skip default ESLINT checks, and there's no .eslintrc.*, use eslint from root
-if [[ ! -n "$SKIP_ESLINT_DEFAULT" ]] && ! compgen -G ".eslintrc.*" > /dev/null; then
-  # When using default config, resolve plugins relative to builderrors
-  ESLINT_OPTIONS="--config $WIN_SCRIPT_DIR/.eslintrc.js"
-else
-  # When using project config, resolve plugins relative current directory
-  npm install > /dev/null 2>&1
-  CREATED_NODE_MODULES=1
-  ESLINT_OPTIONS="--resolve-plugins-relative-to ."
-fi
-check "ERROR" "$SKIP_ESLINT" "fix eslint errors: ${GREEN}npx eslint --fix${CLEAR}" \
-  "$(git ls-files | grep -E '\.(html|js)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" $ESLINT_OPTIONS --quiet --format unix 2>&1)"
-if [[ -n "$CREATED_NODE_MODULES" ]]; then
-  git -c core.longPaths=true clean -fd > /dev/null
+if [[ -z "$SKIP_LIB" ]]; then
+  check "ERROR" "don't commit libraries" \
+    "$(git ls-files | grep -E 'node_modules/|bower_components/' | sort)"
 fi
 
-# stylelint uses v8-compile-cache. Disable it since there's nothing to cache on CI
-export DISABLE_V8_COMPILE_CACHE=1
-if [[ ! -f ".stylelintrc.js" ]]; then
-  cp "$SCRIPT_DIR/.stylelintrc.js" .
-  CREATED_STYLELINTRC=1
-fi
-check "ERROR" "$SKIP_STYLELINT" "fix stylelint errors" \
-  "$(git ls-files | grep -E '\.s?css$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/stylelint" --allow-empty-input --config-basedir "$WIN_SCRIPT_DIR" --custom-syntax "$WIN_SCRIPT_DIR/node_modules/postcss-scss" 2>&1)"
-if [[ -n "$CREATED_STYLELINTRC" ]]; then
-  rm .stylelintrc.js
+if [[ -z "$SKIP_MINIFIED" ]]; then
+  check "ERROR" "don't commit minified files" \
+    "$(git ls-files | grep -E "$RE_MINIFIED" | sort)"
 fi
 
-if [[ ! -f ".htmlhintrc" ]]; then
-  cp "$SCRIPT_DIR/.htmlhintrc" .
-  CREATED_HTMLHINTRC=1
+if [[ -z "$SKIP_LFS" ]]; then
+  # comm -23 prints lines unique to file list #1
+  #   #1: git files > 1 MB, sorted
+  #   #2: git lfs files, sorted
+  # Note: git ls-tree --format is supported only in Git 2.36+ (Apr 2022), so use --long instead
+  check "ERROR" "use Git LFS for files over $LFS_SIZE chars" \
+    "$(comm -23 <(git ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > $LFS_SIZE { print(\$2) }" | sort) <(git lfs ls-files -n | sort))"
 fi
-check "ERROR" "$SKIP_HTMLHINT" "fix htmlhint errors" \
-  "$(git ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/htmlhint" --nocolor --format unix)"
-if [[ -n "$CREATED_HTMLHINTRC" ]]; then
-  rm .htmlhintrc
+
+if [[ -z "$SKIP_USELESS" ]]; then
+  check "ERROR" "don't commit useless or generated files" \
+    "$(git ls-files | grep -E '(\.lnk$|^~\$|~$|\.sublime\-|\.ipynb_checkpoints$|\.stackdump$|^thumbs.db$|\.log$)' | sort)"
 fi
 
-check "ERROR" "$SKIP_CSS_CHARS" "reduce CSS code to $CSS_CHARS_ERROR chars" \
-  "$(git ls-files | grep -E '\.s?css$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$SCRIPT_DIR/codesize" --error=$CSS_CHARS_ERROR --top=10)"
+if [[ -z "$SKIP_DUPLICATE_FILES" ]]; then
+  # List commited files  - git ls-tree ...
+  # that are big enough  - awk ...
+  # Calculate MD5 hash   - xargs md5sum
+  # Sort by MD5 hash     - sort
+  # Take duplicates      - uniq -w32 -dD
+  # Print as groups      - awk '...;sub(/^\*/, "", $2);...'
+  #                      -          ^ strip leading * if Cygwin treats file as binary
+  # Note: git ls-tree --format is supported only in Git 2.36+ (Apr 2022), so use --long instead
+  check "ERROR" "don't duplicate files" \
+    "$(git ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > $DUPLICATE_FILESIZE { print(\$2) }" | tr '\n' '\0' | xargs -0 --no-run-if-empty md5sum | sort | uniq -w32 -dD | awk '{if(h!=$1){printf "\n"};sub(/^\*/, "", $2);for (i=2; i<=NF; ++i) printf "%s ", $i;printf "\n";h=$1}')"
+fi
 
-check "ERROR" "$SKIP_CODE_CHARS" "reduce Python + JS code to $CODE_CHARS_ERROR chars" \
-  "$(git ls-files | grep -E '\.py$|\.js$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$SCRIPT_DIR/codesize" --error=$CODE_CHARS_ERROR --top=10)"
+if [[ -z "$SKIP_DUPLICATE_LINES" ]]; then
+  # jscpd prints a table of results and "Found <nn> clones" and "Detection time: <nn>ms". Ignore these lines at the end using:
+  #   grep '^[a-zA-Z]'        # cut out the table
+  #   grep -v '^Found '       # remove "Found <nn> clones"
+  #   grep -v '^Detection '   # remove "Detection time: <nn>ms"
+  check "ERROR" "reduce duplicate lines" \
+    "$(git ls-files | grep -E '\.(js|py|css|scss)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/jscpd" --min-lines="$DUPLICATE_LINES" 2>&1 | grep '^[a-zA-Z ]' | grep -v '^Found ' | grep -v '^Detection ')"
+fi
 
-# Use the venv-extra Python environment
+if [[ -z "$SKIP_PRETTIER" ]]; then
+  # NOTE: Don't run prettier on minified files. No point, and it bloats errors
+  # NOTE: Don't run prettier on HTML files. It does not handle Tornado / Lodash templates
+  check "ERROR" "format with Prettier: ${GREEN}npx prettier --write \"**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}\"${CLEAR}" \
+    "$(git ls-files | grep -E '\.(js|jsx|vue|ts|css|scss|sass|yaml|md)$' | grep -v -E "$RE_MINIFIED" | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/prettier" --loglevel=warn --check 2>&1)"
+fi
+
+if [[ -z "$SKIP_BLACK" ]]; then
+  # black prints "All done!" and "Oh no!" and "<nn> files would be left unchanged." with unicode characters and color. Strip these with "grep -v ..."
+  check "ERROR" "format with Python black: ${GREEN}black . --skip-string-normalization --line-length=99${CLEAR}" \
+    "$(git ls-files | grep -E '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty black --check --skip-string-normalization --line-length=${PY_LINE_LENGTH} 2>&1 | grep -v "^All done!" | grep -v "^Oh no!" | grep -v "would be left unchanged.")"
+fi
+
+if [[ -z "$SKIP_PY_FILENAMES" ]]; then
+  check "ERROR" "use lower_alphanumeric Python paths" \
+    "$(git ls-files | grep '\.py$' | sort | grep -e '[^a-z0-9_./]')"
+fi
+
+if [[ -z "$SKIP_FLAKE8" ]]; then
+  # flake8: ignore E203 which is not PEP8 compliant
+  # https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#slices
+  # flake8: ignore E501 which black handles
+  # https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
+  check "ERROR" "fix flake8 errors" \
+    "$(git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501)"
+fi
+
+if [[ -z "$SKIP_BANDIT" ]]; then
+  check "ERROR" "fix bandit security errors" \
+    "$(git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty bandit --format txt --severity-level $BANDIT_SEVERITY --confidence-level $BANDIT_CONFIDENCE --quiet 2>/dev/null)"
+fi
+
+if [[ -z "$SKIP_ESLINT" ]]; then
+  # If user didn't skip default ESLINT checks, and there's no .eslintrc.*, use eslint from root
+  if [[ ! -n "$SKIP_ESLINT_DEFAULT" ]] && ! compgen -G ".eslintrc.*" > /dev/null; then
+    # When using default config, resolve plugins relative to builderrors
+    ESLINT_OPTIONS="--config $WIN_SCRIPT_DIR/.eslintrc.js"
+  else
+    # When using project config, resolve plugins relative current directory
+    npm install > /dev/null 2>&1
+    CREATED_NODE_MODULES=1
+    ESLINT_OPTIONS="--resolve-plugins-relative-to ."
+  fi
+  check "ERROR" "fix eslint errors: ${GREEN}npx eslint --fix${CLEAR}" \
+    "$(git ls-files | grep -E '\.(html|js)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" $ESLINT_OPTIONS --quiet --format unix 2>&1)"
+  if [[ -n "$CREATED_NODE_MODULES" ]]; then
+    git -c core.longPaths=true clean -fd > /dev/null
+  fi
+fi
+
+if [[ -z "$SKIP_STYLELINT" ]]; then
+  # stylelint uses v8-compile-cache. Disable it since there's nothing to cache on CI
+  export DISABLE_V8_COMPILE_CACHE=1
+  if [[ ! -f ".stylelintrc.js" ]]; then
+    cp "$SCRIPT_DIR/.stylelintrc.js" .
+    CREATED_STYLELINTRC=1
+  fi
+  check "ERROR" "fix stylelint errors" \
+    "$(git ls-files | grep -E '\.s?css$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/stylelint" --allow-empty-input --config-basedir "$WIN_SCRIPT_DIR" --custom-syntax "$WIN_SCRIPT_DIR/node_modules/postcss-scss" 2>&1)"
+  if [[ -n "$CREATED_STYLELINTRC" ]]; then
+    rm .stylelintrc.js
+  fi
+fi
+
+if [[ -z "$SKIP_HTMLHINT" ]]; then
+  if [[ ! -f ".htmlhintrc" ]]; then
+    cp "$SCRIPT_DIR/.htmlhintrc" .
+    CREATED_HTMLHINTRC=1
+  fi
+  check "ERROR" "fix htmlhint errors" \
+    "$(git ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/htmlhint" --nocolor --format unix)"
+  if [[ -n "$CREATED_HTMLHINTRC" ]]; then
+    rm .htmlhintrc
+  fi
+fi
+
+if [[ -z "$SKIP_CSS_CHARS" ]]; then
+  check "ERROR" "reduce CSS code to $CSS_CHARS_ERROR chars" \
+    "$(git ls-files | grep -E '\.s?css$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$SCRIPT_DIR/codesize" --error=$CSS_CHARS_ERROR --top=10)"
+fi
+
+if [[ -z "$SKIP_CODE_CHARS" ]]; then
+  check "ERROR" "reduce Python + JS code to $CODE_CHARS_ERROR chars" \
+    "$(git ls-files | grep -E '\.py$|\.js$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$SCRIPT_DIR/codesize" --error=$CODE_CHARS_ERROR --top=10)"
+fi
+
+# For warnings, use the venv-extra Python environment
 if [[ -f "${SCRIPT_DIR}/venv-extra/bin/activate" ]]; then
   source "${SCRIPT_DIR}/venv-extra/bin/activate"
 elif [[ -f "${SCRIPT_DIR}/venv-extra/Scripts/activate" ]]; then
   source "${SCRIPT_DIR}/venv-extra/Scripts/activate"
 fi
 
-if [[ -f "package-lock.json" ]]; then
-  check "WARNING" "$SKIP_NPM_AUDIT" "fix npm audit: ${GREEN}npm audit fix${CLEAR}" \
-    "$(npm audit --prefer-offline --progress=false | grep -v 'found 0 vulnerabilities')"
+if [[ -z "$SKIP_NPM_AUDIT" ]]; then
+  if [[ -f "package-lock.json" ]]; then
+    check "WARNING" "fix npm audit: ${GREEN}npm audit fix${CLEAR}" \
+      "$(npm audit --prefer-offline --progress=false | grep -v 'found 0 vulnerabilities')"
+  fi
 fi
 
-check "WARNING" "$SKIP_FLAKE8_EXTRA" "fix flake8 extra checks" \
-  "$(git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501)"
+if [[ -z "$SKIP_FLAKE8_EXTRA" ]]; then
+  check "WARNING" "fix flake8 extra checks" \
+    "$(git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501)"
+fi
 
-check "WARNING" "$SKIP_ABSOLUTE_URLS" "avoid absolute URLs" \
-  "$(git ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty grep -e 'href\s*=\s*"/' -e 'src\s*=\s*"/')"
+if [[ -z "$SKIP_ABSOLUTE_URLS" ]]; then
+  check "WARNING" "avoid absolute URLs" \
+    "$(git ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty grep -e 'href\s*=\s*"/' -e 'src\s*=\s*"/')"
+fi
 
 # If ANY of the ERRORS above failed, exit with an error message
 if [[ $EXIT_STATUS -ne 0 ]]; then
