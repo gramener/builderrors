@@ -17,6 +17,14 @@ HELP https://github.com/gramener/builderrors/#pydoc
             D100: Missing docstring in public module
 
 
+INFO (folders) review folder structure and files
+HELP https://github.com/gramener/builderrors/#folders
+
+    HasCapitals.py
+    has-hyphen.py
+    has_underscore.py
+
+
 INFO (code-size) review largest PY/JS code
 HELP https://github.com/gramener/builderrors/#code-size
 

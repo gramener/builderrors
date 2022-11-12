@@ -8,6 +8,16 @@ HELP https://github.com/gramener/builderrors/#minified
     web.pack.js
 
 
+INFO (folders) review folder structure and files
+HELP https://github.com/gramener/builderrors/#folders
+
+    .editorconfig
+    bootstrap.min.css
+    underscore-min.js
+    underscore.min.js
+    web.pack.js
+
+
 INFO (css-size) review largest CSS code
 HELP https://github.com/gramener/builderrors/#css-size
 

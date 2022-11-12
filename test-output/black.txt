@@ -1,5 +1,5 @@
 
-ERROR (black) re-format Python with Black
+ERROR (black) auto-format Python with Black
 HELP https://github.com/gramener/builderrors/#black
 To fix, run: black . --skip-string-normalization --line-length=99
 
@@ -27,6 +27,12 @@ HELP https://github.com/gramener/builderrors/#pydoc
             D100: Missing docstring in public module
     test.py:1 in public function `test`:
             D103: Missing docstring in public function
+
+
+INFO (folders) review folder structure and files
+HELP https://github.com/gramener/builderrors/#folders
+
+    test.py
 
 
 INFO (code-size) review largest PY/JS code

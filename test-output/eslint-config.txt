@@ -1,5 +1,5 @@
 
-ERROR (prettier) re-format JS/CSS with Prettier
+ERROR (prettier) auto-format JS/CSS with Prettier
 HELP https://github.com/gramener/builderrors/#prettier
 To fix, run: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"
 
@@ -22,6 +22,17 @@ To fix, run: npx eslint --fix
     script.js:31:10: 'dosomething3' is already defined. [Error/no-redeclare]
 
     9 problems
+
+
+INFO (folders) review folder structure and files
+HELP https://github.com/gramener/builderrors/#folders
+
+    .eslintrc.js
+    .gitignore
+    index.html
+    package-lock.json
+    package.json
+    script.js
 
 
 INFO (code-size) review largest PY/JS code

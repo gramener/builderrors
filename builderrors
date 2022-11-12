@@ -17,7 +17,7 @@ export LC_ALL=C
 
 # Refer https://stackoverflow.com/a/7948533/100904 for getopt usage
 OPTIONS=v
-LONGOPTS=verbose,skip-lib,skip-minified,skip-lfs,skip-prettier,skip-useless,skip-duplicate-files,skip-duplicate-lines,skip-py-filenames,skip-black,skip-flake8,skip-bandit,skip-eslint,skip-eslint-default,skip-stylelint,skip-htmlhint,skip-css-size,skip-code-size,skip-npm-audit,skip-flake8-extra,skip-pydoc,skip-absolute-urls,lfs-size:,duplicate-filesize:,duplicate-lines:,py-line-length:,bandit-confidence:,bandit-severity:
+LONGOPTS=verbose,skip-lib,skip-minified,skip-lfs,skip-prettier,skip-useless,skip-duplicate-files,skip-duplicate-lines,skip-py-filenames,skip-black,skip-flake8,skip-bandit,skip-eslint,skip-eslint-default,skip-stylelint,skip-htmlhint,skip-folders,skip-css-size,skip-code-size,skip-npm-audit,skip-flake8-extra,skip-pydoc,skip-absolute-urls,lfs-size:,duplicate-filesize:,duplicate-lines:,py-line-length:,bandit-confidence:,bandit-severity:
 TEMP=$(getopt --options "$OPTIONS" --longoptions "$LONGOPTS" --name builderrors -- "$@")
 if [ $? != 0 ] ; then echo "Could not run: builderrors $@" >&2 ; exit 1 ; fi
 eval set -- "$TEMP"
@@ -39,12 +39,13 @@ while true; do
     "--skip-eslint-default" ) SKIP_ESLINT_DEFAULT='--'; shift ;;
     "--skip-stylelint" ) SKIP_STYLELINT='--'; shift ;;
     "--skip-htmlhint" ) SKIP_HTMLHINT='--'; shift ;;
-    "--skip-css-size" ) SKIP_CSS_CHARS='--'; shift ;;
-    "--skip-code-size" ) SKIP_CODE_CHARS='--'; shift ;;
     "--skip-npm-audit" ) SKIP_NPM_AUDIT='--'; shift ;;
     "--skip-flake8-extra" ) SKIP_FLAKE8_EXTRA='--'; shift ;;
     "--skip-pydoc" ) SKIP_PYDOC='--'; shift ;;
     "--skip-absolute-urls" ) SKIP_ABSOLUTE_URLS='--'; shift ;;
+    "--skip-folders" ) SKIP_FOLDERS='--'; shift ;;
+    "--skip-css-size" ) SKIP_CSS_SIZE='--'; shift ;;
+    "--skip-code-size" ) SKIP_CODE_SIZE='--'; shift ;;
     "--lfs-size" ) LFS_SIZE=$2; shift 2 ;;
     "--duplicate-filesize" ) DUPLICATE_FILESIZE=$2; shift 2 ;;
     "--duplicate-lines" ) DUPLICATE_LINES=$2; shift 2 ;;
@@ -78,12 +79,13 @@ if [[ -n "$VERBOSE" ]]; then
   echo "  ${SKIP_ESLINT_DEFAULT:-# --}skip-eslint-default \\"
   echo "  ${SKIP_STYLELINT:-# --}skip-stylelint \\"
   echo "  ${SKIP_HTMLHINT:-# --}skip-htmlhint \\"
-  echo "  ${SKIP_CSS_CHARS:-# --}skip-css-size \\"
-  echo "  ${SKIP_CODE_CHARS:-# --}skip-code-size \\"
   echo "  ${SKIP_NPM_AUDIT:-# --}skip-npm-audit \\"
   echo "  ${SKIP_FLAKE8_EXTRA:-# --}skip-flake8-extra \\"
   echo "  ${SKIP_PYDOC:-# --}skip-pydoc \\"
   echo "  ${SKIP_ABSOLUTE_URLS:-# --}skip-absolute-urls \\"
+  echo "  ${SKIP_FOLDERS:-# --}skip-folders \\"
+  echo "  ${SKIP_CSS_SIZE:-# --}skip-css-size \\"
+  echo "  ${SKIP_CODE_SIZE:-# --}skip-code-size \\"
   echo "  --lfs-size=$LFS_SIZE \\"
   echo "  --duplicate-filesize=$DUPLICATE_FILESIZE \\"
   echo "  --duplicate-lines=$DUPLICATE_LINES \\"
@@ -147,8 +149,10 @@ check() {
       if [[ "$TYPE" == "ERROR" ]]; then
         echo -e "${SECTION_START}${RED}$TYPE ($CODE)${CLEAR} $MSG"
         EXIT_STATUS=1
-      else
+      elif [[ "$TYPE" == "WARNING" ]]; then
         echo -e "${SECTION_START}${BROWN}$TYPE ($CODE)${CLEAR} $MSG"
+      elif [[ "$TYPE" == "INFO" ]]; then
+        echo -e "${SECTION_START}${GREEN}$TYPE ($CODE)${CLEAR} $MSG"
       fi
       echo -e "${YELLOW}HELP${CLEAR} https://github.com/gramener/builderrors/#${CODE}"
       if [[ -n "$FIX" ]]; then
@@ -225,13 +229,13 @@ check-prettier() {
   # NOTE: Don't run prettier on HTML files. It does not handle Tornado / Lodash templates
   git ls-files | grep -E '\.(js|jsx|vue|ts|css|scss|sass|yaml|md)$' | grep -v -E "$RE_MINIFIED" | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/prettier" --loglevel=warn --check 2>&1
 }
-check "$SKIP_PRETTIER" "ERROR" "prettier" "re-format JS/CSS with Prettier" "npx prettier --write \"**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}\"" \
+check "$SKIP_PRETTIER" "ERROR" "prettier" "auto-format JS/CSS with Prettier" "npx prettier --write \"**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}\"" \
 
 check-black() {
   # black prints "All done!" and "Oh no!" and "<nn> files would be left unchanged." with unicode characters and color. Strip these with "grep -v ..."
   git ls-files | grep -E '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty black --check --skip-string-normalization --line-length=${PY_LINE_LENGTH} 2>&1 | grep -v "^All done!" | grep -v "^Oh no!" | grep -v "would be left unchanged."
 }
-check "$SKIP_BLACK" "ERROR" "black" "re-format Python with Black" "black . --skip-string-normalization --line-length=99" \
+check "$SKIP_BLACK" "ERROR" "black" "auto-format Python with Black" "black . --skip-string-normalization --line-length=99" \
 
 check-py-filenames() {
   git ls-files | grep '\.py$' | sort | grep -e '[^a-z0-9_./]'
@@ -332,15 +336,20 @@ check-absolute-urls() {
 check "$SKIP_ABSOLUTE_URLS" "WARNING" "absolute-urls" "avoid absolute URLs" ""
 
 
+check-folders() {
+  git ls-files | python "$WIN_SCRIPT_DIR/printfiles.py"
+}
+check "$SKIP_FOLDERS" "INFO" "folders" "review folder structure and files" ""
+
 check-css-size() {
   git ls-files | grep -E '\.s?css$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty wc | sort -nrk 1
 }
-check "$SKIP_CSS_CHARS" "INFO" "css-size" "review largest CSS code" ""
+check "$SKIP_CSS_SIZE" "INFO" "css-size" "review largest CSS code" ""
 
 check-code-size() {
   git ls-files | grep -E '\.py$|\.js$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty wc | sort -nrk 1
 }
-check "$SKIP_CODE_CHARS" "INFO" "code-size" "review largest PY/JS code" ""
+check "$SKIP_CODE_SIZE" "INFO" "code-size" "review largest PY/JS code" ""
 
 # If ANY of the ERRORS above failed, exit with an error message
 if [[ $EXIT_STATUS -ne 0 ]]; then

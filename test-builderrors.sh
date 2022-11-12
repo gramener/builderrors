@@ -33,21 +33,26 @@ check() {
   git -c core.longPaths=true clean -fd > /dev/null
   git checkout --quiet "$BRANCH"
 
-  # In the diff below:
+  # diff
   #   --ignore-space-change: when running on git bash, the number of spaces changes
   #   --ignore-tab-expansion: same as above
   #   --ignore-trailing-space: duplicate-files awk script has a trailing space
   #   --ignore-matching-lines: ignores bandit's report of the batch run time
-  #   sed #1: strips color codes from jscpd: https://stackoverflow.com/a/18000433/100904
-  #   sed #2: strip current directory in output of eslint, htmlhint
-  #   sed #3: replace "BUILD FAILED on builderrors version ..." with a standard "BUILD FAILED."
-  #   sed #4: replace .\file.py with ./file.py for bandit
+  # builderrors
+  #   --duplicate-filesize=0: show the empty duplicate filenames we have in our tests
+  #   --duplicate-lines=30: test cases are built using this value
+  # sed
+  #   #1: strips color codes from jscpd: https://stackoverflow.com/a/18000433/100904
+  #   #2: strip current directory in output of eslint, htmlhint
+  #   #3: replace "BUILD FAILED on builderrors version ..." with a standard "BUILD FAILED."
+  #   #4: replace "BUILD PASSED on builderrors version ..." with a standard "BUILD PASSED."
+  #   #5: replace .\file.py with ./file.py for bandit
   diff \
     --ignore-space-change \
     --ignore-tab-expansion \
     --ignore-trailing-space \
     --ignore-matching-lines="Run started.*" \
-    <(../builderrors $@ --duplicate-filesize=0 --duplicate-lines=30 --lfs-size=1000000 | \
+    <(../builderrors $@ --duplicate-filesize=0 --duplicate-lines=30 | \
       sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" |
       sed "s/^BUILD FAILED.*/BUILD FAILED./" |
       sed "s/^BUILD PASSED.*/BUILD PASSED./" |

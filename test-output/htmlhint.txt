@@ -8,6 +8,12 @@ HELP https://github.com/gramener/builderrors/#htmlhint
 
     3 problems
 
+
+INFO (folders) review folder structure and files
+HELP https://github.com/gramener/builderrors/#folders
+
+    index.html
+
 ---------------------------------------------------------------------
 BUILD FAILED.
 HELP https://github.com/gramener/builderrors

@@ -6,7 +6,6 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
 
 - Flake8 plugins
   - [flake8-annotations](https://pypi.org/project/flake8-annotations) ⭐116
-  - [flake8-docstrings](https://pypi.org/project/flake8-docstrings) ⭐97
   - [flake8-cognitive-complexity](https://pypi.org/project/flake8-cognitive-complexity) ⭐54. More apt than McCabe complexity
 - ESLint plugins
   - [@typescript-eslint/eslint-plugin](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin) ⭐12,400

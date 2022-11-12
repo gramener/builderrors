@@ -4,6 +4,12 @@ HELP https://github.com/gramener/builderrors/#lfs
 
     large-file.txt
 
+
+INFO (folders) review folder structure and files
+HELP https://github.com/gramener/builderrors/#folders
+
+    large-file.txt
+
 ---------------------------------------------------------------------
 BUILD FAILED.
 HELP https://github.com/gramener/builderrors

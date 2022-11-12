@@ -6,6 +6,12 @@ HELP https://github.com/gramener/builderrors/#absolute-urls
       <img src = "/icon2.png" alt="">
       <a href = "/login">Login</a>
 
+
+INFO (folders) review folder structure and files
+HELP https://github.com/gramener/builderrors/#folders
+
+    index.html
+
 ---------------------------------------------------------------------
 BUILD PASSED.
 HELP https://github.com/gramener/builderrors

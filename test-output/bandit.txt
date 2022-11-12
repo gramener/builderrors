@@ -44,6 +44,12 @@ HELP https://github.com/gramener/builderrors/#pydoc
             D103: Missing docstring in public function
 
 
+INFO (folders) review folder structure and files
+HELP https://github.com/gramener/builderrors/#folders
+
+    bandit_error.py
+
+
 INFO (code-size) review largest PY/JS code
 HELP https://github.com/gramener/builderrors/#code-size
 

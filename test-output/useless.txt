@@ -12,6 +12,21 @@ HELP https://github.com/gramener/builderrors/#useless
     ~
     ~$
 
+
+INFO (folders) review folder structure and files
+HELP https://github.com/gramener/builderrors/#folders
+
+    .ipynb_checkpoints | useless.ipynb
+    .stackdump
+    .sublime-project | useless.txt
+    .sublime-workspace | useless.txt
+    thumbs.db
+    useless.lnk
+    useless.log
+    useless~
+    ~
+    ~$
+
 ---------------------------------------------------------------------
 BUILD FAILED.
 HELP https://github.com/gramener/builderrors

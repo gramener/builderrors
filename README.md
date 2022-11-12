@@ -15,8 +15,8 @@ Run automated checks on repositories to improve code quality.
   - [ERROR (useless) don't commit useless/generated files](#useless)
   - [ERROR (duplicate-files) delete duplicate files](#duplicate-files)
   - [ERROR (duplicate-lines) reduce duplicate lines](#duplicate-lines)
-  - [ERROR (prettier) re-format JS/CSS with Prettier](#prettier)
-  - [ERROR (black) re-format Python with Black](#black)
+  - [ERROR (prettier) auto-format JS/CSS with Prettier](#prettier)
+  - [ERROR (black) auto-format Python with Black](#black)
   - [ERROR (py-filenames) use lower_alpha Python paths](#py-filenames)
   - [ERROR (flake8) fix Python errors](#flake8)
   - [ERROR (bandit) fix Python security errors](#bandit)
@@ -27,6 +27,7 @@ Run automated checks on repositories to improve code quality.
   - [WARNING (flake8-extra) improve Python code](#flake8-extra)
   - [WARNING (pydoc) document Python code](#pydoc)
   - [WARNING (absolute-urls) avoid absolute URLs](#absolute-urls)
+  - [INFO (folders): review folder structure and files](#folders)
   - [INFO (css-size): review largest CSS code](#css-size)
   - [INFO (code-size) review largest PY/JS code](#code-size)
 - [Alternatives](#alternatives)
@@ -196,8 +197,9 @@ under Settings > CI / CD > Variables.
 | `SKIP_NPM_AUDIT`       | `--skip-npm-audit`         | Skip [npm audit info](#npm-audit) warning                                             |
 | `SKIP_FLAKE8_EXTRA`    | `--skip-flake8-extra`      | Skip [flake8 extra check](#flake8-extra) warning                                      |
 | `SKIP_ABSOLUTE_URLS`   | `--skip-absolute-urls`     | Skip [absolute URLs check](#absolute-urls) warning                                    |
-| `SKIP_CSS_CHARS`       | `--skip-css-size`          | Skip [CSS size info](#css-size)                                                       |
-| `SKIP_CODE_CHARS`      | `--skip-code-size`         | Skip [PY/JS size info](#code-size)                                                    |
+| `SKIP_FOLDERS`         | `--skip-folders`           | Skip [folders info](#folders)                                                         |
+| `SKIP_CSS_SIZE`        | `--skip-css-size`          | Skip [CSS size info](#css-size)                                                       |
+| `SKIP_CODE_SIZE`       | `--skip-code-size`         | Skip [PY/JS size info](#code-size)                                                    |
 | `LFS_SIZE`             | `--lfs-size=num`           | Files over `num` bytes should use Git LFS (default: 1,000,000)                        |
 | `DUPLICATE_FILESIZE`   | `--duplicate-filesize=num` | Files over `num` bytes should not be duplicated (default: 100)                        |
 | `DUPLICATE_LINES`      | `--duplicate-lines=num`    | Duplicate code over `num` lines are not allowed (default: 50)                         |
@@ -304,7 +306,7 @@ You can re-use the same code
 ## `prettier`
 
 ```text
-ERROR (prettier) re-format JS/CSS with Prettier
+ERROR (prettier) auto-format JS/CSS with Prettier
 ```
 
 It's important to have consistent formatting for readability. We use [prettier](https://prettier.io).
@@ -330,7 +332,7 @@ to auto-format your code.
 ## `black`
 
 ```text
-ERROR (black) re-format Python with Black
+ERROR (black) auto-format Python with Black
 ```
 
 It's important to have consistent formatting for readability. We use [black](https://black.readthedocs.io/) for Python files.
@@ -532,6 +534,15 @@ application is deployed at a different path (e.g. at `https://example.org/app/` 
 
 Change URLs to relative paths,
 e.g. `<a href="../login">` or `<a href="login">` or `<img src="../assets/icon.png">`.
+
+## `folders`
+
+```text
+INFO (folders): review folder structure and files
+```
+
+- Commit only necessary files
+- Group files logically into folders
 
 ## `css-size`
 

@@ -83,6 +83,14 @@ To fix, run: npm audit fix
     To address all issues (including breaking changes), run:
       npm audit fix --force
 
+
+INFO (folders) review folder structure and files
+HELP https://github.com/gramener/builderrors/#folders
+
+    .gitignore
+    package-lock.json
+    package.json
+
 ---------------------------------------------------------------------
 BUILD PASSED.
 HELP https://github.com/gramener/builderrors

@@ -66,6 +66,19 @@ HELP https://github.com/gramener/builderrors/#flake8-extra
     file6.py:837:1: SIM120 Use 'class PeriodicCallback:' instead of 'class PeriodicCallback(object):'
 
 
+INFO (folders) review folder structure and files
+HELP https://github.com/gramener/builderrors/#folders
+
+    .editorconfig
+    .flake8
+    file1.py
+    file2.py
+    file3.py
+    file4.py
+    file5.py
+    file6.py
+
+
 INFO (code-size) review largest PY/JS code
 HELP https://github.com/gramener/builderrors/#code-size
 

@@ -16,7 +16,7 @@ HELP https://github.com/gramener/builderrors/#duplicate-files
     file2.yaml
 
 
-ERROR (prettier) re-format JS/CSS with Prettier
+ERROR (prettier) auto-format JS/CSS with Prettier
 HELP https://github.com/gramener/builderrors/#prettier
 To fix, run: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"
 
@@ -60,6 +60,19 @@ HELP https://github.com/gramener/builderrors/#pydoc
             D100: Missing docstring in public module
     file 2.py:1 at module level:
             D100: Missing docstring in public module
+
+
+INFO (folders) review folder structure and files
+HELP https://github.com/gramener/builderrors/#folders
+
+    conf1.yaml
+    conf2.yaml
+    file 1.js
+    file 1.py
+    file 2.js
+    file 2.py
+    file1.yaml
+    file2.yaml
 
 
 INFO (code-size) review largest PY/JS code
