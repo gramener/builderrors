@@ -155,10 +155,10 @@ You can pass options as command-line parameters. For example:
 ```bash
 # Skip flake8. Report errors only if 100+ lines are duplicated
 docker run --rm -it -v $(pwd):/src gramener/builderrors \
-  builderrors --skip-flake8 --duplicate-lines=100000
+  builderrors --skip=flake8 --duplicate-lines=100000
 
 # Skip Git LFS, eslint and stylelint
-bash /path/to/builderrors --skip-lfs --skip-eslint --skip-stylelint
+bash /path/to/builderrors --skip=lfs --skip=eslint --skip=stylelint
 ```
 
 You can also pass options as environment variables. (Command line overrides environment variables.) For example:
@@ -176,36 +176,42 @@ SKIP_LFS=1 SKIP_ESLINT=1 SKIP_STYLELINT=1 bash /path/to/builderrors
 On Gitlab, set [environment variables](https://docs.gitlab.com/ce/ci/variables/)
 under Settings > CI / CD > Variables.
 
-| Environment variable   | Command line               | Meaning                                                                               |
-| ---------------------- | -------------------------- | ------------------------------------------------------------------------------------- |
-| `VERBOSE`              | `--verbose`                | Show config used and progress                                                         |
-| `SKIP_LIB`             | `--skip-lib`               | Skip [libraries check](#lib)                                                          |
-| `SKIP_MINIFIED`        | `--skip-minified`          | Skip [minified file check](#minified)                                                 |
-| `SKIP_LFS`             | `--skip-lfs`               | Skip [Git LFS check](#lfs)                                                            |
-| `SKIP_PRETTIER`        | `--skip-prettier`          | Skip [Prettier check](#prettier)                                                      |
-| `SKIP_USELESS`         | `--skip-useless`           | Skip [useless files check](#useless)                                                  |
-| `SKIP_DUPLICATE_FILES` | `--skip-duplicate-files`   | Skip [duplicate files check](#duplicate-files)                                        |
-| `SKIP_DUPLICATE_LINES` | `--skip-duplicate-lines`   | Skip [duplicate lines check](#duplicate-lines)                                        |
-| `SKIP_PY_FILENAMES`    | `--skip-py-filenames`      | Skip [Python filename check](#py-filenames)                                           |
-| `SKIP_BLACK`           | `--skip-black`             | Skip [Python Black check](#black)                                                     |
-| `SKIP_FLAKE8`          | `--skip-flake8`            | Skip [flake8 check](#flake8)                                                          |
-| `SKIP_BANDIT`          | `--skip-bandit`            | Skip [bandit check](#bandit)                                                          |
-| `SKIP_ESLINT`          | `--skip-eslint`            | Skip [eslint check](#eslint)                                                          |
-| `SKIP_ESLINT_DEFAULT`  | `--skip-eslint-default`    | Skip [eslint extra checks](#eslint)                                                   |
-| `SKIP_STYLELINT`       | `--skip-stylelint`         | Skip [stylelint check](#stylelint)                                                    |
-| `SKIP_HTMLHINT`        | `--skip-htmlhint`          | Skip [htmlhint check](#htmlhint)                                                      |
-| `SKIP_NPM_AUDIT`       | `--skip-npm-audit`         | Skip [npm audit info](#npm-audit) warning                                             |
-| `SKIP_FLAKE8_EXTRA`    | `--skip-flake8-extra`      | Skip [flake8 extra check](#flake8-extra) warning                                      |
-| `SKIP_ABSOLUTE_URLS`   | `--skip-absolute-urls`     | Skip [absolute URLs check](#absolute-urls) warning                                    |
-| `SKIP_FOLDERS`         | `--skip-folders`           | Skip [folders info](#folders)                                                         |
-| `SKIP_CSS_SIZE`        | `--skip-css-size`          | Skip [CSS size info](#css-size)                                                       |
-| `SKIP_CODE_SIZE`       | `--skip-code-size`         | Skip [PY/JS size info](#code-size)                                                    |
-| `LFS_SIZE`             | `--lfs-size=num`           | Files over `num` bytes should use Git LFS (default: 1,000,000)                        |
-| `DUPLICATE_FILESIZE`   | `--duplicate-filesize=num` | Files over `num` bytes should not be duplicated (default: 100)                        |
-| `DUPLICATE_LINES`      | `--duplicate-lines=num`    | Duplicate code over `num` lines are not allowed (default: 50)                         |
-| `PY_LINE_LENGTH`       | `--py-line-length=num`     | Approx line length of Python code used by Black (default: 99)                         |
-| `BANDIT_CONFIDENCE`    | `--bandit-confidence=low`  | Show bandit errors with `low` or more confidence. `medium`, `high`, `all` are allowed |
-| `BANDIT_SEVERITY`      | `--bandit-severity=low`    | Show bandit errors with `low` or more severity. `medium`, `high`, `all` are allowed   |
+| Environment variable     | Command line              | Meaning                                                                               |
+| ------------------------ | ------------------------- | ------------------------------------------------------------------------------------- |
+| `SKIP_LIB=1`             | `--skip=lib`              | Skip [libraries check](#lib)                                                          |
+| `SKIP_MINIFIED=1`        | `--skip=minified`         | Skip [minified file check](#minified)                                                 |
+| `SKIP_LFS=1`             | `--skip=lfs`              | Skip [Git LFS check](#lfs)                                                            |
+| `SKIP_PRETTIER=1`        | `--skip=prettier`         | Skip [Prettier check](#prettier)                                                      |
+| `SKIP_USELESS=1`         | `--skip=useless`          | Skip [useless files check](#useless)                                                  |
+| `SKIP_DUPLICATE_FILES=1` | `--skip=duplicate-files`  | Skip [duplicate files check](#duplicate-files)                                        |
+| `SKIP_DUPLICATE_LINES=1` | `--skip=duplicate-lines`  | Skip [duplicate lines check](#duplicate-lines)                                        |
+| `SKIP_PY_FILENAMES=1`    | `--skip=py-filenames`     | Skip [Python filename check](#py-filenames)                                           |
+| `SKIP_BLACK=1`           | `--skip=black`            | Skip [Python Black check](#black)                                                     |
+| `SKIP_FLAKE8=1`          | `--skip=flake8`           | Skip [flake8 check](#flake8)                                                          |
+| `SKIP_BANDIT=1`          | `--skip=bandit`           | Skip [bandit check](#bandit)                                                          |
+| `SKIP_ESLINT=1`          | `--skip=eslint`           | Skip [eslint check](#eslint)                                                          |
+| `SKIP_ESLINT_DEFAULT=1`  | `--skip=eslint-default`   | Skip [eslint extra checks](#eslint)                                                   |
+| `SKIP_STYLELINT=1`       | `--skip=stylelint`        | Skip [stylelint check](#stylelint)                                                    |
+| `SKIP_HTMLHINT=1`        | `--skip=htmlhint`         | Skip [htmlhint check](#htmlhint)                                                      |
+| `SKIP_NPM_AUDIT=1`       | `--skip=npm-audit`        | Skip [npm audit info](#npm-audit) warning                                             |
+| `SKIP_FLAKE8_EXTRA=1`    | `--skip=flake8-extra`     | Skip [flake8 extra check](#flake8-extra) warning                                      |
+| `SKIP_ABSOLUTE_URLS=1`   | `--skip=absolute-urls`    | Skip [absolute URLs check](#absolute-urls) warning                                    |
+| `SKIP_FOLDERS=1`         | `--skip=folders`          | Skip [folders info](#folders)                                                         |
+| `SKIP_CSS_SIZE=1`        | `--skip=css-size`         | Skip [CSS size info](#css-size)                                                       |
+| `SKIP_CODE_SIZE=1`       | `--skip=code-size`        | Skip [PY/JS size info](#code-size)                                                    |
+| `LFS_SIZE=n`             | `--lfs-size=n`            | Files over `n` bytes should use Git LFS (default: 1,000,000)                          |
+| `DUPLICATE_FILESIZE=n`   | `--duplicate-filesize=n`  | Files over `n` bytes should not be duplicated (default: 100)                          |
+| `DUPLICATE_LINES=n`      | `--duplicate-lines=n`     | Duplicate code over `n` lines are not allowed (default: 50)                           |
+| `PY_LINE_LENGTH=n`       | `--py-line-length=n`      | Approx line length of Python code used by Black (default: 99)                         |
+| `BANDIT_CONFIDENCE=low`  | `--bandit-confidence=low` | Show bandit errors with `low` or more confidence. `medium`, `high`, `all` are allowed |
+| `BANDIT_SEVERITY=low`    | `--bandit-severity=low`   | Show bandit errors with `low` or more severity. `medium`, `high`, `all` are allowed   |
+
+Instead of `--skip={check}` you can use `--only={check}`. This only runs the check(s) you specify. For example:
+
+```bash
+# Run only flake8 and eslint checks, nothing else
+bash /path/to/builderrors --only=flake8 --only=eslint
+```
 
 # How to fix errors
 
@@ -221,7 +227,7 @@ ERROR (lib) don't commit libraries
 
 - Run `git rm -rf node_modules/ bower_components/` to remove the libraries
 - Add `bower_components/` and `node_modules/` to your `.gitignore`
-- To skip this check, use `builderrors --skip-libraries` (e.g. to share a git repo for offline installation)
+- To skip this check, use `builderrors --skip=libraries` (e.g. to share a git repo for offline installation)
 
 ## `minified`
 
@@ -234,7 +240,7 @@ Minified files are not source code and shouldn't be version-controlled. They're 
 - Run `git rm jquery.min.js ...other.min.js` to remove the file
 - Run `npm install your-package-name` to install the package
 - Change URLs to point to the package (e.g. `node_modules/<lib>/dist/<lib>.min.js`)
-- To skip this check, use `builderrors --skip-minified` (e.g. if the package is not on npm)
+- To skip this check, use `builderrors --skip=minified` (e.g. if the package is not on npm)
 
 ## `lfs`
 
@@ -257,7 +263,7 @@ Git stores copies of every version. LFS stores pointers instead
   git commit -m"Use LFS for your-large-file.txt`
   ```
   <!-- Dummy comment to avoid MD031/blanks-around-fences -->
-- To skip this check, use `builderrors --skip-lfs` (e.g. if you can't use LFS)
+- To skip this check, use `builderrors --skip=lfs` (e.g. if you can't use LFS)
 
 ## `useless`
 
@@ -269,7 +275,7 @@ Thumbnails (`thumbs.db`), backups (`*~`), etc don't need to be committed. Nor lo
 
 - Run `git rm <useless.file>` to remove it
 - Add `<useless.file>` to your `.gitignore`
-- To skip this check, use `builderrors --skip-useless` (e.g. if you DO need to commit `.log` files)
+- To skip this check, use `builderrors --skip=useless` (e.g. if you DO need to commit `.log` files)
 
 ## `duplicate-files`
 
@@ -282,7 +288,7 @@ You can re-use the same file
 - Run `git rm <duplicate.file>` to remove it
 - Replace `<duplicate.file>` with the retained file in your code
 - To allow duplicate files less than 1000 bytes, run `builderrors --duplicate-filesize=1000`
-- To skip this check, use `builderrors --skip-duplicate-files` (e.g. if you need duplicate files for test cases)
+- To skip this check, use `builderrors --skip=duplicate-files` (e.g. if you need duplicate files for test cases)
 
 ## `duplicate-lines`
 
@@ -301,7 +307,7 @@ You can re-use the same code
   to create and return a new function depending on your variation
 - Refactor the code and test _very carefully_. (Unit test cases help here)
 - To ignore duplicates up to 100 lines, run `builderrors --duplicate-lines=100`
-- To skip this check, use `builderrors --skip-duplicate-lines` (e.g. if you need duplicate code for test cases)
+- To skip this check, use `builderrors --skip=duplicate-lines` (e.g. if you need duplicate code for test cases)
 
 ## `prettier`
 
@@ -327,7 +333,7 @@ to auto-format your code.
 - To auto-fix, run `npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"`
 - To ignore specific files, add a [`.prettierignore`](https://prettier.io/docs/en/ignore.html) file (e.g. add `*.html`)
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`.prettierrc`](https://prettier.io/docs/en/configuration.html) file
-- To skip this check, use `builderrors --skip-prettier` (e.g. if you temporarily need the build to pass)
+- To skip this check, use `builderrors --skip=prettier` (e.g. if you temporarily need the build to pass)
 
 ## `black`
 
@@ -342,9 +348,9 @@ to auto-format your code.
 
 - To auto-fix, run:
   - `pip install black` (one-time)
-  - `black . --skip-string-normalization --line-length=99`
+  - `black . --skip=string-normalization --line-length=99`
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`pyproject.toml`](https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file) file
-- To skip this check, use `builderrors --skip-black` (e.g. if you temporarily need the build to pass)
+- To skip this check, use `builderrors --skip=black` (e.g. if you temporarily need the build to pass)
 
 Troubleshooting:
 
@@ -362,7 +368,7 @@ ERROR (py-filenames) use lower_alpha Python paths
 You can't import a Python file unless it has alphanumeric letters. Using lowercase is the convention.
 
 - Rename the Python files using lower case alphanumerics and underscore (`_`)
-- To skip this check, use `builderrors --skip-py-filenames` (e.g. if you won't be importing the module)
+- To skip this check, use `builderrors --skip=py-filenames` (e.g. if you won't be importing the module)
 
 ## `flake8`
 
@@ -380,7 +386,7 @@ ERROR (flake8) fix Python errors
 - To ignore a specific line, add [`# noqa: <error-number>`](https://flake8.pycqa.org/en/latest/user/violations.html) at the end, e.g. `print("\n") # noqa: T201`
 - To ignore specific rules, add a [`.flake8`](https://flake8.pycqa.org/en/latest/user/configuration.html) file
   - Make sure to use `extend-ignore=E203,E501` for consistency with [black](https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#flake8)
-- To skip this check, use `builderrors --skip-flake8` (e.g. if you temporarily need the build to pass)
+- To skip this check, use `builderrors --skip=flake8` (e.g. if you temporarily need the build to pass)
 
 <!-- DO NOT LIST COMMON ERRORS. It wastes space. It's self-explanatory. People can refer it online.
 
@@ -411,7 +417,7 @@ ERROR (bandit) fix Python security errors
 - To ignore specific rules, add a [`.bandit`](https://bandit.readthedocs.io/en/latest/config.html#bandit-settings) file
 - To only report errors with high confidence, use `builderrors --bandit-confidence=high` (or `medium`)
 - To only report errors with high severity, use `builderrors --bandit-severity=high` (or `medium`)
-- To skip this check, use `builderrors --skip-bandit` (e.g. if there are too many false-positives)
+- To skip this check, use `builderrors --skip=bandit` (e.g. if there are too many false-positives)
 
 ## `eslint`
 
@@ -424,7 +430,7 @@ ERROR (eslint) fix JavaScript errors
 - To auto-fix, run `npx eslint --fix`
 - To ignore a specific line, add a [`// eslint-disable-line`](https://eslint.org/docs/latest/user-guide/configuring/rules#disabling-rules) at the end
 - To ignore specific rules, add a [`.eslintrc.js`](http://eslint.org/docs/rules/) based on the [default](.eslintrc.js)
-- To skip this check, use `builderrors --skip-eslint` (e.g. if you temporarily need the build to pass)
+- To skip this check, use `builderrors --skip=eslint` (e.g. if you temporarily need the build to pass)
 
 Common errors:
 
@@ -446,7 +452,7 @@ ERROR (stylelint) fix CSS errors
 - To ignore a specific line, add a [`/* stylelint-disable-line */`](https://stylelint.io/user-guide/ignore-code) at the end
 - To ignore specific rules, add a [`.stylelintrc.js`](https://stylelint.io/user-guide/configure) file based on the [default](.stylelintrc.js). For example:
   - `"selector-no-unknown": null` allows styling custom web components
-- To skip this check, use `builderrors --skip-stylelint` (e.g. if you're using third-party provided CSS)
+- To skip this check, use `builderrors --skip=stylelint` (e.g. if you're using third-party provided CSS)
 
 ## `htmlhint`
 
@@ -458,7 +464,7 @@ ERROR (htmlhint) fix HTML errors
 
 - Re-write the code based on advice from htmlhint
 - To ignore specific rules, add a [`.htmlhintrc`](https://htmlhint.com/docs/user-guide/getting-started) file based on the [default](.htmlhintrc)
-- To skip this check, use `builderrors --skip-htmllint` (e.g. if you're building a Lodash template library)
+- To skip this check, use `builderrors --skip=htmllint` (e.g. if you're building a Lodash template library)
 
 ## `npm-audit`
 
@@ -553,7 +559,7 @@ INFO (css-size): review largest CSS code
 Shows the number of lines, words and characters in all CSS/SCSS files.
 
 - Reduce CSS code using libraries
-- To skip this check, use `builderrors --skip-css-size`
+- To skip this check, use `builderrors --skip=css-size`
 
 ## `code-size`
 
@@ -564,7 +570,7 @@ INFO (code-size) review largest PY/JS code
 Shows the number of lines, words and characters in all Python / JavaScript files.
 
 - Reduce code using configurations, functions, and libraries
-- To skip this check, use `builderrors --skip-code-size`
+- To skip this check, use `builderrors --skip=code-size`
 
 # Alternatives
 

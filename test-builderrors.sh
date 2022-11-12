@@ -61,24 +61,24 @@ check() {
     "../test-output/$BRANCH.txt" || EXIT_STATUS=1
 }
 
-# Note: Black file order is unpredictable. So --skip-black when there are multiple .py files.
+# Note: Black file order is unpredictable. So --skip=black when there are multiple .py files.
 check libraries-node
 check libraries-bower
 check minified
 check git-lfs
 check useless
-check duplicate-files --skip-black --skip-flake8-extra  # Test --skip-flake8-extra flag
-check duplicate-lines --skip-black --skip-pydoc   # Test --skip-pydoc flag
+check duplicate-files --skip=black --skip=flake8-extra  # Test --skip=flake8-extra flag
+check duplicate-lines --skip=black --skip=pydoc   # Test --skip=pydoc flag
 check prettier
 check black
 check python-filenames
-check flake8 --skip-black
+check flake8 --skip=black
 check bandit
 check eslint
 check eslint-config
 check stylelint
 check htmlhint
-check flake8-extra --skip-bandit --skip-flake8  # Test --skip-* flags and that build passes
+check flake8-extra --skip=bandit --skip=flake8  # Test --skip=* flags and that build passes
 check npm-audit
 check absolute-urls
 
