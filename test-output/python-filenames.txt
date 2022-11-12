@@ -6,6 +6,17 @@ HELP https://github.com/gramener/builderrors/#py-filenames
     has-hyphen.py
 
 
+WARNING (pydoc) document Python code
+HELP https://github.com/gramener/builderrors/#pydoc
+
+    HasCapitals.py:1 at module level:
+            D100: Missing docstring in public module
+    has-hyphen.py:1 at module level:
+            D100: Missing docstring in public module
+    has_underscore.py:1 at module level:
+            D100: Missing docstring in public module
+
+
 INFO (code-size) review largest PY/JS code
 HELP https://github.com/gramener/builderrors/#code-size
 

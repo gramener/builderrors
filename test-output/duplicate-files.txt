@@ -53,6 +53,15 @@ To fix, run: npx eslint --fix
     2 problems
 
 
+WARNING (pydoc) document Python code
+HELP https://github.com/gramener/builderrors/#pydoc
+
+    file 1.py:1 at module level:
+            D100: Missing docstring in public module
+    file 2.py:1 at module level:
+            D100: Missing docstring in public module
+
+
 INFO (code-size) review largest PY/JS code
 HELP https://github.com/gramener/builderrors/#code-size
 

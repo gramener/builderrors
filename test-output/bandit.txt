@@ -35,6 +35,15 @@ HELP https://github.com/gramener/builderrors/#bandit
     Files skipped (0):
 
 
+WARNING (pydoc) document Python code
+HELP https://github.com/gramener/builderrors/#pydoc
+
+    bandit_error.py:1 at module level:
+            D100: Missing docstring in public module
+    bandit_error.py:4 in public function `insecure_query`:
+            D103: Missing docstring in public function
+
+
 INFO (code-size) review largest PY/JS code
 HELP https://github.com/gramener/builderrors/#code-size
 

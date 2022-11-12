@@ -13,6 +13,15 @@ HELP https://github.com/gramener/builderrors/#flake8-extra
     error.py:7:13: E722 do not use bare 'except'
 
 
+WARNING (pydoc) document Python code
+HELP https://github.com/gramener/builderrors/#pydoc
+
+    error.py:1 at module level:
+            D100: Missing docstring in public module
+    error.py:1 in public function `test`:
+            D103: Missing docstring in public function
+
+
 INFO (code-size) review largest PY/JS code
 HELP https://github.com/gramener/builderrors/#code-size
 

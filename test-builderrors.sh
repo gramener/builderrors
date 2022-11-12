@@ -63,7 +63,7 @@ check minified
 check git-lfs
 check useless
 check duplicate-files --skip-black --skip-flake8-extra  # Test --skip-flake8-extra flag
-check duplicate-lines --skip-black
+check duplicate-lines --skip-black --skip-pydoc   # Test --skip-pydoc flag
 check prettier
 check black
 check python-filenames

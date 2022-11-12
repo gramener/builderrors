@@ -3,3 +3,4 @@ flake8-bugbear
 flake8-comprehensions
 flake8-simplify
 flake8-eradicate
+pydocstyle

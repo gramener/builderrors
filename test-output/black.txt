@@ -20,6 +20,15 @@ HELP https://github.com/gramener/builderrors/#flake8-extra
     test.py:2:3: E111 indentation is not a multiple of 4
 
 
+WARNING (pydoc) document Python code
+HELP https://github.com/gramener/builderrors/#pydoc
+
+    test.py:1 at module level:
+            D100: Missing docstring in public module
+    test.py:1 in public function `test`:
+            D103: Missing docstring in public function
+
+
 INFO (code-size) review largest PY/JS code
 HELP https://github.com/gramener/builderrors/#code-size
 

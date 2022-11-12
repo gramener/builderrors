@@ -25,6 +25,7 @@ Run automated checks on repositories to improve code quality.
   - [ERROR (htmlhint) fix HTML errors](#htmlhint)
   - [WARNING (npm-audit) avoid unsafe npm packages](#npm-audit)
   - [WARNING (flake8-extra) improve Python code](#flake8-extra)
+  - [WARNING (pydoc) document Python code](#pydoc)
   - [WARNING (absolute-urls) avoid absolute URLs](#absolute-urls)
   - [INFO (css-size): review largest CSS code](#css-size)
   - [INFO (code-size) review largest PY/JS code](#code-size)
@@ -195,8 +196,8 @@ under Settings > CI / CD > Variables.
 | `SKIP_NPM_AUDIT`       | `--skip-npm-audit`         | Skip [npm audit info](#npm-audit) warning                                             |
 | `SKIP_FLAKE8_EXTRA`    | `--skip-flake8-extra`      | Skip [flake8 extra check](#flake8-extra) warning                                      |
 | `SKIP_ABSOLUTE_URLS`   | `--skip-absolute-urls`     | Skip [absolute URLs check](#absolute-urls) warning                                    |
-| `SKIP_CSS_CHARS`       | `--skip-css-size`         | Skip [CSS size info](#css-size)                                                      |
-| `SKIP_CODE_CHARS`      | `--skip-code-size`        | Skip [PY/JS size info](#code-size)                                                   |
+| `SKIP_CSS_CHARS`       | `--skip-css-size`          | Skip [CSS size info](#css-size)                                                       |
+| `SKIP_CODE_CHARS`      | `--skip-code-size`         | Skip [PY/JS size info](#code-size)                                                    |
 | `LFS_SIZE`             | `--lfs-size=num`           | Files over `num` bytes should use Git LFS (default: 1,000,000)                        |
 | `DUPLICATE_FILESIZE`   | `--duplicate-filesize=num` | Files over `num` bytes should not be duplicated (default: 100)                        |
 | `DUPLICATE_LINES`      | `--duplicate-lines=num`    | Duplicate code over `num` lines are not allowed (default: 50)                         |
@@ -507,6 +508,17 @@ Common errors:
 - **SIM203**: Use 'table not in meta' instead of 'not table in meta'
 
 -->
+
+## `pydoc`
+
+```text
+WARNING (pydoc) document Python code
+```
+
+Add a docstring to your public Python functions, classes and methods.
+
+We recommend writing docstrings in Markdown (not ReST) in the
+[Google style guide](https://mkdocstrings.github.io/griffe/docstrings/).
 
 ## `absolute-urls`
 

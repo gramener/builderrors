@@ -62,6 +62,21 @@ HELP https://github.com/gramener/builderrors/#flake8-extra
     error.py:6:5: F821 undefined name 'math'
 
 
+WARNING (pydoc) document Python code
+HELP https://github.com/gramener/builderrors/#pydoc
+
+    complexity.py:123 in public function `yearChanged`:
+            D103: Missing docstring in public function
+    complexity.py:136 in public function `get_data`:
+            D103: Missing docstring in public function
+    complexity.py:1060 in public function `network_distribution_rate`:
+            D103: Missing docstring in public function
+    debugger.py:1 at module level:
+            D100: Missing docstring in public module
+    error.py:1 at module level:
+            D100: Missing docstring in public module
+
+
 INFO (code-size) review largest PY/JS code
 HELP https://github.com/gramener/builderrors/#code-size
 
