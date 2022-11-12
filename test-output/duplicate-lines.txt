@@ -31,19 +31,7 @@ HELP https://github.com/gramener/builderrors/#duplicate-lines
        file2.py [135:1 - 861:4]
 
 
-ERROR (code-chars) reduce PY/JS code (max: 30000 chars)
-HELP https://github.com/gramener/builderrors/#code-chars
-
-    Size 44985 > 30000 (minified). Largest files:
-    9749      file2.py
-    9742      file1.py
-    6609      file3.py
-    6295      file4.py
-    6295      file5.py
-    6295      file6.py
-
-
-WARNING (flake8-extra) fix flake8 extra checks
+WARNING (flake8-extra) improve Python code
 HELP https://github.com/gramener/builderrors/#flake8-extra
 
     file1.py:58:22: B006 Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
@@ -76,6 +64,18 @@ HELP https://github.com/gramener/builderrors/#flake8-extra
     file6.py:799:9: SIM105 Use 'contextlib.suppress(OSError)'
     file6.py:808:1: SIM120 Use 'class _Timeout:' instead of 'class _Timeout(object):'
     file6.py:837:1: SIM120 Use 'class PeriodicCallback:' instead of 'class PeriodicCallback(object):'
+
+
+INFO (code-size) review largest PY/JS code
+HELP https://github.com/gramener/builderrors/#code-size
+
+      5323  21237 197041 total
+       942   3955  35223 file6.py
+       942   3955  35223 file5.py
+       942   3955  35223 file4.py
+       861   3057  30153 file2.py
+       861   3057  30153 file1.py
+       775   3258  31066 file3.py
 
 ---------------------------------------------------------------------
 BUILD FAILED.

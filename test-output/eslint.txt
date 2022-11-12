@@ -7,7 +7,7 @@ To fix, run: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"
     [warn] Code style issues found in the above file. Forgot to run Prettier?
 
 
-ERROR (eslint) fix eslint errors
+ERROR (eslint) fix JavaScript errors
 HELP https://github.com/gramener/builderrors/#eslint
 To fix, run: npx eslint --fix
 
@@ -22,6 +22,12 @@ To fix, run: npx eslint --fix
     script.js:31:10: 'dosomething3' is already defined. [Error/no-redeclare]
 
     9 problems
+
+
+INFO (code-size) review largest PY/JS code
+HELP https://github.com/gramener/builderrors/#code-size
+
+     51 140 866 script.js
 
 ---------------------------------------------------------------------
 BUILD FAILED.

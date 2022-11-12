@@ -7,6 +7,21 @@ HELP https://github.com/gramener/builderrors/#minified
     underscore.min.js
     web.pack.js
 
+
+INFO (css-size) review largest CSS code
+HELP https://github.com/gramener/builderrors/#css-size
+
+     1  1 19 bootstrap.min.css
+
+
+INFO (code-size) review largest PY/JS code
+HELP https://github.com/gramener/builderrors/#code-size
+
+    0 0 0 web.pack.js
+    0 0 0 underscore.min.js
+    0 0 0 underscore-min.js
+    0 0 0 total
+
 ---------------------------------------------------------------------
 BUILD FAILED.
 HELP https://github.com/gramener/builderrors

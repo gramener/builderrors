@@ -8,7 +8,7 @@ To fix, run: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"
     [warn] Code style issues found in 2 files. Forgot to run Prettier?
 
 
-ERROR (stylelint) fix stylelint errors
+ERROR (stylelint) fix CSS errors
 HELP https://github.com/gramener/builderrors/#stylelint
 
 
@@ -20,6 +20,14 @@ HELP https://github.com/gramener/builderrors/#stylelint
      9:3  ✖  Unexpected duplicate selector "body .footer", first used at line 5  no-duplicate-selectors
 
     3 problems (3 errors, 0 warnings)
+
+
+INFO (css-size) review largest CSS code
+HELP https://github.com/gramener/builderrors/#css-size
+
+      44  271 1990 total
+      28  235 1750 style.css
+      16   36  240 style.scss
 
 ---------------------------------------------------------------------
 BUILD FAILED.

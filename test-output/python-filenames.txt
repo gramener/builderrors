@@ -1,9 +1,18 @@
 
-ERROR (py-filenames) use lower_alphanumeric Python paths
+ERROR (py-filenames) use lower_alpha Python paths
 HELP https://github.com/gramener/builderrors/#py-filenames
 
     HasCapitals.py
     has-hyphen.py
+
+
+INFO (code-size) review largest PY/JS code
+HELP https://github.com/gramener/builderrors/#code-size
+
+     3 12 45 total
+     1  4 15 has_underscore.py
+     1  4 15 has-hyphen.py
+     1  4 15 HasCapitals.py
 
 ---------------------------------------------------------------------
 BUILD FAILED.

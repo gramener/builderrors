@@ -1,5 +1,5 @@
 
-ERROR (htmlhint) fix htmlhint errors
+ERROR (htmlhint) fix HTML errors
 HELP https://github.com/gramener/builderrors/#htmlhint
 
     index.html:11:7: An alt attribute must be present on <img> elements. [warning/alt-require]

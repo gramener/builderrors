@@ -4,8 +4,8 @@ Run automated checks on repositories to improve code quality.
 
 - You can install and run it in
   - [Gitlab CI](#gitlab-ci-usage)
-  - [BitBucket Pipelines](#bitbucket-pipelines-usage)
   - [Docker](#docker-usage)
+  - [BitBucket Pipelines](#bitbucket-pipelines-usage)
   - [Jenkins](#jenkins-usage)
   - [Local](#local-usage)
 - Here are instructions on how to fix each error:
@@ -23,23 +23,12 @@ Run automated checks on repositories to improve code quality.
   - [ERROR (eslint) fix JavaScript errors](#eslint)
   - [ERROR (stylelint) fix CSS errors](#stylelint)
   - [ERROR (htmlhint) fix HTML errors](#htmlhint)
-  - [ERROR (css-chars): reduce CSS code](#css-chars)
-  - [ERROR (code-chars) reduce PY/JS code](#code-chars)
   - [WARNING (npm-audit) avoid unsafe npm packages](#npm-audit)
   - [WARNING (flake8-extra) improve Python code](#flake8-extra)
   - [WARNING (absolute-urls) avoid absolute URLs](#absolute-urls)
+  - [INFO (css-size): review largest CSS code](#css-size)
+  - [INFO (code-size) review largest PY/JS code](#code-size)
 - [Alternatives](#alternatives)
-
-## Gitlab CI usage
-
-To run checks on every push with [Gitlab](https://docs.gitlab.com/ee/ci/pipelines/),
-add this on top of your [`.gitlab-ci.yml`](https://docs.gitlab.com/ee/ci/yaml/) file:
-
-```yaml
-validate:
-  image: gramener/builderrors
-  script: builderrors
-```
 
 ## Migrate from Gramex < 1.84
 
@@ -50,21 +39,15 @@ If you used `gramex init` from [gramex](https://github.com/gramener/gramex) befo
 - If you have a `.flake8` or [equivalent](https://flake8.pycqa.org/en/latest/user/configuration.html), add `extend-ignore=E203,E501`.
   [`black`](#formatg
 
-## BitBucket Pipelines usage
+## Gitlab CI usage
 
-To run checks on every push with [BitBucket](https://bitbucket.org/product/features/pipelines),
-add this on top of your [`bitbucket-pipelines.yml`](https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/):
+To run checks on every push with [Gitlab](https://docs.gitlab.com/ee/ci/pipelines/),
+add this on top of your [`.gitlab-ci.yml`](https://docs.gitlab.com/ee/ci/yaml/) file:
 
 ```yaml
-clone:
-  lfs: true
-
-pipelines:
-  default:
-    - step:
-        name: validate
-        image: gramener/builderrors
-        script: builderrors
+validate:
+  image: gramener/builderrors
+  script: builderrors
 ```
 
 ## Docker usage
@@ -91,6 +74,23 @@ On Windows PowerShell:
 
 ```powershell
 docker run --rm -it -v ${PWD}:/src gramener/builderrors
+```
+
+## BitBucket Pipelines usage
+
+To run checks on every push with [BitBucket](https://bitbucket.org/product/features/pipelines),
+add this on top of your [`bitbucket-pipelines.yml`](https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/):
+
+```yaml
+clone:
+  lfs: true
+
+pipelines:
+  default:
+    - step:
+        name: validate
+        image: gramener/builderrors
+        script: builderrors
 ```
 
 ## Jenkins usage
@@ -151,9 +151,9 @@ It **WON'T** check untracked or `.gitignore`d files.
 You can pass options as command-line parameters. For example:
 
 ```bash
-# Skip flake8. Report errors only if minified code characters > 100,000
+# Skip flake8. Report errors only if 100+ lines are duplicated
 docker run --rm -it -v $(pwd):/src gramener/builderrors \
-  builderrors --skip-flake8 --code-chars-error=100000
+  builderrors --skip-flake8 --duplicate-lines=100000
 
 # Skip Git LFS, eslint and stylelint
 bash /path/to/builderrors --skip-lfs --skip-eslint --skip-stylelint
@@ -162,9 +162,9 @@ bash /path/to/builderrors --skip-lfs --skip-eslint --skip-stylelint
 You can also pass options as environment variables. (Command line overrides environment variables.) For example:
 
 ```bash
-# Skip flake8. Report errors only if minified code characters > 100,000
+# Skip flake8. Report errors only if 100+ lines are duplicated
 docker run --rm -it -v $(pwd):/src \
-  -e SKIP_FLAKE8=1 -e CODE_CHARS_ERROR=100000 \
+  -e SKIP_FLAKE8=1 -e DUPLICATE_LINES=100 \
   builderrors gramener/builderrors
 
 # Skip Git LFS, eslint and stylelint
@@ -177,34 +177,32 @@ under Settings > CI / CD > Variables.
 | Environment variable   | Command line               | Meaning                                                                               |
 | ---------------------- | -------------------------- | ------------------------------------------------------------------------------------- |
 | `VERBOSE`              | `--verbose`                | Show config used and progress                                                         |
-| `SKIP_LIB`             | `--skip-lib`               | Skip [libraries check](#dont                                                          |
-| `SKIP_MINIFIED`        | `--skip-minified`          | Skip [minified file check](#dont                                                      |
-| `SKIP_LFS`             | `--skip-lfs`               | Skip [Git LFS check](#use                                                             |
-| `SKIP_PRETTIER`        | `--skip-prettier`          | Skip [Prettier check](#format                                                         |
-| `SKIP_USELESS`         | `--skip-useless`           | Skip [useless files check](#dont                                                      |
-| `SKIP_DUPLICATE_FILES` | `--skip-duplicate-files`   | Skip [duplicate files check](#dont                                                    |
-| `SKIP_DUPLICATE_LINES` | `--skip-duplicate-lines`   | Skip [duplicate lines check](#reduce                                                  |
-| `SKIP_PY_FILENAMES`    | `--skip-py-filenames`      | Skip [Python filename check](#use                                                     |
-| `SKIP_BLACK`           | `--skip-black`             | Skip [Python Black check](#format                                                     |
-| `SKIP_FLAKE8`          | `--skip-flake8`            | Skip [flake8 check](#fix                                                              |
-| `SKIP_BANDIT`          | `--skip-bandit`            | Skip [bandit check](#fix                                                              |
-| `SKIP_ESLINT`          | `--skip-eslint`            | Skip [eslint check](#fix                                                              |
-| `SKIP_ESLINT_DEFAULT`  | `--skip-eslint-default`    | Skip [eslint extra checks](#fix                                                       |
-| `SKIP_STYLELINT`       | `--skip-stylelint`         | Skip [stylelint check](#fix                                                           |
-| `SKIP_HTMLHINT`        | `--skip-htmlhint`          | Skip [htmlhint check](#fix                                                            |
-| `SKIP_CSS_CHARS`       | `--skip-css-chars`         | Skip [CSS size check](#css                                                            |
-| `SKIP_CODE_CHARS`      | `--skip-code-chars`        | Skip [code size check](#python                                                        |
-| `SKIP_NPM_AUDIT`       | `--skip-npm-audit`         | Skip [npm audit check](#warning-fix-npm-audit) warning                                |
-| `SKIP_FLAKE8_EXTRA`    | `--skip-flake8-extra`      | Skip [flake8 extra check](#warning-fix-flake8-extra-checks) warning                   |
-| `SKIP_ABSOLUTE_URLS`   | `--skip-absolute-urls`     | Skip [absolute URLs check](#warning-avoid-absolute-urls) warning                      |
+| `SKIP_LIB`             | `--skip-lib`               | Skip [libraries check](#lib)                                                          |
+| `SKIP_MINIFIED`        | `--skip-minified`          | Skip [minified file check](#minified)                                                 |
+| `SKIP_LFS`             | `--skip-lfs`               | Skip [Git LFS check](#lfs)                                                            |
+| `SKIP_PRETTIER`        | `--skip-prettier`          | Skip [Prettier check](#prettier)                                                      |
+| `SKIP_USELESS`         | `--skip-useless`           | Skip [useless files check](#useless)                                                  |
+| `SKIP_DUPLICATE_FILES` | `--skip-duplicate-files`   | Skip [duplicate files check](#duplicate-files)                                        |
+| `SKIP_DUPLICATE_LINES` | `--skip-duplicate-lines`   | Skip [duplicate lines check](#duplicate-lines)                                        |
+| `SKIP_PY_FILENAMES`    | `--skip-py-filenames`      | Skip [Python filename check](#py-filenames)                                           |
+| `SKIP_BLACK`           | `--skip-black`             | Skip [Python Black check](#black)                                                     |
+| `SKIP_FLAKE8`          | `--skip-flake8`            | Skip [flake8 check](#flake8)                                                          |
+| `SKIP_BANDIT`          | `--skip-bandit`            | Skip [bandit check](#bandit)                                                          |
+| `SKIP_ESLINT`          | `--skip-eslint`            | Skip [eslint check](#eslint)                                                          |
+| `SKIP_ESLINT_DEFAULT`  | `--skip-eslint-default`    | Skip [eslint extra checks](#eslint)                                                   |
+| `SKIP_STYLELINT`       | `--skip-stylelint`         | Skip [stylelint check](#stylelint)                                                    |
+| `SKIP_HTMLHINT`        | `--skip-htmlhint`          | Skip [htmlhint check](#htmlhint)                                                      |
+| `SKIP_NPM_AUDIT`       | `--skip-npm-audit`         | Skip [npm audit info](#npm-audit) warning                                             |
+| `SKIP_FLAKE8_EXTRA`    | `--skip-flake8-extra`      | Skip [flake8 extra check](#flake8-extra) warning                                      |
+| `SKIP_ABSOLUTE_URLS`   | `--skip-absolute-urls`     | Skip [absolute URLs check](#absolute-urls) warning                                    |
+| `SKIP_CSS_CHARS`       | `--skip-css-size`         | Skip [CSS size info](#css-size)                                                      |
+| `SKIP_CODE_CHARS`      | `--skip-code-size`        | Skip [PY/JS size info](#code-size)                                                   |
 | `LFS_SIZE`             | `--lfs-size=num`           | Files over `num` bytes should use Git LFS (default: 1,000,000)                        |
 | `DUPLICATE_FILESIZE`   | `--duplicate-filesize=num` | Files over `num` bytes should not be duplicated (default: 100)                        |
 | `DUPLICATE_LINES`      | `--duplicate-lines=num`    | Duplicate code over `num` lines are not allowed (default: 50)                         |
 | `PY_LINE_LENGTH`       | `--py-line-length=num`     | Approx line length of Python code used by Black (default: 99)                         |
 | `BANDIT_CONFIDENCE`    | `--bandit-confidence=low`  | Show bandit errors with `low` or more confidence. `medium`, `high`, `all` are allowed |
 | `BANDIT_SEVERITY`      | `--bandit-severity=low`    | Show bandit errors with `low` or more severity. `medium`, `high`, `all` are allowed   |
-| `CSS_CHARS_ERROR`      | `--css-chars-error=num`    | Minified CSS should be less than `num` bytes (default: 10,000)                        |
-| `CODE_CHARS_ERROR`     | `--code-chars-error=num`   | Minified Python + JS code should be less than `num` bytes (default: 50,000)           |
 
 # How to fix errors
 
@@ -459,30 +457,6 @@ ERROR (htmlhint) fix HTML errors
 - To ignore specific rules, add a [`.htmlhintrc`](https://htmlhint.com/docs/user-guide/getting-started) file based on the [default](.htmlhintrc)
 - To skip this check, use `builderrors --skip-htmllint` (e.g. if you're building a Lodash template library)
 
-## `css-chars`
-
-```text
-ERROR (css-chars): reduce CSS code
-```
-
-You have too much CSS code, even after minifying with [clean-css](https://www.npmjs.com/package/clean-css-cli).
-
-- Reduce CSS code using libraries
-- To allow 20,000 characters, use `builderrors --css-chars-error=10000`
-- To skip this check, use `builderrors --skip-css-chars`
-
-## `code-chars`
-
-```text
-ERROR (code-chars) reduce PY/JS code
-```
-
-You have too much Python / JavaScript code
-
-- Reduce code using libraries
-- To allow 80,000 characters, use `builderrors --code-chars-error=80000`
-- To skip this check, use `builderrors --skip-code-chars`
-
 ## `npm-audit`
 
 ```text
@@ -546,6 +520,28 @@ application is deployed at a different path (e.g. at `https://example.org/app/` 
 
 Change URLs to relative paths,
 e.g. `<a href="../login">` or `<a href="login">` or `<img src="../assets/icon.png">`.
+
+## `css-size`
+
+```text
+INFO (css-size): review largest CSS code
+```
+
+Shows the number of lines, words and characters in all CSS/SCSS files.
+
+- Reduce CSS code using libraries
+- To skip this check, use `builderrors --skip-css-size`
+
+## `code-size`
+
+```text
+INFO (code-size) review largest PY/JS code
+```
+
+Shows the number of lines, words and characters in all Python / JavaScript files.
+
+- Reduce code using configurations, functions, and libraries
+- To skip this check, use `builderrors --skip-code-size`
 
 # Alternatives
 

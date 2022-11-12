@@ -47,7 +47,7 @@ check() {
     --ignore-tab-expansion \
     --ignore-trailing-space \
     --ignore-matching-lines="Run started.*" \
-    <(../builderrors $@ --duplicate-filesize=0 --duplicate-lines=30 --css-chars-error=10000 --code-chars-error=30000 --lfs-size=1000000 | \
+    <(../builderrors $@ --duplicate-filesize=0 --duplicate-lines=30 --lfs-size=1000000 | \
       sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" |
       sed "s/^BUILD FAILED.*/BUILD FAILED./" |
       sed "s/^BUILD PASSED.*/BUILD PASSED./" |

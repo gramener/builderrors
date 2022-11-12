@@ -29,21 +29,21 @@ To fix, run: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"
     [warn] Code style issues found in 6 files. Forgot to run Prettier?
 
 
-ERROR (py-filenames) use lower_alphanumeric Python paths
+ERROR (py-filenames) use lower_alpha Python paths
 HELP https://github.com/gramener/builderrors/#py-filenames
 
     file 1.py
     file 2.py
 
 
-ERROR (flake8) fix flake8 errors
+ERROR (flake8) fix Python errors
 HELP https://github.com/gramener/builderrors/#flake8
 
     file 1.py:1:2: E221 multiple spaces before operator
     file 2.py:1:2: E221 multiple spaces before operator
 
 
-ERROR (eslint) fix eslint errors
+ERROR (eslint) fix JavaScript errors
 HELP https://github.com/gramener/builderrors/#eslint
 To fix, run: npx eslint --fix
 
@@ -51,6 +51,16 @@ To fix, run: npx eslint --fix
     file 2.js:1:10: 'random' is defined but never used. [Error/no-unused-vars]
 
     2 problems
+
+
+INFO (code-size) review largest PY/JS code
+HELP https://github.com/gramener/builderrors/#code-size
+
+      8  18 106 total
+      3   6  45 file 2.js
+      3   6  45 file 1.js
+      1   3   8 file 2.py
+      1   3   8 file 1.py
 
 ---------------------------------------------------------------------
 BUILD FAILED.

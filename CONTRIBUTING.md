@@ -92,7 +92,7 @@ Here are some we don't plan to add:
    git push --follow-tags
    ```
 
-    <!-- git push gitlab master --follow-tags  # For https://code.gramener.com/cto/builderrors -->
+    <!-- git push gitlab main --follow-tags  # For https://code.gramener.com/cto/builderrors -->
 
 6. Deploy image on servers. For example, on Gitlab CI runners, run:
 

@@ -1,5 +1,5 @@
 
-ERROR (bandit) fix bandit security errors
+ERROR (bandit) fix Python security errors
 HELP https://github.com/gramener/builderrors/#bandit
 
     Run started:2022-09-21 06:30:03.804551
@@ -33,6 +33,12 @@ HELP https://github.com/gramener/builderrors/#bandit
                 Medium: 0
                 High: 0
     Files skipped (0):
+
+
+INFO (code-size) review largest PY/JS code
+HELP https://github.com/gramener/builderrors/#code-size
+
+      6  18 134 bandit_error.py
 
 ---------------------------------------------------------------------
 BUILD FAILED.

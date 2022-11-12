@@ -1,5 +1,5 @@
 
-WARNING (npm-audit) fix npm audit
+WARNING (npm-audit) avoid unsafe npm packages
 HELP https://github.com/gramener/builderrors/#npm-audit
 To fix, run: npm audit fix
 

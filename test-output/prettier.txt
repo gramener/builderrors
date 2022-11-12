@@ -6,6 +6,12 @@ To fix, run: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"
     [warn] test.js
     [warn] Code style issues found in the above file. Forgot to run Prettier?
 
+
+INFO (code-size) review largest PY/JS code
+HELP https://github.com/gramener/builderrors/#code-size
+
+     9 20 94 test.js
+
 ---------------------------------------------------------------------
 BUILD FAILED.
 HELP https://github.com/gramener/builderrors

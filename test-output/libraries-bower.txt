@@ -21,13 +21,13 @@ To fix, run: npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"
     [warn] Code style issues found in 4 files. Forgot to run Prettier?
 
 
-ERROR (code-chars) reduce PY/JS code (max: 30000 chars)
-HELP https://github.com/gramener/builderrors/#code-chars
+INFO (code-size) review largest PY/JS code
+HELP https://github.com/gramener/builderrors/#code-size
 
-    Size 48640 > 30000 (minified). Largest files:
-    23346     bower_components/color-obj/test/Color.spec.js
-    12657     bower_components/color-obj/dist/Color.js
-    12637     bower_components/color-obj/src/Color.js
+      3259   8557 104180 total
+      1784   3167  50460 bower_components/color-obj/test/Color.spec.js
+      1450   4801  40788 bower_components/color-obj/src/Color.js
+        25    589  12932 bower_components/color-obj/dist/Color.js
 
 ---------------------------------------------------------------------
 BUILD FAILED.
