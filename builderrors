@@ -79,7 +79,7 @@ check() {
       echo -e "${SECTION_END}"
     # On Gitlab, print an OK message
     elif [[ -n "$CI_SERVER_VERSION_MAJOR" ]]; then
-      echo -e "${GREEN}OK ($CODE)${CLEAR}"
+      echo -e "${SECTION_START}${GREEN}OK ($CODE)${CLEAR}${SECTION_END}"
     fi
   fi
 }
