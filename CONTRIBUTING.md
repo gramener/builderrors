@@ -26,6 +26,11 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
   - [`checkov`](https://github.com/bridgecrewio/checkov) for containers & secrets
   - devskim, dustilock, git_diff, goodcheck, secretlint, semgrep, syft, trivy
 - Spelling: textllint, misspell, cspell, proselint
+- Testing
+  - [pa11y](https://github.com/pa11y/pa11y) for accessibility testing
+  - [SiteSpeed](https://www.sitespeed.io/) for browser performance testing
+  - [K6](https://github.com/grafana/k6) for load performance testing
+
 
 Here are some we don't plan to add:
 
@@ -75,7 +80,7 @@ Here are some we don't plan to add:
 4. Build and push Docker container
 
    ```bash
-   export VERSION=1.x.x
+   export VERSION=2.x.x
    docker build --tag gramener/builderrors:$VERSION --tag gramener/builderrors:latest .
    docker run --rm -v `pwd`:/src gramener/builderrors:latest
    docker push gramener/builderrors:$VERSION
@@ -85,7 +90,7 @@ Here are some we don't plan to add:
 5. Commit and push git repo
 
    ```bash
-   export VERSION=1.x.x
+   export VERSION=2.x.x
    git commit . -m"DOC: Release $VERSION"
    git tag -a v$VERSION -m"Release $VERSION"
    git push --follow-tags
