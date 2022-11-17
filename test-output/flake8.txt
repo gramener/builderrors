@@ -62,6 +62,15 @@ HELP https://github.com/gramener/builderrors/#flake8-extra
     error.py:6:5: F821 undefined name 'math'
 
 
+WARNING (complexity) review complex code
+HELP https://github.com/gramener/builderrors/#complexity
+
+    complexity.py:330:1: C901 'everyday_it_rate' is too complex (45)
+    complexity.py:534:1: C901 'security_rate' is too complex (18)
+    complexity.py:645:1: C901 'application_rate' is too complex (45)
+    complexity.py:846:1: C901 'network_rate' is too complex (37)
+
+
 WARNING (pydoc) document Python code
 HELP https://github.com/gramener/builderrors/#pydoc
 

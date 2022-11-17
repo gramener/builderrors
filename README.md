@@ -25,6 +25,7 @@ Run automated checks on repositories to improve code quality.
   - [ERROR (htmlhint) fix HTML errors](#htmlhint)
   - [WARNING (npm-audit) avoid unsafe npm packages](#npm-audit)
   - [WARNING (flake8-extra) improve Python code](#flake8-extra)
+  - [WARNING (complexity) review complex code](#complexity)
   - [WARNING (pydoc) document Python code](#pydoc)
   - [WARNING (absolute-urls) avoid absolute URLs](#absolute-urls)
   - [INFO (folders): review folder structure and files](#folders)
@@ -205,6 +206,8 @@ under Settings > CI / CD > Variables.
 | `PY_LINE_LENGTH=n`       | `--py-line-length=n`      | Approx line length of Python code used by Black (default: 99)                         |
 | `BANDIT_CONFIDENCE=low`  | `--bandit-confidence=low` | Show bandit errors with `low` or more confidence. `medium`, `high`, `all` are allowed |
 | `BANDIT_SEVERITY=low`    | `--bandit-severity=low`   | Show bandit errors with `low` or more severity. `medium`, `high`, `all` are allowed   |
+| `MAX_JS_COMPLEXITY=n`    | `--max-js-complexity=n`   | Report JS functions with `>n` cyclomatic complexity                                   |
+| `MAX_PY_COMPLEXITY=n`    | `--max-py-complexity=n`   | Report PY functions with `>n` cyclomatic complexity                                   |
 
 Instead of `--skip={check}` you can use `--only={check}`. This only runs the check(s) you specify. For example:
 
@@ -516,6 +519,14 @@ Common errors:
 - **SIM203**: Use 'table not in meta' instead of 'not table in meta'
 
 -->
+
+## `complexity`
+
+```text
+WARNING (complexity) review complex code
+```
+
+Break your code into smaller functions. Use clear function names. Re-use as much as possible.
 
 ## `pydoc`
 

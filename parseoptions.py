@@ -18,13 +18,14 @@ checks = [
     'eslint-default',
     'stylelint',
     'htmlhint',
+    'npm-audit',
+    'flake8-extra',
+    'complexity',
+    'pydoc',
+    'absolute-urls',
     'folders',
     'css-size',
     'code-size',
-    'npm-audit',
-    'flake8-extra',
-    'pydoc',
-    'absolute-urls',
 ]
 
 
@@ -39,6 +40,8 @@ def main():
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--skip', help="don't run specified check(s)", **kwargs)
     group.add_argument('--only', help='run only specified checks(s)', **kwargs)
+    # Note: Though help mentions a default, DON'T add default=.
+    # This overrides user's environment variables. Allow THOSE to be the default.
     parser.add_argument(
         '--lfs-size', metavar='N', help='max file size allowed without LFS (1000000)'
     )
@@ -61,6 +64,8 @@ def main():
         choices=['high', 'medium', 'low', 'all'],
         help='min bandit severity to report (all)',
     )
+    parser.add_argument('--max-js-complexity', metavar='N', help='max JS complexity (10)')
+    parser.add_argument('--max-py-complexity', metavar='N', help='max PY complexity (10)')
     # Allow legacy arguments but ignore them
     parser.add_argument('--css-chars-error', metavar='N', help=argparse.SUPPRESS)
     parser.add_argument('--code-chars-error', metavar='N', help=argparse.SUPPRESS)

@@ -66,6 +66,20 @@ HELP https://github.com/gramener/builderrors/#flake8-extra
     file6.py:837:1: SIM120 Use 'class PeriodicCallback:' instead of 'class PeriodicCallback(object):'
 
 
+WARNING (complexity) review complex code
+HELP https://github.com/gramener/builderrors/#complexity
+
+    file1.py:58:1: C901 'filter' is too complex (16)
+    file1.py:176:1: C901 'filter2' is too complex (16)
+    file1.py:294:1: C901 'filter3' is too complex (16)
+    file2.py:10:1: C901 'filter' is too complex (16)
+    file2.py:176:1: C901 'filter2' is too complex (16)
+    file2.py:294:1: C901 'filter3' is too complex (16)
+    file4.py:460:5: C901 'IOLoop.run_sync' is too complex (11)
+    file5.py:460:5: C901 'IOLoop.run_sync' is too complex (11)
+    file6.py:460:5: C901 'IOLoop.run_sync' is too complex (11)
+
+
 INFO (folders) review folder structure and files
 HELP https://github.com/gramener/builderrors/#folders
 

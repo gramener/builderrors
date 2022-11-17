@@ -241,6 +241,23 @@ check-flake8-extra() {
 }
 check "$SKIP_FLAKE8_EXTRA" "WARNING" "flake8-extra" "improve Python code" ""
 
+check-complexity() {
+  # TODO: avoid config file. Put in all options here
+  git ls-files | grep -E '\.(html|js)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" \
+    --no-eslintrc \
+    --parser-options ecmaVersion:latest \
+    --plugin html --plugin template \
+    --resolve-plugins-relative-to "$WIN_SCRIPT_DIR" \
+    --rule "complexity: [error, {max: ${MAX_JS_COMPLEXITY:-10}}]" \
+    --quiet --format unix 2>&1
+  git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 \
+    --isolated \
+    --ignore=A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z \
+    --max-complexity="${MAX_PY_COMPLEXITY:-10}" \
+    --select=C901
+}
+check "$SKIP_COMPLEXITY" "WARNING" "complexity" "review complex code" ""
+
 check-pydoc() {
   git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty pydocstyle --select=D1
 }

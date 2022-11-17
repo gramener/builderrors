@@ -31,7 +31,6 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
   - [SiteSpeed](https://www.sitespeed.io/) for browser performance testing
   - [K6](https://github.com/grafana/k6) for load performance testing
 
-
 Here are some we don't plan to add:
 
 - [`npm audit`](https://docs.npmjs.com/cli/v8/commands/npm-audit) because it reports un-fixable problems, and may be [broken by design](https://overreacted.io/npm-audit-broken-by-design/)
@@ -81,6 +80,7 @@ Here are some we don't plan to add:
 
    ```bash
    export VERSION=2.x.x
+   docker pull nikolaik/python-nodejs:python3.10-nodejs18-bullseye
    docker build --tag gramener/builderrors:$VERSION --tag gramener/builderrors:latest .
    docker run --rm -v `pwd`:/src gramener/builderrors:latest
    docker push gramener/builderrors:$VERSION
