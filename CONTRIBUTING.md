@@ -22,7 +22,6 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
 - Security & containers
   - [`snyk`](https://snyk.io/). It's [paid](https://snyk.io/plans/) but has a free tier
   - [`hadolint`](https://github.com/hadolint/hadolint) for Dockerfile
-  - [`gitleaks`](https://github.com/zricethezav/gitleaks) for secrets / keys leakage
   - [`checkov`](https://github.com/bridgecrewio/checkov) for containers & secrets
   - devskim, dustilock, git_diff, goodcheck, secretlint, semgrep, syft, trivy
 - Spelling: textllint, misspell, cspell, proselint
@@ -33,7 +32,6 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
 
 Here are some we don't plan to add:
 
-- [`npm audit`](https://docs.npmjs.com/cli/v8/commands/npm-audit) because it reports un-fixable problems, and may be [broken by design](https://overreacted.io/npm-audit-broken-by-design/)
 - ESLint plugins
   - [`eslint-plugin-json`](https://www.npmjs.com/package/eslint-plugin-json). We treat JSON as data, not code
   - [`eslint-plugin-jsonc`](https://www.npmjs.com/package/eslint-plugin-jsonc). Prettier formats JSONC, if required

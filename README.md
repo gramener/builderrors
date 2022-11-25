@@ -24,6 +24,7 @@ Run automated checks on repositories to improve code quality.
   - [ERROR (stylelint) fix CSS errors](#stylelint)
   - [ERROR (htmlhint) fix HTML errors](#htmlhint)
   - [WARNING (npm-audit) avoid unsafe npm packages](#npm-audit)
+  - [WARNING (gitleaks) don't commit secrets](#gitleaks)
   - [WARNING (flake8-extra) improve Python code](#flake8-extra)
   - [WARNING (complexity) review complex code](#complexity)
   - [WARNING (pydoc) document Python code](#pydoc)
@@ -40,7 +41,7 @@ If you used `gramex init` from [gramex](https://github.com/gramener/gramex) befo
 - Delete `.editorconfig`, `.htmllintrc` and `.stylelintrc.js`
 - Copy this [`.eslintrc.js`](.eslintrc.js) and run `npm install --save-dev eslint eslint-plugin-html eslint-plugin-template`
 - If you have a `.flake8` or [equivalent](https://flake8.pycqa.org/en/latest/user/configuration.html), add `extend-ignore=E203,E501`.
-  [`black`](#formatg
+  [`black`](#black)
 
 ## Gitlab CI usage
 
@@ -179,27 +180,28 @@ under Settings > CI / CD > Variables.
 
 | Environment variable     | Command line              | Meaning                                                                               |
 | ------------------------ | ------------------------- | ------------------------------------------------------------------------------------- |
-| `SKIP_LIB=1`             | `--skip=lib`              | Skip [libraries check](#lib)                                                          |
-| `SKIP_MINIFIED=1`        | `--skip=minified`         | Skip [minified file check](#minified)                                                 |
-| `SKIP_LFS=1`             | `--skip=lfs`              | Skip [Git LFS check](#lfs)                                                            |
-| `SKIP_PRETTIER=1`        | `--skip=prettier`         | Skip [Prettier check](#prettier)                                                      |
-| `SKIP_USELESS=1`         | `--skip=useless`          | Skip [useless files check](#useless)                                                  |
-| `SKIP_DUPLICATE_FILES=1` | `--skip=duplicate-files`  | Skip [duplicate files check](#duplicate-files)                                        |
-| `SKIP_DUPLICATE_LINES=1` | `--skip=duplicate-lines`  | Skip [duplicate lines check](#duplicate-lines)                                        |
-| `SKIP_PY_FILENAMES=1`    | `--skip=py-filenames`     | Skip [Python filename check](#py-filenames)                                           |
-| `SKIP_BLACK=1`           | `--skip=black`            | Skip [Python Black check](#black)                                                     |
-| `SKIP_FLAKE8=1`          | `--skip=flake8`           | Skip [flake8 check](#flake8)                                                          |
-| `SKIP_BANDIT=1`          | `--skip=bandit`           | Skip [bandit check](#bandit)                                                          |
-| `SKIP_ESLINT=1`          | `--skip=eslint`           | Skip [eslint check](#eslint)                                                          |
-| `SKIP_ESLINT_DEFAULT=1`  | `--skip=eslint-default`   | Skip [eslint extra checks](#eslint)                                                   |
-| `SKIP_STYLELINT=1`       | `--skip=stylelint`        | Skip [stylelint check](#stylelint)                                                    |
-| `SKIP_HTMLHINT=1`        | `--skip=htmlhint`         | Skip [htmlhint check](#htmlhint)                                                      |
-| `SKIP_NPM_AUDIT=1`       | `--skip=npm-audit`        | Skip [npm audit info](#npm-audit) warning                                             |
-| `SKIP_FLAKE8_EXTRA=1`    | `--skip=flake8-extra`     | Skip [flake8 extra check](#flake8-extra) warning                                      |
-| `SKIP_ABSOLUTE_URLS=1`   | `--skip=absolute-urls`    | Skip [absolute URLs check](#absolute-urls) warning                                    |
-| `SKIP_FOLDERS=1`         | `--skip=folders`          | Skip [folders info](#folders)                                                         |
-| `SKIP_CSS_SIZE=1`        | `--skip=css-size`         | Skip [CSS size info](#css-size)                                                       |
-| `SKIP_CODE_SIZE=1`       | `--skip=code-size`        | Skip [PY/JS size info](#code-size)                                                    |
+| `SKIP_LIB=1`             | `--skip=lib`              | Skip [libraries](#lib) error                                                          |
+| `SKIP_MINIFIED=1`        | `--skip=minified`         | Skip [minified file](#minified) error                                                 |
+| `SKIP_LFS=1`             | `--skip=lfs`              | Skip [Git LFS](#lfs) error                                                            |
+| `SKIP_PRETTIER=1`        | `--skip=prettier`         | Skip [Prettier](#prettier) error                                                      |
+| `SKIP_USELESS=1`         | `--skip=useless`          | Skip [useless files](#useless) error                                                  |
+| `SKIP_DUPLICATE_FILES=1` | `--skip=duplicate-files`  | Skip [duplicate files](#duplicate-files) error                                        |
+| `SKIP_DUPLICATE_LINES=1` | `--skip=duplicate-lines`  | Skip [duplicate lines](#duplicate-lines) error                                        |
+| `SKIP_PY_FILENAMES=1`    | `--skip=py-filenames`     | Skip [Python filename](#py-filenames) error                                           |
+| `SKIP_BLACK=1`           | `--skip=black`            | Skip [Python Black](#black) error                                                     |
+| `SKIP_FLAKE8=1`          | `--skip=flake8`           | Skip [flake8](#flake8) error                                                          |
+| `SKIP_BANDIT=1`          | `--skip=bandit`           | Skip [bandit](#bandit) error                                                          |
+| `SKIP_ESLINT=1`          | `--skip=eslint`           | Skip [eslint](#eslint) error                                                          |
+| `SKIP_ESLINT_DEFAULT=1`  | `--skip=eslint-default`   | Skip [eslint extra](#eslint) error                                                    |
+| `SKIP_STYLELINT=1`       | `--skip=stylelint`        | Skip [stylelint](#stylelint) error                                                    |
+| `SKIP_HTMLHINT=1`        | `--skip=htmlhint`         | Skip [htmlhint](#htmlhint) error                                                      |
+| `SKIP_NPM_AUDIT=1`       | `--skip=npm-audit`        | Skip [npm audit](#npm-audit) warning                                                  |
+| `SKIP_GITLEAKS=1`        | `--skip=gitleaks`         | Skip [gitleaks](#gitleaks) warning                                                    |
+| `SKIP_FLAKE8_EXTRA=1`    | `--skip=flake8-extra`     | Skip [flake8 extra](#flake8-extra) warning                                            |
+| `SKIP_ABSOLUTE_URLS=1`   | `--skip=absolute-urls`    | Skip [absolute URLs](#absolute-urls) warning                                          |
+| `SKIP_FOLDERS=1`         | `--skip=folders`          | Skip [folders](#folders) info                                                         |
+| `SKIP_CSS_SIZE=1`        | `--skip=css-size`         | Skip [CSS size](#css-size) info                                                       |
+| `SKIP_CODE_SIZE=1`       | `--skip=code-size`        | Skip [PY/JS size](#code-size) info                                                    |
 | `LFS_SIZE=n`             | `--lfs-size=n`            | Files over `n` bytes should use Git LFS (default: 1,000,000)                          |
 | `DUPLICATE_FILESIZE=n`   | `--duplicate-filesize=n`  | Files over `n` bytes should not be duplicated (default: 100)                          |
 | `DUPLICATE_LINES=n`      | `--duplicate-lines=n`     | Duplicate code over `n` lines are not allowed (default: 50)                           |
@@ -481,6 +483,17 @@ WARNING (npm-audit) avoid unsafe npm packages
 - To upgrade all packages to the latest compatible version, run `npm upgrade`
 - Change package versions manually and retry
 
+## `gitleaks`
+
+```text
+WARNING (gitleaks) don't commit secrets
+```
+
+[gitleaks](https://github.com/zricethezav/gitleaks) detects hardcoded passwords, API keys, and tokens in git repos.
+
+To fix these, [rewrite the commit history](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+using [BFG repo-cleaner](https://rtyley.github.io/bfg-repo-cleaner/) or [git filter-repo](https://github.com/newren/git-filter-repo).
+
 ## `flake8-extra`
 
 ```text
@@ -494,7 +507,7 @@ WARNING (flake8-extra) improve Python code
 - [flake8-eradicate](https://pypi.org/package/flake8-eradicate): reports commented code
 - [flake8-simplify](https://pypi.org/package/flake8-simplify): suggests code simplifications
 
-You can fix these exactly like [flake8 errors](#fix.
+You can fix these exactly like [flake8 errors](#flake8)
 
 <!-- DO NOT LIST COMMON ERRORS. It wastes space. It's self-explanatory. People can refer it online.
 

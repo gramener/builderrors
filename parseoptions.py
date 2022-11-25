@@ -19,6 +19,7 @@ checks = [
     'stylelint',
     'htmlhint',
     'npm-audit',
+    'gitleaks',
     'flake8-extra',
     'complexity',
     'pydoc',

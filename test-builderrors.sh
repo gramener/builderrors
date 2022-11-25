@@ -53,7 +53,7 @@ check() {
     --ignore-trailing-space \
     --ignore-matching-lines="Run started.*" \
     <(../builderrors $@ --duplicate-filesize=0 --duplicate-lines=30 | \
-      sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" |
+      sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]//g" |
       sed "s/^BUILD FAILED.*/BUILD FAILED./" |
       sed "s/^BUILD PASSED.*/BUILD PASSED./" |
       sed "s/$PREFIX_VAR//g" |
@@ -62,25 +62,26 @@ check() {
 }
 
 # Note: Black file order is unpredictable. So --skip=black when there are multiple .py files.
-check libraries-node
-check libraries-bower
-check minified
-check git-lfs
-check useless
-check duplicate-files --skip=black --skip=flake8-extra  # Test --skip=flake8-extra flag
-check duplicate-lines --skip=black --skip=pydoc   # Test --skip=pydoc flag
-check prettier
-check black
-check python-filenames
-check flake8 --skip=black
-check bandit
-check eslint
-check eslint-config
-check stylelint
-check htmlhint
-check flake8-extra --skip=bandit --skip=flake8  # Test --skip=* flags and that build passes
-check npm-audit
-check absolute-urls
+check libraries-node --skip=gitleaks
+check libraries-bower --skip=gitleaks
+check minified --skip=gitleaks
+check git-lfs --skip=gitleaks
+check useless --skip=gitleaks
+check duplicate-files --skip=gitleaks --skip=black --skip=flake8-extra
+check duplicate-lines --skip=gitleaks --skip=black --skip=pydoc
+check prettier --skip=gitleaks
+check black --skip=gitleaks
+check python-filenames --skip=gitleaks
+check flake8 --skip=black --skip=gitleaks
+check bandit --skip=gitleaks
+check eslint --skip=gitleaks
+check eslint-config --skip=gitleaks
+check stylelint --skip=gitleaks
+check htmlhint --skip=gitleaks
+check flake8-extra --skip=gitleaks --skip=bandit --skip=flake8  # Test --skip=* flags and that build passes
+check npm-audit --skip=gitleaks
+check gitleaks
+check absolute-urls --skip=gitleaks
 
 # Exit code 1 if ANY of the outputs had an error
 exit $EXIT_STATUS

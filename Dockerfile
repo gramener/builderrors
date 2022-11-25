@@ -7,6 +7,12 @@ RUN cd /tmp && \
   git-lfs-3.2.0/install.sh && \
   rm -rf git-lfs-3.2.0/
 
+# Install Gitleaks
+RUN mkdir -p /usr/share/gitleaks/ && \
+  cd /usr/share/gitleaks/ && \
+  curl --silent --location https://github.com/zricethezav/gitleaks/releases/download/v8.15.1/gitleaks_8.15.1_linux_x64.tar.gz | tar -xzf - && \
+  ln -s -t /usr/bin /usr/share/gitleaks/gitleaks
+
 # Install in a shared location
 WORKDIR /usr/share/builderrors
 

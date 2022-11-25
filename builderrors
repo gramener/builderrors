@@ -236,6 +236,11 @@ if [[ -f "package-lock.json" ]]; then
   check "$SKIP_NPM_AUDIT" "WARNING" "npm-audit" "avoid unsafe npm packages" "npm audit fix"
 fi
 
+check-gitleaks() {
+  gitleaks detect --no-banner --log-level ERROR --verbose
+}
+check "$SKIP_GITLEAKS" "WARNING" "gitleaks" "don't commit secrets" ""
+
 check-flake8-extra() {
   git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501
 }
@@ -264,10 +269,9 @@ check-pydoc() {
 check "$SKIP_PYDOC" "WARNING" "pydoc" "document Python code" ""
 
 check-absolute-urls() {
-  git ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty grep -e 'href\s*=\s*"/' -e 'src\s*=\s*"/'
+  git ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty grep -e 'href\s*=\s*"/[^/]' -e 'src\s*=\s*"/[^/]'
 }
 check "$SKIP_ABSOLUTE_URLS" "WARNING" "absolute-urls" "avoid absolute URLs" ""
-
 
 check-folders() {
   git ls-files | python "$WIN_SCRIPT_DIR/printfiles.py"
