@@ -8,11 +8,7 @@ HELP https://github.com/gramener/builderrors/#gitleaks
     Entropy:     3.625000
     File:        gramex.yaml
     Line:        1
-    Commit:      eaa1f72cb2f9074a87d84f66a66504e1a7c13be9
-    Author:      S Anand
-    Email:       root.node@gmail.com
-    Date:        2022-11-25T04:49:55Z
-    Fingerprint: eaa1f72cb2f9074a87d84f66a66504e1a7c13be9:gramex.yaml:generic-api-key:1
+    Fingerprint: gramex.yaml:generic-api-key:1
 
 
 INFO (folders) review folder structure and files
