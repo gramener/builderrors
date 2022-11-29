@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=2.0.0
+VERSION=2.1.0
 
 # Foreground colors (ANSI escape codes)
 RED="\033[31;1m"
@@ -25,7 +25,8 @@ fi
 # Set consistent sort order
 export LC_ALL=C
 
-# Parse command-line options in Python. Strip \r in Windows
+# Parse command-line options in Python. Strip \r in Windows.
+# This sets environment variables like SKIP_*
 eval $(python "$WIN_SCRIPT_DIR/parseoptions.py" "$@" | tr -d '\r')
 if [[ -z "$BUILDERROR_OPTIONS_PARSED" ]]; then exit 1 ; fi
 
@@ -237,7 +238,7 @@ if [[ -f "package-lock.json" ]]; then
 fi
 
 check-gitleaks() {
-  gitleaks detect --no-banner --log-level ERROR --verbose
+  gitleaks detect --no-git --no-banner --verbose
 }
 check "$SKIP_GITLEAKS" "WARNING" "gitleaks" "don't commit secrets" ""
 

@@ -491,8 +491,16 @@ WARNING (gitleaks) don't commit secrets
 
 [gitleaks](https://github.com/zricethezav/gitleaks) detects hardcoded passwords, API keys, and tokens in git repos.
 
-To fix these, [rewrite the commit history](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+To fix these, change the password, key or token.
+
+<!--
+
+[`.gitleaksignore` file](https://github.com/zricethezav/gitleaks#gitleaksignore) ignores fragments, but is experimental.
+
+Optionally, [rewrite the commit history](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
 using [BFG repo-cleaner](https://rtyley.github.io/bfg-repo-cleaner/) or [git filter-repo](https://github.com/newren/git-filter-repo).
+
+-->
 
 ## `flake8-extra`
 

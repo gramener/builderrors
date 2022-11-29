@@ -25,7 +25,8 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
   - [`checkov`](https://github.com/bridgecrewio/checkov) for containers & secrets
   - devskim, dustilock, git_diff, goodcheck, secretlint, semgrep, syft, trivy
 - Spelling: textllint, misspell, cspell, proselint
-- Testing
+- Testing output
+  - [Lighthouse](https://github.com/GoogleChrome/lighthouse)
   - [pa11y](https://github.com/pa11y/pa11y) for accessibility testing
   - [SiteSpeed](https://www.sitespeed.io/) for browser performance testing
   - [K6](https://github.com/grafana/k6) for load performance testing
