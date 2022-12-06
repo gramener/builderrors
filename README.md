@@ -2,6 +2,8 @@
 
 Run automated checks on repositories to improve code quality.
 
+![Sample output](output.png)
+
 - You can install and run it in
   - [Gitlab CI](#gitlab-ci-usage)
   - [Docker](#docker-usage)

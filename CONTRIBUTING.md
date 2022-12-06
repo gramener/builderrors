@@ -11,6 +11,7 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
   - [@typescript-eslint/eslint-plugin](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin) ⭐12,400
   - [eslint-plugin-unicorn](https://github.com/sindresorhus/eslint-plugin-unicorn) ⭐2,800
   - [eslint-formatter-summary](https://github.com/mhipszki/eslint-formatter-summary) ⭐37
+- [`codeclimate-duplication`](https://github.com/codeclimate/codeclimate-duplication) for fuzzy duplication
 - [`pyright`](https://github.com/microsoft/pyright) or
   [`mypy`](https://github.com/python/mypy) for Python static type checking
 - [`curlylint`](https://github.com/thibaudcolas/curlylint) or
@@ -25,11 +26,18 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
   - [`checkov`](https://github.com/bridgecrewio/checkov) for containers & secrets
   - devskim, dustilock, git_diff, goodcheck, secretlint, semgrep, syft, trivy
 - Spelling: textllint, misspell, cspell, proselint
-- Testing output
+- Testing output (DAST)
+  - [Gitlab DAST](https://docs.gitlab.com/ee/user/application_security/dast/)
+  - [OWASP ZAP](https://www.zaproxy.org/docs/docker/)
+  - [API Fuzzing](https://docs.gitlab.com/ee/user/application_security/api_fuzzing/)
   - [Lighthouse](https://github.com/GoogleChrome/lighthouse)
+  - [Venom](https://github.com/orkestral/venom)
+    - [OSHP-Validator for headers](https://github.com/oshp/oshp-validator)
   - [pa11y](https://github.com/pa11y/pa11y) for accessibility testing
   - [SiteSpeed](https://www.sitespeed.io/) for browser performance testing
   - [K6](https://github.com/grafana/k6) for load performance testing
+- Metrics
+  - [Maintainability ratings](https://docs.codeclimate.com/docs/maintainability-calculation)
 
 Here are some we don't plan to add:
 
@@ -57,6 +65,7 @@ Here are some we don't plan to add:
   - [flake8-todos](https://pypi.org/project/flake8-todos) ⭐18. We want to ENCOURAGE TODO statements. This discourages them
   - [flake8-string-format](https://pypi.org/project/flake8-string-format) ⭐18. It's crazy. Doesn't work. Only false positives
   - [flake8-datetime-utcnow-plugin](https://pypi.org/project/flake8-datetime-utcnow-plugin) ⭐1. Error message is unclear. Very minor impact
+- [`synt`](https://github.com/brentlintner/synt) uses [esprima](https://www.npmjs.com/package/esprima) which doesn't parse [`?.`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) and other modern JS features
 
 ## Release
 
