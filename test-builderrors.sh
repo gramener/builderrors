@@ -52,7 +52,7 @@ check() {
     --ignore-tab-expansion \
     --ignore-trailing-space \
     --ignore-matching-lines="Run started.*" \
-    <(../builderrors $@ --duplicate-filesize=0 --duplicate-lines=30 | \
+    <(../builderrors $@ --build-env=gitlab-ci --duplicate-filesize=0 --duplicate-lines=30 | \
       sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]//g" |
       sed "s/^BUILD FAILED.*/BUILD FAILED./" |
       sed "s/^BUILD PASSED.*/BUILD PASSED./" |

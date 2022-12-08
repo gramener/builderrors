@@ -27,8 +27,13 @@ export LC_ALL=C
 
 # Parse command-line options in Python. Strip \r in Windows.
 # This sets environment variables like SKIP_*
-eval $(python "$WIN_SCRIPT_DIR/parseoptions.py" "$@" | tr -d '\r')
-if [[ -z "$BUILDERROR_OPTIONS_PARSED" ]]; then exit 1 ; fi
+PARSE_OUTPUT="$(python "$WIN_SCRIPT_DIR/parseoptions.py" "$@" | tr -d '\r')"
+if [[ "$PARSE_OUTPUT" == *"BUILDERROR_OPTIONS_PARSED"* ]]; then
+  eval "$PARSE_OUTPUT"
+else
+  echo "$PARSE_OUTPUT"
+  exit 1
+fi
 
 # To start with, we don't have any errors
 EXIT_STATUS=0
@@ -59,7 +64,8 @@ check() {
       SECTION_START="\e[0Ksection_start:${START_TIME}:${CODE}[collapsed=true]\r\e[0K"
       SECTION_END="\e[0Ksection_end:${END_TIME}:${CODE}\r\e[0K"
     fi
-    if [[ -n "$OUTPUT" ]]; then
+    # Print the output if there's an output unless it's an INFO outside a CI environment
+    if [[ -n "$OUTPUT" && ( "$TYPE" != "INFO" || -n "$BUILD_ENV" ) ]]; then
       # If it's an error check, print "ERROR:" in red, and exit later with error.
       # If it's a warning, print "WARNING:" in brown, don't set exit status as error.
       echo ""
@@ -137,7 +143,7 @@ check-duplicate-lines() {
   #   grep '^[a-zA-Z]'        # cut out the table
   #   grep -v '^Found '       # remove "Found <nn> clones"
   #   grep -v '^Detection '   # remove "Detection time: <nn>ms"
-  git ls-files | grep -E '\.(js|py|css|scss)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/jscpd" --min-lines="${DUPLICATE_LINES:-50}" 2>&1 | grep '^[a-zA-Z ]' | grep -v '^Found ' | grep -v '^Detection '
+  git ls-files | grep -E '\.(js|py|css|scss)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/jscpd" --min-lines="${DUPLICATE_LINES:-50}" --mode=weak 2>&1 | grep '^[a-zA-Z ]' | grep -v '^Found ' | grep -v '^Detection '
 }
 check "$SKIP_DUPLICATE_LINES" "ERROR" "duplicate-lines" "reduce duplicate lines" ""
 
@@ -169,7 +175,8 @@ check-flake8() {
 check "$SKIP_FLAKE8" "ERROR" "flake8" "fix Python errors" ""
 
 check-bandit() {
-  git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty bandit --format txt --severity-level ${BANDIT_SEVERITY:-all} --confidence-level ${BANDIT_CONFIDENCE:-all} --quiet 2>/dev/null
+  # Don't use git ls-files and then run bandit. Bandit ignores any `.bandit` files in such cases
+  bandit -r . --severity-level ${BANDIT_SEVERITY:-all} --confidence-level ${BANDIT_CONFIDENCE:-all} --exclude="*/*test*/*,*/node_modules/*,*/venv*/*" --quiet 2>/dev/null
 }
 check "$SKIP_BANDIT" "ERROR" "bandit" "fix Python security errors" ""
 

@@ -3,11 +3,11 @@ ERROR (duplicate-lines) reduce duplicate lines
 HELP https://github.com/gramener/builderrors/#duplicate-lines
 
     Clone found (python):
-     - file5.py [2:1 - 942:18] (940 lines, 4044 tokens)
-       file6.py [2:1 - 942:18]
+     - file5.py [17:1 - 942:18] (925 lines, 4015 tokens)
+       file6.py [17:1 - 942:18]
     Clone found (python):
-     - file4.py [2:1 - 942:18] (940 lines, 4044 tokens)
-       file6.py [2:1 - 942:18]
+     - file4.py [17:1 - 942:18] (925 lines, 4015 tokens)
+       file6.py [17:1 - 942:18]
     Clone found (python):
      - file2.py [135:15 - 176:4] (41 lines, 410 tokens)
        file2.py [87:14 - 128:7]

@@ -1,3 +1,4 @@
+import os
 import argparse
 import sys
 
@@ -67,6 +68,18 @@ def main():
     )
     parser.add_argument('--max-js-complexity', metavar='N', help='max JS complexity (10)')
     parser.add_argument('--max-py-complexity', metavar='N', help='max PY complexity (10)')
+    parser.add_argument(
+        '--build-env',
+        choices=['gitlab-ci', 'github-actions', 'jenkins-ci'],
+        default='gitlab-ci'
+        if 'GITLAB_CI' in os.environ
+        else 'github-action'
+        if 'GITHUB_ACTION' in os.environ
+        else 'jenkins-ci'
+        if 'JENKINS_URL' in os.environ
+        else None,
+        help='build environment',
+    )
     # Allow legacy arguments but ignore them
     parser.add_argument('--css-chars-error', metavar='N', help=argparse.SUPPRESS)
     parser.add_argument('--code-chars-error', metavar='N', help=argparse.SUPPRESS)
