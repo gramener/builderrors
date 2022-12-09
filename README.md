@@ -42,8 +42,7 @@ If you used `gramex init` from [gramex](https://github.com/gramener/gramex) befo
 
 - Delete `.editorconfig`, `.htmllintrc` and `.stylelintrc.js`
 - Copy this [`.eslintrc.js`](.eslintrc.js) and run `npm install --save-dev eslint eslint-plugin-html eslint-plugin-template`
-- If you have a `.flake8` or [equivalent](https://flake8.pycqa.org/en/latest/user/configuration.html), add `extend-ignore=E203,E501`.
-  [`black`](#black)
+- If you have a `.flake8` or [equivalent](https://flake8.pycqa.org/en/latest/user/configuration.html), add `extend-ignore=E203,E501`
 
 ## Gitlab CI usage
 
@@ -337,7 +336,7 @@ to auto-format your code.
 - Unibeautify supports templates: https://github.com/unibeautify/unibeautify
 -->
 
-- To auto-fix, run `npx prettier --write "**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}"`
+- To auto-fix, run `npx prettier --write "**/*.{js|mjs|ts|jsx|tsx|vue|css|scss|sass|yaml|md}"`
 - To ignore specific files, add a [`.prettierignore`](https://prettier.io/docs/en/ignore.html) file (e.g. add `*.html`)
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`.prettierrc`](https://prettier.io/docs/en/configuration.html) file
 - To skip this check, use `builderrors --skip=prettier` (e.g. if you temporarily need the build to pass)

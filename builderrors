@@ -143,16 +143,16 @@ check-duplicate-lines() {
   #   grep '^[a-zA-Z]'        # cut out the table
   #   grep -v '^Found '       # remove "Found <nn> clones"
   #   grep -v '^Detection '   # remove "Detection time: <nn>ms"
-  git ls-files | grep -E '\.(js|py|css|scss)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/jscpd" --min-lines="${DUPLICATE_LINES:-50}" --mode=weak 2>&1 | grep '^[a-zA-Z ]' | grep -v '^Found ' | grep -v '^Detection '
+  git ls-files | grep -E '\.(js|mjs|ts|jsx|tsx|vue|py|css|scss)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/jscpd" --min-lines="${DUPLICATE_LINES:-50}" --mode=weak 2>&1 | grep '^[a-zA-Z ]' | grep -v '^Found ' | grep -v '^Detection '
 }
 check "$SKIP_DUPLICATE_LINES" "ERROR" "duplicate-lines" "reduce duplicate lines" ""
 
 check-prettier() {
   # NOTE: Don't run prettier on minified files. No point, and it bloats errors
   # NOTE: Don't run prettier on HTML files. It does not handle Tornado / Lodash templates
-  git ls-files | grep -E '\.(js|jsx|vue|ts|css|scss|sass|yaml|md)$' | grep -v -E "$RE_MINIFIED" | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/prettier" --loglevel=warn --check 2>&1
+  git ls-files | grep -E '\.(js|mjs|ts|jsx|tsx|vue|css|scss|sass|yaml|md)$' | grep -v -E "$RE_MINIFIED" | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/prettier" --loglevel=warn --check 2>&1
 }
-check "$SKIP_PRETTIER" "ERROR" "prettier" "auto-format JS/CSS with Prettier" "npx prettier --write \"**/*.{js,jsx,vue,ts,css,scss,sass,yaml,md}\""
+check "$SKIP_PRETTIER" "ERROR" "prettier" "auto-format JS/CSS with Prettier" "npx prettier --write \"**/*.{js|mjs|ts|jsx|tsx|vue|css|scss|sass|yaml|md}\""
 
 check-black() {
   # black prints "All done!" and "Oh no!" and "<nn> files would be left unchanged." with unicode characters and color. Strip these with "grep -v ..."
@@ -181,7 +181,7 @@ check-bandit() {
 check "$SKIP_BANDIT" "ERROR" "bandit" "fix Python security errors" ""
 
 check-eslint() {
-  git ls-files | grep -E '\.(html|js)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" $ESLINT_OPTIONS --quiet --format unix 2>&1
+  git ls-files | grep -E '\.(html|js|mjs)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" $ESLINT_OPTIONS --quiet --format unix 2>&1
 }
 if [[ -z "$SKIP_ESLINT" ]]; then
   # If user didn't skip default ESLINT checks, and there's no .eslintrc.*, use eslint from root
@@ -256,7 +256,7 @@ check "$SKIP_FLAKE8_EXTRA" "WARNING" "flake8-extra" "improve Python code" ""
 
 check-complexity() {
   # TODO: avoid config file. Put in all options here
-  git ls-files | grep -E '\.(html|js)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" \
+  git ls-files | grep -E '\.(html|js|mjs)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" \
     --no-eslintrc \
     --parser-options ecmaVersion:latest \
     --plugin html --plugin template \
@@ -292,7 +292,7 @@ check-css-size() {
 check "$SKIP_CSS_SIZE" "INFO" "css-size" "review largest CSS code" ""
 
 check-code-size() {
-  git ls-files | grep -E '\.py$|\.js$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty wc | sort -nrk 1
+  git ls-files | grep -E '\.(py|js|mjs|ts|jsx|tsx|vue)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty wc | sort -nrk 1
 }
 check "$SKIP_CODE_SIZE" "INFO" "code-size" "review largest PY/JS code" ""
 
