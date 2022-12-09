@@ -80,6 +80,7 @@ Here are some we don't plan to add:
 3. Test for errors
 
    ```bash
+   npm run build
    ./builderrors
    ./test-builderrors.sh
    ```

@@ -25,6 +25,7 @@ Run automated checks on repositories to improve code quality.
   - [ERROR (eslint) fix JavaScript errors](#eslint)
   - [ERROR (stylelint) fix CSS errors](#stylelint)
   - [ERROR (htmlhint) fix HTML errors](#htmlhint)
+  - [WARNING (js-modules) use JavaScript modules](#js-modules)
   - [WARNING (npm-audit) avoid unsafe npm packages](#npm-audit)
   - [WARNING (gitleaks) don't commit secrets](#gitleaks)
   - [WARNING (flake8-extra) improve Python code](#flake8-extra)
@@ -336,7 +337,7 @@ to auto-format your code.
 - Unibeautify supports templates: https://github.com/unibeautify/unibeautify
 -->
 
-- To auto-fix, run `npx prettier --write "**/*.{js|mjs|ts|jsx|tsx|vue|css|scss|sass|yaml|md}"`
+- To auto-fix, run `npx prettier --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"`
 - To ignore specific files, add a [`.prettierignore`](https://prettier.io/docs/en/ignore.html) file (e.g. add `*.html`)
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`.prettierrc`](https://prettier.io/docs/en/configuration.html) file
 - To skip this check, use `builderrors --skip=prettier` (e.g. if you temporarily need the build to pass)
@@ -471,6 +472,20 @@ ERROR (htmlhint) fix HTML errors
 - Re-write the code based on advice from htmlhint
 - To ignore specific rules, add a [`.htmlhintrc`](https://htmlhint.com/docs/user-guide/getting-started) file based on the [default](.htmlhintrc)
 - To skip this check, use `builderrors --skip=htmllint` (e.g. if you're building a Lodash template library)
+
+## `js-modules`
+
+```text
+WARNING (js-modules) use JavaScript modules
+```
+
+[`JavaScript modules`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
+are the modern way of including JavaScript.
+
+- Change `<script>` to `<script type="module">`
+- Consider using [lebab](https://www.npmjs.com/package/lebab) or
+  [ES5 to ES6](https://marketplace.visualstudio.com/items?itemName=jeremyrajan.vscode-lebab)
+- Test your code!
 
 ## `npm-audit`
 

@@ -1,7 +1,5 @@
 /* eslint-env node */
 
-// These rules override the configurations in the app.
-// Use --skip-eslint-extra or set SKIP_ESLINT_EXRA=1 to ignore this.
 // See https://eslint.org/docs/user-guide/configuring
 module.exports = {
   parserOptions: {

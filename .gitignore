@@ -1,4 +1,5 @@
 TODO
+scripts/*.js
 node_modules/
 build-errors-test/
 venv-*/

@@ -11,7 +11,7 @@ HELP https://github.com/gramener/builderrors/#lib
 
 ERROR (prettier) auto-format JS/CSS with Prettier
 HELP https://github.com/gramener/builderrors/#prettier
-To fix, run: npx prettier --write "**/*.{js|mjs|ts|jsx|tsx|vue|css|scss|sass|yaml|md}"
+To fix, run: npx prettier --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"
 
     [error] No matching files. Patterns: node_modules/is-positive/index.js node_modules/is-positive/readme.md
 

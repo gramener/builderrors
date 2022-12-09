@@ -1,7 +1,7 @@
 
 ERROR (prettier) auto-format JS/CSS with Prettier
 HELP https://github.com/gramener/builderrors/#prettier
-To fix, run: npx prettier --write "**/*.{js|mjs|ts|jsx|tsx|vue|css|scss|sass|yaml|md}"
+To fix, run: npx prettier --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"
 
     [warn] script.js
     [warn] Code style issues found in the above file. Forgot to run Prettier?
@@ -22,6 +22,12 @@ To fix, run: npx eslint --fix
     script.js:31:10: 'dosomething3' is already defined. [Error/no-redeclare]
 
     9 problems
+
+
+WARNING (js-modules) use JavaScript modules
+HELP https://github.com/gramener/builderrors/#js-modules
+
+    index.html:10:3: <script>
 
 
 WARNING (complexity) review complex code

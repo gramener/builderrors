@@ -19,6 +19,7 @@ checks = [
     'eslint-default',
     'stylelint',
     'htmlhint',
+    'js-modules',
     'npm-audit',
     'gitleaks',
     'flake8-extra',
