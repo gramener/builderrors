@@ -2,17 +2,19 @@
 
 VERSION=2.3.0
 
-# Foreground colors (ANSI escape codes)
+# Define colors to use for output messages as foreground colors (ANSI escape codes)
 RED="\033[31;1m"
 GREEN="\033[32;1m"
 BROWN="\033[33;1m"
 YELLOW="\033[93;1m"
 CLEAR="\033[0m"
 
-# RegEx for minified files
+# Define a regular expression for matching minified files
 RE_MINIFIED='[\.\-](min|pack)\.(js|css)$'
 
+# Get the directory where the script is located
 SCRIPT_DIR=`dirname "$(realpath "$0")"`
+# Set the directory where node modules are installed
 NODE_DIR="$SCRIPT_DIR/node_modules/.bin"
 
 # stylelint can't process Cygwin paths. Convert to Windows path if required
@@ -22,14 +24,17 @@ if [ -x "$CYGPATH" ] ; then
   WIN_SCRIPT_DIR="$(cygpath -aw "$SCRIPT_DIR")"
 fi
 
-# Set consistent sort order
+# Set the locale to use for sorting files consistently
 export LC_ALL=C
 
-# Parse command-line options in Python. Strip \r in Windows.
-# This sets environment variables like SKIP_*
+# Parse command-line options and set environment variables using Python.
+# Note: Strip \r in Windows.
 PARSE_OUTPUT="$(python "$WIN_SCRIPT_DIR/scripts/parseoptions.py" "$@" | tr -d '\r')"
+# If the output from the options parser indicates success, evaluate it to set the environment variables
+# This sets environment variables like SKIP_*.
 if [[ "$PARSE_OUTPUT" == *"BUILDERROR_OPTIONS_PARSED"* ]]; then
   eval "$PARSE_OUTPUT"
+# Otherwise, print the output and exit with an error code
 else
   echo "$PARSE_OUTPUT"
   exit 1

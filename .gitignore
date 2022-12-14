@@ -1,5 +1,12 @@
-TODO
+# Ignore local notes
+TODO.md
+
+# Ignore JS files generated from TS files
 scripts/*.js
+
+# Ignore system-specific packages. These should be installed in each environment separately.
 node_modules/
-build-errors-test/
 venv-*/
+
+# Ignore test cases -- this is a separate repo
+build-errors-test/

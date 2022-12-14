@@ -19,6 +19,7 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
 - [`markdownlint`](https://www.npmjs.com/package/markdownlint). But Prettier does most of this
 - [`yamllint`](https://yamllint.readthedocs.io/). But Prettier handles most of this, except `empty-values`, `key-duplicates`
 - [`sqlfluff`](https://github.com/sqlfluff/sqlfluff) for SQL
+- [`commitlint`](https://commitlint.js.org/#/) for Conventional commits
 - Documentation linters for Python, JavaScript and README (e.g. overview, setup instructions, contact)
 - Security & containers
   - [`snyk`](https://snyk.io/). It's [paid](https://snyk.io/plans/) but has a free tier
@@ -30,14 +31,20 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
   - [Gitlab DAST](https://docs.gitlab.com/ee/user/application_security/dast/)
   - [OWASP ZAP](https://www.zaproxy.org/docs/docker/)
   - [API Fuzzing](https://docs.gitlab.com/ee/user/application_security/api_fuzzing/)
-  - [Lighthouse](https://github.com/GoogleChrome/lighthouse)
-  - [Venom](https://github.com/orkestral/venom)
+  - [Lighthouse](https://github.com/GoogleChrome/lighthouse): `npm i lighthouse`
+  - [Venom](https://github.com/orkestral/venom) `npm i venom-bot`
     - [OSHP-Validator for headers](https://github.com/oshp/oshp-validator)
   - [pa11y](https://github.com/pa11y/pa11y) for accessibility testing
   - [SiteSpeed](https://www.sitespeed.io/) for browser performance testing
   - [K6](https://github.com/grafana/k6) for load performance testing
 - Metrics
   - [Maintainability ratings](https://docs.codeclimate.com/docs/maintainability-calculation)
+
+<!--
+
+- Custom [Semgrep](https://semgrep.dev/) rules, or [CodeQL](https://codeql.github.com/)?
+
+-->
 
 Here are some we don't plan to add:
 
