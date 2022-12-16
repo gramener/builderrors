@@ -87,7 +87,8 @@ check() {
         echo -e "${GREEN}To fix, run${CLEAR}: ${FIX}"
       fi
       echo ""
-      echo -E "$OUTPUT" | sed "s/^/    /"
+      # Strip empty lines and indent output
+      echo -E "$OUTPUT" | sed -r '/^\s*$/d' | sed "s/^/    /"
       echo -e "${SECTION_END}"
     # On Gitlab, print an OK message
     elif [[ -n "$CI_SERVER_VERSION_MAJOR" ]]; then
@@ -139,7 +140,9 @@ check-duplicate-files() {
   # Print as groups      - awk '...;sub(/^\*/, "", $2);...'
   #                      -          ^ strip leading * if Cygwin treats file as binary
   # Note: git ls-tree --format is supported only in Git 2.36+ (Apr 2022), so use --long instead
-  git ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > ${DUPLICATE_FILESIZE:-100} { print(\$2) }" | tr '\n' '\0' | xargs -0 --no-run-if-empty md5sum | sort | uniq -w32 -dD | awk '{if(h!=$1){printf "\n"};sub(/^\*/, "", $2);for (i=2; i<=NF; ++i) printf "%s ", $i;printf "\n";h=$1}'
+  git ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > ${DUPLICATE_FILESIZE:-100} { print(\$2) }" | tr '\n' '\0' | \
+    xargs -0 --no-run-if-empty md5sum | sort | uniq -w32 -dD | \
+    awk '{if(h!=$1){printf "\n"};sub(/^\*/, "", $2);for (i=2; i<=NF; ++i) printf "%s ", $i;h=$1}'
 }
 check "$SKIP_DUPLICATE_FILES" "ERROR" "duplicate-files" "delete duplicate files" ""
 
@@ -155,13 +158,17 @@ check "$SKIP_DUPLICATE_LINES" "ERROR" "duplicate-lines" "reduce duplicate lines"
 check-prettier() {
   # NOTE: Don't run prettier on minified files. No point, and it bloats errors
   # NOTE: Don't run prettier on HTML files. It does not handle Tornado / Lodash templates
-  git ls-files | grep -E '\.(js|mjs|ts|jsx|tsx|vue|css|scss|sass|yaml|md)$' | grep -v -E "$RE_MINIFIED" | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/prettier" --loglevel=warn --check 2>&1
+  git ls-files | grep -E '\.(js|mjs|ts|jsx|tsx|vue|css|scss|sass|yaml|md)$' | grep -v -E "$RE_MINIFIED" | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/prettier" --list-different 2>&1
 }
 check "$SKIP_PRETTIER" "ERROR" "prettier" "auto-format JS/CSS with Prettier" "npx prettier --write \"**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}\""
 
 check-black() {
-  # black prints "All done!" and "Oh no!" and "<nn> files would be left unchanged." with unicode characters and color. Strip these with "grep -v ..."
-  git ls-files | grep -E '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty black --check --skip-string-normalization --line-length=${PY_LINE_LENGTH:-99} 2>&1 | grep -v "^All done!" | grep -v "^Oh no!" | grep -v "would be left unchanged."
+  # black prints "All done!" and "Oh no!" and "<nn> files would be left unchanged." with unicode characters and color. Strip with "grep -v ..."
+  git ls-files | grep -E '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty black --check --skip-string-normalization --line-length=${PY_LINE_LENGTH:-99} 2>&1 |
+    grep -v "^All done!" | \
+    grep -v "^Oh no!" | \
+    grep -v "would be left unchanged." | \
+    grep -v "would be reformatted."
 }
 check "$SKIP_BLACK" "ERROR" "black" "auto-format Python with Black" "black . --skip-string-normalization --line-length=${PY_LINE_LENGTH:-99}"
 
@@ -181,12 +188,14 @@ check "$SKIP_FLAKE8" "ERROR" "flake8" "fix Python errors" ""
 
 check-bandit() {
   # Don't use git ls-files and then run bandit. Bandit ignores any `.bandit` files in such cases
-  bandit -r . --severity-level ${BANDIT_SEVERITY:-all} --confidence-level ${BANDIT_CONFIDENCE:-all} --exclude="*/*test*/*,*/node_modules/*,*/venv*/*" --quiet 2>/dev/null
+  bandit -r . --format custom --severity-level ${BANDIT_SEVERITY:-all} --confidence-level ${BANDIT_CONFIDENCE:-all} --exclude="*/*test*/*,*/node_modules/*,*/venv*/*" --quiet 2>/dev/null
 }
 check "$SKIP_BANDIT" "ERROR" "bandit" "fix Python security errors" ""
 
 check-eslint() {
-  git ls-files | grep -E '\.(html|js|mjs)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" $ESLINT_OPTIONS --quiet --format unix 2>&1
+  # eslint prints ".. problems" at the end. Strip with "grep -v ..."
+  git ls-files | grep -E '\.(html|js|mjs)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" $ESLINT_OPTIONS --quiet --format unix 2>&1 | \
+    grep -v "^[0-9]* problems"
 }
 if [[ -z "$SKIP_ESLINT" ]]; then
   # If user didn't skip default ESLINT checks, and there's no .eslintrc.*, use eslint from root
@@ -206,7 +215,9 @@ if [[ -z "$SKIP_ESLINT" ]]; then
 fi
 
 check-stylelint() {
-  git ls-files | grep -E '\.s?css$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/stylelint" --allow-empty-input --config-basedir "$WIN_SCRIPT_DIR" --custom-syntax "$WIN_SCRIPT_DIR/node_modules/postcss-scss" 2>&1
+  # stylelint prints "3 problems" at the end. Strip with "grep -v ..."
+  git ls-files | grep -E '\.s?css$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/stylelint" --allow-empty-input --config-basedir "$WIN_SCRIPT_DIR" --custom-syntax "$WIN_SCRIPT_DIR/node_modules/postcss-scss" --formatter unix 2>&1 | \
+    grep -v "^[0-9]* problems"
 }
 if [[ -z "$SKIP_STYLELINT" ]]; then
   # stylelint uses v8-compile-cache. Disable it since there's nothing to cache on CI
@@ -222,7 +233,9 @@ if [[ -z "$SKIP_STYLELINT" ]]; then
 fi
 
 check-htmlhint() {
-  git ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/htmlhint" --nocolor --format unix
+  # htmlhint prints "3 problems" at the end. Strip with "grep -v ..."
+  git ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/htmlhint" --nocolor --format unix | \
+    grep -v "^[0-9]* problems"
 }
 if [[ -z "$SKIP_HTMLHINT" ]]; then
   if [[ ! -f ".htmlhintrc" ]]; then
@@ -248,7 +261,7 @@ check-js-modules() {
 check "$SKIP_JS_MODULES" "WARNING" "js-modules" "use JavaScript modules" ""
 
 check-npm-audit() {
-  npm audit --prefer-offline --progress=false | grep -v 'found 0 vulnerabilities'
+  npm audit --prefer-offline --progress=false --json | node "$WIN_SCRIPT_DIR/scripts/format-npm-audit.js"
 }
 if [[ -f "package-lock.json" ]]; then
   check "$SKIP_NPM_AUDIT" "WARNING" "npm-audit" "avoid unsafe npm packages" "npm audit fix"
@@ -265,14 +278,15 @@ check-flake8-extra() {
 check "$SKIP_FLAKE8_EXTRA" "WARNING" "flake8-extra" "improve Python code" ""
 
 check-complexity() {
-  # TODO: avoid config file. Put in all options here
+  # Avoid config file. Put in all options here
   git ls-files | grep -E '\.(html|js|mjs)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" \
     --no-eslintrc \
     --parser-options ecmaVersion:latest \
     --plugin html --plugin template \
     --resolve-plugins-relative-to "$WIN_SCRIPT_DIR" \
     --rule "complexity: [error, {max: ${MAX_JS_COMPLEXITY:-10}}]" \
-    --quiet --format unix 2>&1
+    --quiet --format unix 2>&1 | \
+    grep -v "^[0-9]* problems"
   git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 \
     --isolated \
     --ignore=A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z \

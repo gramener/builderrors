@@ -20,6 +20,7 @@ if [ -x "$IS_WINDOWS" ] ; then
 else
   PREFIX_DIR="$(pwd)/"
 fi
+# Use PREFIX_VAR to remove current directory from output. Makes test cases portable from any directory.
 # PREFIX_DIR will be used inside sed. Escape sed special characters. https://unix.stackexchange.com/a/519305
 PREFIX_VAR=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$PREFIX_DIR")
 

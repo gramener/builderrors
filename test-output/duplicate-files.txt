@@ -2,31 +2,22 @@
 ERROR (duplicate-files) delete duplicate files
 HELP https://github.com/gramener/builderrors/#duplicate-files
 
-
-    file 1.py
-    file 2.py
-
-    file 1.js
-    file 2.js
-
-    conf1.yaml
-    conf2.yaml
-
-    file1.yaml
-    file2.yaml
+    file 1.py file 2.py
+    file 1.js file 2.js
+    conf1.yaml conf2.yaml
+    file1.yaml file2.yaml
 
 
 ERROR (prettier) auto-format JS/CSS with Prettier
 HELP https://github.com/gramener/builderrors/#prettier
 To fix, run: npx prettier --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"
 
-    [warn] conf1.yaml
-    [warn] conf2.yaml
-    [warn] file 1.js
-    [warn] file 2.js
-    [warn] file1.yaml
-    [warn] file2.yaml
-    [warn] Code style issues found in 6 files. Forgot to run Prettier?
+    conf1.yaml
+    conf2.yaml
+    file 1.js
+    file 2.js
+    file1.yaml
+    file2.yaml
 
 
 ERROR (py-filenames) use lower_alpha Python paths
@@ -49,8 +40,6 @@ To fix, run: npx eslint --fix
 
     file 1.js:1:10: 'random' is defined but never used. [Error/no-unused-vars]
     file 2.js:1:10: 'random' is defined but never used. [Error/no-unused-vars]
-
-    2 problems
 
 
 WARNING (pydoc) document Python code

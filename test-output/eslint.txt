@@ -3,8 +3,7 @@ ERROR (prettier) auto-format JS/CSS with Prettier
 HELP https://github.com/gramener/builderrors/#prettier
 To fix, run: npx prettier --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"
 
-    [warn] script.js
-    [warn] Code style issues found in the above file. Forgot to run Prettier?
+    script.js
 
 
 ERROR (eslint) fix JavaScript errors
@@ -21,8 +20,6 @@ To fix, run: npx eslint --fix
     script.js:24:10: 'donothing' is defined but never used. [Error/no-unused-vars]
     script.js:31:10: 'dosomething3' is already defined. [Error/no-redeclare]
 
-    9 problems
-
 
 WARNING (js-modules) use JavaScript modules
 HELP https://github.com/gramener/builderrors/#js-modules
@@ -35,8 +32,6 @@ HELP https://github.com/gramener/builderrors/#complexity
 
     script.js:5:1: Function 'dosomething3' has a complexity of 11. Maximum allowed is 10. [Error/complexity]
     script.js:31:1: Function 'dosomething3' has a complexity of 12. Maximum allowed is 10. [Error/complexity]
-
-    2 problems
 
 
 INFO (folders) review folder structure and files

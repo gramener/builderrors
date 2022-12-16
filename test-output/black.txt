@@ -5,8 +5,6 @@ To fix, run: black . --skip-string-normalization --line-length=99
 
     would reformat test.py
 
-    1 file would be reformatted.
-
 
 ERROR (flake8) fix Python errors
 HELP https://github.com/gramener/builderrors/#flake8

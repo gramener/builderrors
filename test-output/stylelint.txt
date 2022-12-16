@@ -3,23 +3,16 @@ ERROR (prettier) auto-format JS/CSS with Prettier
 HELP https://github.com/gramener/builderrors/#prettier
 To fix, run: npx prettier --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"
 
-    [warn] style.css
-    [warn] style.scss
-    [warn] Code style issues found in 2 files. Forgot to run Prettier?
+    style.css
+    style.scss
 
 
 ERROR (stylelint) fix CSS errors
 HELP https://github.com/gramener/builderrors/#stylelint
 
-
-    style.css
-     15:1  ✖  Unexpected duplicate selector ".app", first used at line 10   no-duplicate-selectors
-     20:1  ✖  Unexpected duplicate selector ".link", first used at line 11  no-duplicate-selectors
-
-    style.scss
-     9:3  ✖  Unexpected duplicate selector "body .footer", first used at line 5  no-duplicate-selectors
-
-    3 problems (3 errors, 0 warnings)
+    style.css:15:1: Unexpected duplicate selector ".app", first used at line 10 (no-duplicate-selectors) [error]
+    style.css:20:1: Unexpected duplicate selector ".link", first used at line 11 (no-duplicate-selectors) [error]
+    style.scss:9:3: Unexpected duplicate selector "body .footer", first used at line 5 (no-duplicate-selectors) [error]
 
 
 INFO (folders) review folder structure and files
