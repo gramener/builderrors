@@ -82,6 +82,13 @@ On Windows PowerShell:
 docker run --rm -it -v ${PWD}:/src gramener/builderrors
 ```
 
+To log into the container and run commands, use:
+
+```bash
+docker run --rm -it -v `pwd`:/src gramener/builderrors /bin/sh -l
+# Now run `builderrors` or any other command
+```
+
 ## BitBucket Pipelines usage
 
 To run checks on every push with [BitBucket](https://bitbucket.org/product/features/pipelines),
