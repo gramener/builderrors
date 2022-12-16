@@ -1,5 +1,5 @@
 
-ERROR (duplicate-lines) reduce duplicate lines
+ERROR (duplicate-lines) reduce duplicate lines. 405 min
 HELP https://github.com/gramener/builderrors/#duplicate-lines
 
     Clone found (python):
@@ -31,7 +31,7 @@ HELP https://github.com/gramener/builderrors/#duplicate-lines
        file2.py [135:1 - 861:4]
 
 
-WARNING (flake8-extra) improve Python code
+WARNING (flake8-extra) improve Python code.
 HELP https://github.com/gramener/builderrors/#flake8-extra
 
     file1.py:58:22: B006 Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
@@ -66,7 +66,7 @@ HELP https://github.com/gramener/builderrors/#flake8-extra
     file6.py:837:1: SIM120 Use 'class PeriodicCallback:' instead of 'class PeriodicCallback(object):'
 
 
-WARNING (complexity) review complex code
+WARNING (complexity) review complex code.
 HELP https://github.com/gramener/builderrors/#complexity
 
     file1.py:58:1: C901 'filter' is too complex (16)
@@ -80,7 +80,7 @@ HELP https://github.com/gramener/builderrors/#complexity
     file6.py:460:5: C901 'IOLoop.run_sync' is too complex (11)
 
 
-INFO (folders) review folder structure and files
+INFO (folders) review folder structure and files.
 HELP https://github.com/gramener/builderrors/#folders
 
     .editorconfig
@@ -93,7 +93,7 @@ HELP https://github.com/gramener/builderrors/#folders
     file6.py
 
 
-INFO (code-size) review largest PY/JS code
+INFO (code-size) review largest PY/JS code.
 HELP https://github.com/gramener/builderrors/#code-size
 
       5323  21237 197041 total
@@ -105,5 +105,5 @@ HELP https://github.com/gramener/builderrors/#code-size
        775   3258  31066 file3.py
 
 ---------------------------------------------------------------------
-BUILD FAILED.
+BUILD FAILED. 405 min to fix
 HELP https://github.com/gramener/builderrors

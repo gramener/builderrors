@@ -1,5 +1,5 @@
 
-ERROR (htmlhint) fix HTML errors
+ERROR (htmlhint) fix HTML errors. 15 min
 HELP https://github.com/gramener/builderrors/#htmlhint
 
     index.html:11:7: An alt attribute must be present on <img> elements. [warning/alt-require]
@@ -7,11 +7,11 @@ HELP https://github.com/gramener/builderrors/#htmlhint
     index.html:20:1: Tag must be paired, missing: [ </center></center></center></center> ], start tag match failed [ <center> ] on line 19. [error/tag-pair]
 
 
-INFO (folders) review folder structure and files
+INFO (folders) review folder structure and files.
 HELP https://github.com/gramener/builderrors/#folders
 
     index.html
 
 ---------------------------------------------------------------------
-BUILD FAILED.
+BUILD FAILED. 15 min to fix
 HELP https://github.com/gramener/builderrors

@@ -1,15 +1,15 @@
 
-ERROR (lfs) use Git LFS for large files
+ERROR (lfs) use Git LFS for large files. 15 min
 HELP https://github.com/gramener/builderrors/#lfs
 
     large-file.txt
 
 
-INFO (folders) review folder structure and files
+INFO (folders) review folder structure and files.
 HELP https://github.com/gramener/builderrors/#folders
 
     large-file.txt
 
 ---------------------------------------------------------------------
-BUILD FAILED.
+BUILD FAILED. 15 min to fix
 HELP https://github.com/gramener/builderrors

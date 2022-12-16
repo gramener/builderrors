@@ -1,5 +1,5 @@
 
-ERROR (lib) don't commit libraries
+ERROR (lib) don't commit libraries. 15 min
 HELP https://github.com/gramener/builderrors/#lib
 
     bower_components/color-obj/.bower.json
@@ -10,7 +10,7 @@ HELP https://github.com/gramener/builderrors/#lib
     bower_components/color-obj/test/Color.spec.js
 
 
-ERROR (prettier) auto-format JS/CSS with Prettier
+ERROR (prettier) auto-format JS/CSS with Prettier. 2 min
 HELP https://github.com/gramener/builderrors/#prettier
 To fix, run: npx prettier --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"
 
@@ -20,7 +20,7 @@ To fix, run: npx prettier --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yam
     bower_components\color-obj\test\Color.spec.js
 
 
-INFO (folders) review folder structure and files
+INFO (folders) review folder structure and files.
 HELP https://github.com/gramener/builderrors/#folders
 
     .editorconfig
@@ -33,7 +33,7 @@ HELP https://github.com/gramener/builderrors/#folders
                      |           | test | Color.spec.js
 
 
-INFO (code-size) review largest PY/JS code
+INFO (code-size) review largest PY/JS code.
 HELP https://github.com/gramener/builderrors/#code-size
 
       3259   8557 104180 total
@@ -42,5 +42,5 @@ HELP https://github.com/gramener/builderrors/#code-size
         25    589  12932 bower_components/color-obj/dist/Color.js
 
 ---------------------------------------------------------------------
-BUILD FAILED.
+BUILD FAILED. 17 min to fix
 HELP https://github.com/gramener/builderrors

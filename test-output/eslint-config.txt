@@ -1,12 +1,12 @@
 
-ERROR (prettier) auto-format JS/CSS with Prettier
+ERROR (prettier) auto-format JS/CSS with Prettier. 2 min
 HELP https://github.com/gramener/builderrors/#prettier
 To fix, run: npx prettier --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"
 
     script.js
 
 
-ERROR (eslint) fix JavaScript errors
+ERROR (eslint) fix JavaScript errors. 18 min
 HELP https://github.com/gramener/builderrors/#eslint
 To fix, run: npx eslint --fix
 
@@ -21,20 +21,20 @@ To fix, run: npx eslint --fix
     script.js:31:10: 'dosomething3' is already defined. [Error/no-redeclare]
 
 
-WARNING (js-modules) use JavaScript modules
+WARNING (js-modules) use JavaScript modules.
 HELP https://github.com/gramener/builderrors/#js-modules
 
     index.html:10:3: <script>
 
 
-WARNING (complexity) review complex code
+WARNING (complexity) review complex code.
 HELP https://github.com/gramener/builderrors/#complexity
 
     script.js:5:1: Function 'dosomething3' has a complexity of 11. Maximum allowed is 10. [Error/complexity]
     script.js:31:1: Function 'dosomething3' has a complexity of 12. Maximum allowed is 10. [Error/complexity]
 
 
-INFO (folders) review folder structure and files
+INFO (folders) review folder structure and files.
 HELP https://github.com/gramener/builderrors/#folders
 
     .eslintrc.js
@@ -45,7 +45,7 @@ HELP https://github.com/gramener/builderrors/#folders
     script.js
 
 
-INFO (code-size) review largest PY/JS code
+INFO (code-size) review largest PY/JS code.
 HELP https://github.com/gramener/builderrors/#code-size
 
       66  168 1097 total
@@ -53,5 +53,5 @@ HELP https://github.com/gramener/builderrors/#code-size
       15   28  231 .eslintrc.js
 
 ---------------------------------------------------------------------
-BUILD FAILED.
+BUILD FAILED. 20 min to fix
 HELP https://github.com/gramener/builderrors

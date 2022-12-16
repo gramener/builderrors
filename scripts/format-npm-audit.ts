@@ -1,6 +1,6 @@
 interface NpmAudit {
   auditReportVersion: 2;
-  vulnerabilities: {[key: string]: NpmAuditVulnerability};
+  vulnerabilities: { [key: string]: NpmAuditVulnerability };
 }
 interface NpmAuditVulnerability {
   name: string;
@@ -28,12 +28,14 @@ process.stdin.on("end", () => {
   const audit: NpmAudit = JSON.parse(chunks.join(""));
   // Loop through each vulnerability and print a summary
   for (const [name, vulnerability] of Object.entries(audit.vulnerabilities)) {
-    console.log([
-      name,
-      vulnerability.range,
-      vulnerability.severity.toUpperCase(),
-      vulnerability.fixAvailable ? "fixable" : "",
-      vulnerability.isDirect ? "(direct)" : ""
-    ].join(" "));
+    console.log(
+      [
+        name,
+        vulnerability.range,
+        vulnerability.severity.toUpperCase(),
+        vulnerability.fixAvailable ? "fixable" : "",
+        vulnerability.isDirect ? "(direct)" : "",
+      ].join(" ")
+    );
   }
-})
+});

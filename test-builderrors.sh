@@ -55,8 +55,8 @@ check() {
     --ignore-matching-lines="Run started.*" \
     <(../builderrors $@ --build-env=gitlab-ci --duplicate-filesize=0 --duplicate-lines=30 | \
       sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]//g" |
-      sed "s/^BUILD FAILED.*/BUILD FAILED./" |
-      sed "s/^BUILD PASSED.*/BUILD PASSED./" |
+      sed -E "s/^BUILD FAILED on builderrors v[0-9\.]*\. ([0-9]* min to fix)/BUILD FAILED. \1/" |
+      sed "s/^BUILD PASSED on builderrors v[0-9\.]*\./BUILD PASSED./" |
       sed "s/$PREFIX_VAR//g" |
       sed "s~\.\\\\~\./~g") \
     "../test-output/$BRANCH.txt" || EXIT_STATUS=1

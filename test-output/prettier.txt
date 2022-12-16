@@ -1,22 +1,22 @@
 
-ERROR (prettier) auto-format JS/CSS with Prettier
+ERROR (prettier) auto-format JS/CSS with Prettier. 2 min
 HELP https://github.com/gramener/builderrors/#prettier
 To fix, run: npx prettier --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"
 
     test.js
 
 
-INFO (folders) review folder structure and files
+INFO (folders) review folder structure and files.
 HELP https://github.com/gramener/builderrors/#folders
 
     test.js
 
 
-INFO (code-size) review largest PY/JS code
+INFO (code-size) review largest PY/JS code.
 HELP https://github.com/gramener/builderrors/#code-size
 
      9 20 94 test.js
 
 ---------------------------------------------------------------------
-BUILD FAILED.
+BUILD FAILED. 2 min to fix
 HELP https://github.com/gramener/builderrors

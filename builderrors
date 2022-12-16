@@ -42,11 +42,14 @@ fi
 
 # To start with, we don't have any errors
 EXIT_STATUS=0
+# It takes 0 minutes to fix each error
+FIX_MINUTES=0
 
 # Usage: check $SKIP $TYPE $CODE $MSG $FIX
 #   $SKIP: Ignore check if specified
 #   $TYPE: "ERROR" or "WARNING" or "INFO"
 #   $CODE: unique error ID, e.g. flake8, eslint
+#   $TIME_TO_FIX: # minutes to fix each error
 #   $MSG: the message that's printed before any error
 #   $FIX: optional "To fix, run:" message
 #   Runs "check-$CODE" function
@@ -55,8 +58,9 @@ check() {
   if [[ -z "$SKIP" ]]; then
     TYPE="$2"
     CODE="$3"
-    MSG="$4"
-    FIX="$5"
+    TIME_TO_FIX="$4"
+    MSG="$5"
+    FIX="$6"
 
     START_TIME="$(date +%s)"
     OUTPUT=$(check-$CODE)
@@ -70,17 +74,27 @@ check() {
       SECTION_END="\e[0Ksection_end:${END_TIME}:${CODE}\r\e[0K"
     fi
     # Print the output if there's an output unless it's an INFO outside a CI environment
+    # TODO: Set BUILD_ENV based on CI environment
     if [[ -n "$OUTPUT" && ( "$TYPE" != "INFO" || -n "$BUILD_ENV" ) ]]; then
       # If it's an error check, print "ERROR:" in red, and exit later with error.
       # If it's a warning, print "WARNING:" in brown, don't set exit status as error.
       echo ""
       if [[ "$TYPE" == "ERROR" ]]; then
-        echo -e "${SECTION_START}${RED}$TYPE ($CODE)${CLEAR} $MSG"
+        # If it's an error, increment FIX_MINUTES by the time to fix (in minutes)
+        # Extract the first number from $TIME_TO_FIX. That's the number of minutes to fix
+        MINUTES=$(echo "$TIME_TO_FIX" | grep -oE '[0-9]+')
+        # If the time to fix is per error ("/error"), multuple by # of lines = # of errors
+        if [[ "$TIME_TO_FIX" == *"error"* ]]; then
+          LINES=$(wc -l <<< ${OUTPUT})
+          MINUTES=$((MINUTES * LINES))
+        fi
+        FIX_MINUTES=$((FIX_MINUTES + MINUTES))
+        echo -e "${SECTION_START}${RED}$TYPE ($CODE)${CLEAR} $MSG. ${YELLOW}${MINUTES} min${CLEAR}"
         EXIT_STATUS=1
       elif [[ "$TYPE" == "WARNING" ]]; then
-        echo -e "${SECTION_START}${BROWN}$TYPE ($CODE)${CLEAR} $MSG"
+        echo -e "${SECTION_START}${BROWN}$TYPE ($CODE)${CLEAR} $MSG."
       elif [[ "$TYPE" == "INFO" ]]; then
-        echo -e "${SECTION_START}${GREEN}$TYPE ($CODE)${CLEAR} $MSG"
+        echo -e "${SECTION_START}${GREEN}$TYPE ($CODE)${CLEAR} $MSG."
       fi
       echo -e "${YELLOW}HELP${CLEAR} https://github.com/gramener/builderrors/#${CODE}"
       if [[ -n "$FIX" ]]; then
@@ -110,12 +124,12 @@ cd "$TARGET_DIR" 2>&1 >/dev/null
 check-lib() {
   git ls-files | grep -E 'node_modules/|bower_components/' | sort
 }
-check "$SKIP_LIB" "ERROR" "lib" "don't commit libraries" ""
+check "$SKIP_LIB" "ERROR" "lib" "15 min" "don't commit libraries" ""
 
 check-minified() {
   git ls-files | grep -E "$RE_MINIFIED" | sort
 }
-check "$SKIP_MINIFIED" "ERROR" "minified" "don't commit minified files" ""
+check "$SKIP_MINIFIED" "ERROR" "minified" "15 min" "don't commit minified files" ""
 
 check-lfs() {
   # comm -23 prints lines unique to file list #1
@@ -124,12 +138,12 @@ check-lfs() {
   # Note: git ls-tree --format is supported only in Git 2.36+ (Apr 2022), so use --long instead
   comm -23 <(git ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > ${LFS_SIZE:-1000000} { print(\$2) }" | sort) <(git lfs ls-files -n | sort)
 }
-check "$SKIP_LFS" "ERROR" "lfs" "use Git LFS for large files" ""
+check "$SKIP_LFS" "ERROR" "lfs" "15 min" "use Git LFS for large files" ""
 
 check-useless() {
   git ls-files | grep -E '(\.lnk$|^~\$|~$|\.sublime\-|\.ipynb_checkpoints$|\.stackdump$|^thumbs.db$|\.log$)' | sort
 }
-check "$SKIP_USELESS" "ERROR" "useless" "don't commit useless/generated files" ""
+check "$SKIP_USELESS" "ERROR" "useless" "15 min" "don't commit useless/generated files" ""
 
 check-duplicate-files() {
   # List commited files  - git ls-tree ...
@@ -144,7 +158,7 @@ check-duplicate-files() {
     xargs -0 --no-run-if-empty md5sum | sort | uniq -w32 -dD | \
     awk '{if(h!=$1){printf "\n"};sub(/^\*/, "", $2);for (i=2; i<=NF; ++i) printf "%s ", $i;h=$1}'
 }
-check "$SKIP_DUPLICATE_FILES" "ERROR" "duplicate-files" "delete duplicate files" ""
+check "$SKIP_DUPLICATE_FILES" "ERROR" "duplicate-files" "10 min/error" "delete duplicate files" ""
 
 check-duplicate-lines() {
   # jscpd prints a table of results and "Found <nn> clones" and "Detection time: <nn>ms". Ignore these lines at the end using:
@@ -153,14 +167,14 @@ check-duplicate-lines() {
   #   grep -v '^Detection '   # remove "Detection time: <nn>ms"
   git ls-files | grep -E '\.(js|mjs|ts|jsx|tsx|vue|py|css|scss)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/jscpd" --min-lines="${DUPLICATE_LINES:-50}" --mode=weak 2>&1 | grep '^[a-zA-Z ]' | grep -v '^Found ' | grep -v '^Detection '
 }
-check "$SKIP_DUPLICATE_LINES" "ERROR" "duplicate-lines" "reduce duplicate lines" ""
+check "$SKIP_DUPLICATE_LINES" "ERROR" "duplicate-lines" "15 min/error" "reduce duplicate lines" ""
 
 check-prettier() {
   # NOTE: Don't run prettier on minified files. No point, and it bloats errors
   # NOTE: Don't run prettier on HTML files. It does not handle Tornado / Lodash templates
   git ls-files | grep -E '\.(js|mjs|ts|jsx|tsx|vue|css|scss|sass|yaml|md)$' | grep -v -E "$RE_MINIFIED" | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/prettier" --list-different 2>&1
 }
-check "$SKIP_PRETTIER" "ERROR" "prettier" "auto-format JS/CSS with Prettier" "npx prettier --write \"**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}\""
+check "$SKIP_PRETTIER" "ERROR" "prettier" "2 min" "auto-format JS/CSS with Prettier" "npx prettier --write \"**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}\""
 
 check-black() {
   # black prints "All done!" and "Oh no!" and "<nn> files would be left unchanged." with unicode characters and color. Strip with "grep -v ..."
@@ -170,12 +184,12 @@ check-black() {
     grep -v "would be left unchanged." | \
     grep -v "would be reformatted."
 }
-check "$SKIP_BLACK" "ERROR" "black" "auto-format Python with Black" "black . --skip-string-normalization --line-length=${PY_LINE_LENGTH:-99}"
+check "$SKIP_BLACK" "ERROR" "black" "2 min" "auto-format Python with Black" "black . --skip-string-normalization --line-length=${PY_LINE_LENGTH:-99}"
 
 check-py-filenames() {
   git ls-files | grep '\.py$' | sort | grep -e '[^a-z0-9_./]'
 }
-check "$SKIP_PY_FILENAMES" "ERROR" "py-filenames" "use lower_alpha Python paths" ""
+check "$SKIP_PY_FILENAMES" "ERROR" "py-filenames" "5 min/error" "use lower_alpha Python paths" ""
 
 check-flake8() {
   # flake8: ignore E203 which is not PEP8 compliant
@@ -184,13 +198,13 @@ check-flake8() {
   # https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
   git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501
 }
-check "$SKIP_FLAKE8" "ERROR" "flake8" "fix Python errors" ""
+check "$SKIP_FLAKE8" "ERROR" "flake8" "5 min/error" "fix Python errors" ""
 
 check-bandit() {
   # Don't use git ls-files and then run bandit. Bandit ignores any `.bandit` files in such cases
   bandit -r . --format custom --severity-level ${BANDIT_SEVERITY:-all} --confidence-level ${BANDIT_CONFIDENCE:-all} --exclude="*/*test*/*,*/node_modules/*,*/venv*/*" --quiet 2>/dev/null
 }
-check "$SKIP_BANDIT" "ERROR" "bandit" "fix Python security errors" ""
+check "$SKIP_BANDIT" "ERROR" "bandit" "60 min/error" "fix Python security errors" ""
 
 check-eslint() {
   # eslint prints ".. problems" at the end. Strip with "grep -v ..."
@@ -208,7 +222,7 @@ if [[ -z "$SKIP_ESLINT" ]]; then
     CREATED_NODE_MODULES=1
     ESLINT_OPTIONS="--resolve-plugins-relative-to ."
   fi
-  check "$SKIP_ESLINT" "ERROR" "eslint" "fix JavaScript errors" "npx eslint --fix"
+  check "$SKIP_ESLINT" "ERROR" "eslint" "2 min/error" "fix JavaScript errors" "npx eslint --fix"
   if [[ -n "$CREATED_NODE_MODULES" ]]; then
     git -c core.longPaths=true clean -fd > /dev/null
   fi
@@ -226,7 +240,7 @@ if [[ -z "$SKIP_STYLELINT" ]]; then
     cp "$SCRIPT_DIR/.stylelintrc.js" .
     CREATED_STYLELINTRC=1
   fi
-  check "$SKIP_STYLELINT" "ERROR" "stylelint" "fix CSS errors" ""
+  check "$SKIP_STYLELINT" "ERROR" "stylelint" "3 min/error" "fix CSS errors" ""
   if [[ -n "$CREATED_STYLELINTRC" ]]; then
     rm .stylelintrc.js
   fi
@@ -242,7 +256,7 @@ if [[ -z "$SKIP_HTMLHINT" ]]; then
     cp "$SCRIPT_DIR/.htmlhintrc" .
     CREATED_HTMLHINTRC=1
   fi
-  check "$SKIP_HTMLHINT" "ERROR" "htmlhint" "fix HTML errors" ""
+  check "$SKIP_HTMLHINT" "ERROR" "htmlhint" "5 min/error" "fix HTML errors" ""
   if [[ -n "$CREATED_HTMLHINTRC" ]]; then
     rm .htmlhintrc
   fi
@@ -258,24 +272,24 @@ fi
 check-js-modules() {
   git ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty node "$WIN_SCRIPT_DIR/scripts/jsmodules.js"
 }
-check "$SKIP_JS_MODULES" "WARNING" "js-modules" "use JavaScript modules" ""
+check "$SKIP_JS_MODULES" "WARNING" "js-modules" "30 min/error" "use JavaScript modules" ""
 
 check-npm-audit() {
   npm audit --prefer-offline --progress=false --json | node "$WIN_SCRIPT_DIR/scripts/format-npm-audit.js"
 }
 if [[ -f "package-lock.json" ]]; then
-  check "$SKIP_NPM_AUDIT" "WARNING" "npm-audit" "avoid unsafe npm packages" "npm audit fix"
+  check "$SKIP_NPM_AUDIT" "WARNING" "npm-audit" "15 min/error" "avoid unsafe npm packages" "npm audit fix"
 fi
 
 check-gitleaks() {
   gitleaks detect --no-git --no-banner --verbose 2>/dev/null
 }
-check "$SKIP_GITLEAKS" "WARNING" "gitleaks" "don't commit secrets" ""
+check "$SKIP_GITLEAKS" "WARNING" "gitleaks" "30 min/error" "don't commit secrets" ""
 
 check-flake8-extra() {
   git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501
 }
-check "$SKIP_FLAKE8_EXTRA" "WARNING" "flake8-extra" "improve Python code" ""
+check "$SKIP_FLAKE8_EXTRA" "WARNING" "flake8-extra" "5 min/error" "improve Python code" ""
 
 check-complexity() {
   # Avoid config file. Put in all options here
@@ -293,40 +307,40 @@ check-complexity() {
     --max-complexity="${MAX_PY_COMPLEXITY:-10}" \
     --select=C901
 }
-check "$SKIP_COMPLEXITY" "WARNING" "complexity" "review complex code" ""
+check "$SKIP_COMPLEXITY" "WARNING" "complexity" "120 min/error" "review complex code" ""
 
 check-pydoc() {
   git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty pydocstyle --select=D1
 }
-check "$SKIP_PYDOC" "WARNING" "pydoc" "document Python code" ""
+check "$SKIP_PYDOC" "WARNING" "pydoc" "15 min/error" "document Python code" ""
 
 check-absolute-urls() {
   git ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty grep -e 'href\s*=\s*"/[^/]' -e 'src\s*=\s*"/[^/]'
 }
-check "$SKIP_ABSOLUTE_URLS" "WARNING" "absolute-urls" "avoid absolute URLs" ""
+check "$SKIP_ABSOLUTE_URLS" "WARNING" "absolute-urls" "10 min/error" "avoid absolute URLs" ""
 
 check-folders() {
   git ls-files | python "$WIN_SCRIPT_DIR/scripts/printfiles.py"
 }
-check "$SKIP_FOLDERS" "INFO" "folders" "review folder structure and files" ""
+check "$SKIP_FOLDERS" "INFO" "folders" "0 min" "review folder structure and files" ""
 
 check-css-size() {
   git ls-files | grep -E '\.s?css$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty wc | sort -nrk 1
 }
-check "$SKIP_CSS_SIZE" "INFO" "css-size" "review largest CSS code" ""
+check "$SKIP_CSS_SIZE" "INFO" "css-size" "0 min" "review largest CSS code" ""
 
 check-code-size() {
   git ls-files | grep -E '\.(py|js|mjs|ts|jsx|tsx|vue)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty wc | sort -nrk 1
 }
-check "$SKIP_CODE_SIZE" "INFO" "code-size" "review largest PY/JS code" ""
+check "$SKIP_CODE_SIZE" "INFO" "code-size" "0 min" "review largest PY/JS code" ""
 
 # If ANY of the ERRORS above failed, exit with an error message
 if [[ $EXIT_STATUS -ne 0 ]]; then
   echo -e "${RED}---------------------------------------------------------------------${CLEAR}"
-  echo -e "${RED}BUILD FAILED on builderrors v$VERSION${CLEAR}"
+  echo -e "${RED}BUILD FAILED on builderrors v$VERSION${CLEAR}. ${FIX_MINUTES} min to fix"
 else
   echo -e "${GREEN}---------------------------------------------------------------------${CLEAR}"
-  echo -e "${GREEN}BUILD PASSED on builderrors v$VERSION${CLEAR}"
+  echo -e "${GREEN}BUILD PASSED on builderrors v$VERSION${CLEAR}."
 fi
 echo -e "${YELLOW}HELP${CLEAR} https://github.com/gramener/builderrors"
 

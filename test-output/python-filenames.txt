@@ -1,12 +1,12 @@
 
-ERROR (py-filenames) use lower_alpha Python paths
+ERROR (py-filenames) use lower_alpha Python paths. 10 min
 HELP https://github.com/gramener/builderrors/#py-filenames
 
     HasCapitals.py
     has-hyphen.py
 
 
-WARNING (pydoc) document Python code
+WARNING (pydoc) document Python code.
 HELP https://github.com/gramener/builderrors/#pydoc
 
     HasCapitals.py:1 at module level:
@@ -17,7 +17,7 @@ HELP https://github.com/gramener/builderrors/#pydoc
             D100: Missing docstring in public module
 
 
-INFO (folders) review folder structure and files
+INFO (folders) review folder structure and files.
 HELP https://github.com/gramener/builderrors/#folders
 
     HasCapitals.py
@@ -25,7 +25,7 @@ HELP https://github.com/gramener/builderrors/#folders
     has_underscore.py
 
 
-INFO (code-size) review largest PY/JS code
+INFO (code-size) review largest PY/JS code.
 HELP https://github.com/gramener/builderrors/#code-size
 
      3 12 45 total
@@ -34,5 +34,5 @@ HELP https://github.com/gramener/builderrors/#code-size
      1  4 15 HasCapitals.py
 
 ---------------------------------------------------------------------
-BUILD FAILED.
+BUILD FAILED. 10 min to fix
 HELP https://github.com/gramener/builderrors

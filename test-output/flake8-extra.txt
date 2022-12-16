@@ -1,5 +1,5 @@
 
-WARNING (flake8-extra) improve Python code
+WARNING (flake8-extra) improve Python code.
 HELP https://github.com/gramener/builderrors/#flake8-extra
 
     error.py:1:17: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
@@ -13,7 +13,7 @@ HELP https://github.com/gramener/builderrors/#flake8-extra
     error.py:7:13: E722 do not use bare 'except'
 
 
-WARNING (pydoc) document Python code
+WARNING (pydoc) document Python code.
 HELP https://github.com/gramener/builderrors/#pydoc
 
     error.py:1 at module level:
@@ -22,13 +22,13 @@ HELP https://github.com/gramener/builderrors/#pydoc
             D103: Missing docstring in public function
 
 
-INFO (folders) review folder structure and files
+INFO (folders) review folder structure and files.
 HELP https://github.com/gramener/builderrors/#folders
 
     error.py
 
 
-INFO (code-size) review largest PY/JS code
+INFO (code-size) review largest PY/JS code.
 HELP https://github.com/gramener/builderrors/#code-size
 
       8  20 203 error.py

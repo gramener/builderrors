@@ -1,5 +1,5 @@
 
-WARNING (absolute-urls) avoid absolute URLs
+WARNING (absolute-urls) avoid absolute URLs.
 HELP https://github.com/gramener/builderrors/#absolute-urls
 
       <link rel="stylesheet" href = "/style2.css">
@@ -7,7 +7,7 @@ HELP https://github.com/gramener/builderrors/#absolute-urls
       <a href = "/login">Login</a>
 
 
-INFO (folders) review folder structure and files
+INFO (folders) review folder structure and files.
 HELP https://github.com/gramener/builderrors/#folders
 
     index.html

@@ -1,5 +1,5 @@
 
-ERROR (useless) don't commit useless/generated files
+ERROR (useless) don't commit useless/generated files. 15 min
 HELP https://github.com/gramener/builderrors/#useless
 
     .stackdump
@@ -13,7 +13,7 @@ HELP https://github.com/gramener/builderrors/#useless
     ~$
 
 
-INFO (folders) review folder structure and files
+INFO (folders) review folder structure and files.
 HELP https://github.com/gramener/builderrors/#folders
 
     .ipynb_checkpoints | useless.ipynb
@@ -28,5 +28,5 @@ HELP https://github.com/gramener/builderrors/#folders
     ~$
 
 ---------------------------------------------------------------------
-BUILD FAILED.
+BUILD FAILED. 15 min to fix
 HELP https://github.com/gramener/builderrors

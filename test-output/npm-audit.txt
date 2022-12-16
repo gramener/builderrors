@@ -1,5 +1,5 @@
 
-WARNING (npm-audit) avoid unsafe npm packages
+WARNING (npm-audit) avoid unsafe npm packages.
 HELP https://github.com/gramener/builderrors/#npm-audit
 To fix, run: npm audit fix
 
@@ -19,7 +19,7 @@ To fix, run: npm audit fix
     yargs-parser 6.0.0 - 13.1.1 MODERATE fixable
 
 
-INFO (folders) review folder structure and files
+INFO (folders) review folder structure and files.
 HELP https://github.com/gramener/builderrors/#folders
 
     .gitignore

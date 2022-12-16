@@ -1,5 +1,5 @@
 
-ERROR (prettier) auto-format JS/CSS with Prettier
+ERROR (prettier) auto-format JS/CSS with Prettier. 2 min
 HELP https://github.com/gramener/builderrors/#prettier
 To fix, run: npx prettier --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"
 
@@ -7,7 +7,7 @@ To fix, run: npx prettier --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yam
     style.scss
 
 
-ERROR (stylelint) fix CSS errors
+ERROR (stylelint) fix CSS errors. 9 min
 HELP https://github.com/gramener/builderrors/#stylelint
 
     style.css:15:1: Unexpected duplicate selector ".app", first used at line 10 (no-duplicate-selectors) [error]
@@ -15,14 +15,14 @@ HELP https://github.com/gramener/builderrors/#stylelint
     style.scss:9:3: Unexpected duplicate selector "body .footer", first used at line 5 (no-duplicate-selectors) [error]
 
 
-INFO (folders) review folder structure and files
+INFO (folders) review folder structure and files.
 HELP https://github.com/gramener/builderrors/#folders
 
     style.css
     style.scss
 
 
-INFO (css-size) review largest CSS code
+INFO (css-size) review largest CSS code.
 HELP https://github.com/gramener/builderrors/#css-size
 
       44  271 1990 total
@@ -30,5 +30,5 @@ HELP https://github.com/gramener/builderrors/#css-size
       16   36  240 style.scss
 
 ---------------------------------------------------------------------
-BUILD FAILED.
+BUILD FAILED. 11 min to fix
 HELP https://github.com/gramener/builderrors

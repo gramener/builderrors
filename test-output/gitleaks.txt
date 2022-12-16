@@ -1,5 +1,5 @@
 
-WARNING (gitleaks) don't commit secrets
+WARNING (gitleaks) don't commit secrets.
 HELP https://github.com/gramener/builderrors/#gitleaks
 
     Finding:     PASSWORD: qkkzjpd49pzSBRxM
@@ -11,7 +11,7 @@ HELP https://github.com/gramener/builderrors/#gitleaks
     Fingerprint: gramex.yaml:generic-api-key:1
 
 
-INFO (folders) review folder structure and files
+INFO (folders) review folder structure and files.
 HELP https://github.com/gramener/builderrors/#folders
 
     gramex.yaml

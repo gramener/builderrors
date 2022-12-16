@@ -1,24 +1,24 @@
 
-ERROR (black) auto-format Python with Black
+ERROR (black) auto-format Python with Black. 2 min
 HELP https://github.com/gramener/builderrors/#black
 To fix, run: black . --skip-string-normalization --line-length=99
 
     would reformat test.py
 
 
-ERROR (flake8) fix Python errors
+ERROR (flake8) fix Python errors. 5 min
 HELP https://github.com/gramener/builderrors/#flake8
 
     test.py:2:3: E111 indentation is not a multiple of 4
 
 
-WARNING (flake8-extra) improve Python code
+WARNING (flake8-extra) improve Python code.
 HELP https://github.com/gramener/builderrors/#flake8-extra
 
     test.py:2:3: E111 indentation is not a multiple of 4
 
 
-WARNING (pydoc) document Python code
+WARNING (pydoc) document Python code.
 HELP https://github.com/gramener/builderrors/#pydoc
 
     test.py:1 at module level:
@@ -27,17 +27,17 @@ HELP https://github.com/gramener/builderrors/#pydoc
             D103: Missing docstring in public function
 
 
-INFO (folders) review folder structure and files
+INFO (folders) review folder structure and files.
 HELP https://github.com/gramener/builderrors/#folders
 
     test.py
 
 
-INFO (code-size) review largest PY/JS code
+INFO (code-size) review largest PY/JS code.
 HELP https://github.com/gramener/builderrors/#code-size
 
      2  4 23 test.py
 
 ---------------------------------------------------------------------
-BUILD FAILED.
+BUILD FAILED. 7 min to fix
 HELP https://github.com/gramener/builderrors

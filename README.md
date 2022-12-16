@@ -234,7 +234,7 @@ bash /path/to/builderrors --only=flake8 --only=eslint
 ## `lib`
 
 ```text
-ERROR (lib) don't commit libraries
+ERROR (lib) don't commit libraries. 15 min
 ```
 
 `node_modules` (or `bower_components`) should be installed via `npm install` in each environment
@@ -246,7 +246,7 @@ ERROR (lib) don't commit libraries
 ## `minified`
 
 ```text
-ERROR (minified) don't commit minified files
+ERROR (minified) don't commit minified files. 15 min
 ```
 
 Minified files are not source code and shouldn't be version-controlled. They're generated
@@ -259,7 +259,7 @@ Minified files are not source code and shouldn't be version-controlled. They're 
 ## `lfs`
 
 ```text
-ERROR (lfs) use Git LFS for large files
+ERROR (lfs) use Git LFS for large files. 15 min
 ```
 
 Git stores copies of every version. LFS stores pointers instead
@@ -282,7 +282,7 @@ Git stores copies of every version. LFS stores pointers instead
 ## `useless`
 
 ```text
-ERROR (useless) don't commit useless/generated files
+ERROR (useless) don't commit useless/generated files. 15 min
 ```
 
 Thumbnails (`thumbs.db`), backups (`*~`), etc don't need to be committed. Nor logs (`*.log`)
@@ -294,7 +294,7 @@ Thumbnails (`thumbs.db`), backups (`*~`), etc don't need to be committed. Nor lo
 ## `duplicate-files`
 
 ```text
-ERROR (duplicate-files) delete duplicate files
+ERROR (duplicate-files) delete duplicate files. 10 min/error
 ```
 
 You can re-use the same file
@@ -307,7 +307,7 @@ You can re-use the same file
 ## `duplicate-lines`
 
 ```text
-ERROR (duplicate-lines) reduce duplicate lines
+ERROR (duplicate-lines) reduce duplicate lines. 15 min/error
 ```
 
 You can re-use the same code
@@ -326,7 +326,7 @@ You can re-use the same code
 ## `prettier`
 
 ```text
-ERROR (prettier) auto-format JS/CSS with Prettier
+ERROR (prettier) auto-format JS/CSS with Prettier. 2 min
 ```
 
 It's important to have consistent formatting for readability. We use [prettier](https://prettier.io).
@@ -352,7 +352,7 @@ to auto-format your code.
 ## `black`
 
 ```text
-ERROR (black) auto-format Python with Black
+ERROR (black) auto-format Python with Black. 2 min
 ```
 
 It's important to have consistent formatting for readability. We use [black](https://black.readthedocs.io/) for Python files.
@@ -376,7 +376,7 @@ Troubleshooting:
 ## `py-filenames`
 
 ```text
-ERROR (py-filenames) use lower_alpha Python paths
+ERROR (py-filenames) use lower_alpha Python paths. 5 min/error
 ```
 
 You can't import a Python file unless it has alphanumeric letters. Using lowercase is the convention.
@@ -387,7 +387,7 @@ You can't import a Python file unless it has alphanumeric letters. Using lowerca
 ## `flake8`
 
 ```text
-ERROR (flake8) fix Python errors
+ERROR (flake8) fix Python errors. 5 min/error
 ```
 
 [Flake8](https://flake8.pycqa.org//) reports Python errors with the
@@ -421,7 +421,7 @@ Common errors:
 ## `bandit`
 
 ```text
-ERROR (bandit) fix Python security errors
+ERROR (bandit) fix Python security errors. 60 min/error
 ```
 
 [Bandit](https://bandit.readthedocs.io/) reports security errors in Python.
@@ -436,7 +436,7 @@ ERROR (bandit) fix Python security errors
 ## `eslint`
 
 ```text
-ERROR (eslint) fix JavaScript errors
+ERROR (eslint) fix JavaScript errors. 2 min/error
 ```
 
 [ESLint](https://eslint.org/) reports JavaScript errors in JS and HTML files -- including HTML templates.
@@ -457,7 +457,7 @@ Common errors:
 ## `stylelint`
 
 ```text
-ERROR (stylelint) fix CSS errors
+ERROR (stylelint) fix CSS errors. 3 min/error
 ```
 
 [stylelint](https://stylelint.io/) reports CSS and SASS errors.
@@ -471,7 +471,7 @@ ERROR (stylelint) fix CSS errors
 ## `htmlhint`
 
 ```text
-ERROR (htmlhint) fix HTML errors
+ERROR (htmlhint) fix HTML errors. 5 min/error
 ```
 
 [htmlhint](https://htmlhint.com/) checks HTML and reports errors.
@@ -483,7 +483,7 @@ ERROR (htmlhint) fix HTML errors
 ## `js-modules`
 
 ```text
-WARNING (js-modules) use JavaScript modules
+WARNING (js-modules) use JavaScript modules. 30 min/error
 ```
 
 [`JavaScript modules`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
@@ -497,7 +497,7 @@ are the modern way of including JavaScript.
 ## `npm-audit`
 
 ```text
-WARNING (npm-audit) avoid unsafe npm packages
+WARNING (npm-audit) avoid unsafe npm packages. 15 min/error
 ```
 
 [`npm audit`](https://docs.npmjs.com/cli/v8/commands/npm-audit) checks for JavaScript package vulnerabilities.
@@ -509,7 +509,7 @@ WARNING (npm-audit) avoid unsafe npm packages
 ## `gitleaks`
 
 ```text
-WARNING (gitleaks) don't commit secrets
+WARNING (gitleaks) don't commit secrets. 30 min/error
 ```
 
 [gitleaks](https://github.com/zricethezav/gitleaks) detects hardcoded passwords, API keys, and tokens in git repos.
@@ -528,7 +528,7 @@ using [BFG repo-cleaner](https://rtyley.github.io/bfg-repo-cleaner/) or [git fil
 ## `flake8-extra`
 
 ```text
-WARNING (flake8-extra) improve Python code
+WARNING (flake8-extra) improve Python code. 5 min/error
 ```
 
 [Flake8](https://flake8.pycqa.org//) reports Python warnings based on experimental plugins. These are **OPTIONAL but GOOD** to fix.
@@ -567,7 +567,7 @@ Common errors:
 ## `complexity`
 
 ```text
-WARNING (complexity) review complex code
+WARNING (complexity) review complex code. 120 min/error
 ```
 
 Break your code into smaller functions. Use clear function names. Re-use as much as possible.
@@ -575,7 +575,7 @@ Break your code into smaller functions. Use clear function names. Re-use as much
 ## `pydoc`
 
 ```text
-WARNING (pydoc) document Python code
+WARNING (pydoc) document Python code. 15 min/error
 ```
 
 Add a docstring to your public Python functions, classes and methods.
@@ -586,7 +586,7 @@ We recommend writing docstrings in Markdown (not ReST) in the
 ## `absolute-urls`
 
 ```text
-WARNING (absolute-urls) avoid absolute URLs
+WARNING (absolute-urls) avoid absolute URLs. 10 min/error
 ```
 
 Avoid URLs that begin with `/`, e.g. `<a href="/login">` or `<img src="/assets/icon.png">`. If the
@@ -619,7 +619,7 @@ Shows the number of lines, words and characters in all CSS/SCSS files.
 ## `code-size`
 
 ```text
-INFO (code-size) review largest PY/JS code
+INFO (code-size) review largest PY/JS code.
 ```
 
 Shows the number of lines, words and characters in all Python / JavaScript files.

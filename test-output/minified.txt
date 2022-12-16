@@ -1,5 +1,5 @@
 
-ERROR (minified) don't commit minified files
+ERROR (minified) don't commit minified files. 15 min
 HELP https://github.com/gramener/builderrors/#minified
 
     bootstrap.min.css
@@ -8,7 +8,7 @@ HELP https://github.com/gramener/builderrors/#minified
     web.pack.js
 
 
-INFO (folders) review folder structure and files
+INFO (folders) review folder structure and files.
 HELP https://github.com/gramener/builderrors/#folders
 
     .editorconfig
@@ -18,13 +18,13 @@ HELP https://github.com/gramener/builderrors/#folders
     web.pack.js
 
 
-INFO (css-size) review largest CSS code
+INFO (css-size) review largest CSS code.
 HELP https://github.com/gramener/builderrors/#css-size
 
      1  1 19 bootstrap.min.css
 
 
-INFO (code-size) review largest PY/JS code
+INFO (code-size) review largest PY/JS code.
 HELP https://github.com/gramener/builderrors/#code-size
 
     0 0 0 web.pack.js
@@ -33,5 +33,5 @@ HELP https://github.com/gramener/builderrors/#code-size
     0 0 0 total
 
 ---------------------------------------------------------------------
-BUILD FAILED.
+BUILD FAILED. 15 min to fix
 HELP https://github.com/gramener/builderrors

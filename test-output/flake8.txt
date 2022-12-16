@@ -1,5 +1,5 @@
 
-ERROR (flake8) fix Python errors
+ERROR (flake8) fix Python errors. 85 min
 HELP https://github.com/gramener/builderrors/#flake8
 
     complexity.py:17:37: E128 continuation line under-indented for visual indent
@@ -21,7 +21,7 @@ HELP https://github.com/gramener/builderrors/#flake8
     error.py:6:5: F821 undefined name 'math'
 
 
-WARNING (flake8-extra) improve Python code
+WARNING (flake8-extra) improve Python code.
 HELP https://github.com/gramener/builderrors/#flake8-extra
 
     complexity.py:17:37: E128 continuation line under-indented for visual indent
@@ -62,7 +62,7 @@ HELP https://github.com/gramener/builderrors/#flake8-extra
     error.py:6:5: F821 undefined name 'math'
 
 
-WARNING (complexity) review complex code
+WARNING (complexity) review complex code.
 HELP https://github.com/gramener/builderrors/#complexity
 
     complexity.py:330:1: C901 'everyday_it_rate' is too complex (45)
@@ -71,7 +71,7 @@ HELP https://github.com/gramener/builderrors/#complexity
     complexity.py:846:1: C901 'network_rate' is too complex (37)
 
 
-WARNING (pydoc) document Python code
+WARNING (pydoc) document Python code.
 HELP https://github.com/gramener/builderrors/#pydoc
 
     complexity.py:123 in public function `yearChanged`:
@@ -86,7 +86,7 @@ HELP https://github.com/gramener/builderrors/#pydoc
             D100: Missing docstring in public module
 
 
-INFO (folders) review folder structure and files
+INFO (folders) review folder structure and files.
 HELP https://github.com/gramener/builderrors/#folders
 
     .editorconfig
@@ -95,7 +95,7 @@ HELP https://github.com/gramener/builderrors/#folders
     error.py
 
 
-INFO (code-size) review largest PY/JS code
+INFO (code-size) review largest PY/JS code.
 HELP https://github.com/gramener/builderrors/#code-size
 
      1141  3825 44771 total
@@ -104,5 +104,5 @@ HELP https://github.com/gramener/builderrors/#code-size
         1     3    26 debugger.py
 
 ---------------------------------------------------------------------
-BUILD FAILED.
+BUILD FAILED. 85 min to fix
 HELP https://github.com/gramener/builderrors
