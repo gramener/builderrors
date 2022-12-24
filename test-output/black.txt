@@ -6,7 +6,7 @@ To fix, run: black . --skip-string-normalization --line-length=99
     would reformat test.py
 
 
-ERROR (flake8) fix Python errors. 5 min
+ERROR (flake8) fix Python errors. 1 min
 HELP https://github.com/gramener/builderrors/#flake8
 
     test.py:2:3: E111 indentation is not a multiple of 4
@@ -39,5 +39,5 @@ HELP https://github.com/gramener/builderrors/#code-size
      2  4 23 test.py
 
 ---------------------------------------------------------------------
-BUILD FAILED. 7 min to fix
+BUILD FAILED. 3 min to fix
 HELP https://github.com/gramener/builderrors

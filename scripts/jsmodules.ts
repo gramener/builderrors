@@ -26,7 +26,9 @@ async function reportNoModules(paths) {
         const attrs = Array.from(script.attributes as NamedNodeMap)
           .map((a) => ` ${a.name}="${a.value.replace(/\s+/gis, " ")}"`)
           .join("");
-        console.log(`${path}:${location?.startLine}:${location?.startCol}: <script${attrs}>`);
+        console.log(
+          `${path}:${location?.startLine}:${location?.startCol}: <script${attrs}>`
+        );
       }
     }
   }

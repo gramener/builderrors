@@ -81,13 +81,19 @@ check() {
       echo ""
       if [[ "$TYPE" == "ERROR" ]]; then
         # If it's an error, increment FIX_MINUTES by the time to fix (in minutes)
-        # Extract the first number from $TIME_TO_FIX. That's the number of minutes to fix
-        MINUTES=$(echo "$TIME_TO_FIX" | grep -oE '[0-9]+')
-        # If the time to fix is per error ("/error"), multuple by # of lines = # of errors
+        # Calculate "SECONDS" based on TIME_TO_FIX (e.g. "5 min", "30 sec/error")
+        DURATION=$(echo "$TIME_TO_FIX" | grep -oE '[0-9]+')
+        if [[ "$TIME_TO_FIX" == *"min"* ]]; then
+          SECONDS=$(( DURATION * 60 ))
+        elif [[ "$TIME_TO_FIX" == *"sec"* ]]; then
+          SECONDS="$DURATION"
+        fi
+        # If the time to fix is per error ("/error"), multiply by # of lines = # of errors
         if [[ "$TIME_TO_FIX" == *"error"* ]]; then
           LINES=$(wc -l <<< ${OUTPUT})
-          MINUTES=$((MINUTES * LINES))
+          SECONDS=$((SECONDS * LINES))
         fi
+        MINUTES=$((SECONDS / 60))
         FIX_MINUTES=$((FIX_MINUTES + MINUTES))
         echo -e "${SECTION_START}${RED}$TYPE ($CODE)${CLEAR} $MSG. ${YELLOW}${MINUTES} min${CLEAR}"
         EXIT_STATUS=1
@@ -198,13 +204,13 @@ check-flake8() {
   # https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
   git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501
 }
-check "$SKIP_FLAKE8" "ERROR" "flake8" "5 min/error" "fix Python errors" ""
+check "$SKIP_FLAKE8" "ERROR" "flake8" "1 min/error" "fix Python errors" ""
 
 check-bandit() {
   # Don't use git ls-files and then run bandit. Bandit ignores any `.bandit` files in such cases
   bandit -r . --format custom --severity-level ${BANDIT_SEVERITY:-all} --confidence-level ${BANDIT_CONFIDENCE:-all} --exclude="*/*test*/*,*/node_modules/*,*/venv*/*" --quiet 2>/dev/null
 }
-check "$SKIP_BANDIT" "ERROR" "bandit" "60 min/error" "fix Python security errors" ""
+check "$SKIP_BANDIT" "ERROR" "bandit" "30 min/error" "fix Python security errors" ""
 
 check-eslint() {
   # eslint prints ".. problems" at the end. Strip with "grep -v ..."
@@ -222,7 +228,7 @@ if [[ -z "$SKIP_ESLINT" ]]; then
     CREATED_NODE_MODULES=1
     ESLINT_OPTIONS="--resolve-plugins-relative-to ."
   fi
-  check "$SKIP_ESLINT" "ERROR" "eslint" "2 min/error" "fix JavaScript errors" "npx eslint --fix"
+  check "$SKIP_ESLINT" "ERROR" "eslint" "30 sec/error" "fix JavaScript errors" "npx eslint --fix"
   if [[ -n "$CREATED_NODE_MODULES" ]]; then
     git -c core.longPaths=true clean -fd > /dev/null
   fi
@@ -270,7 +276,7 @@ elif [[ -f "${SCRIPT_DIR}/venv-extra/Scripts/activate" ]]; then
 fi
 
 check-js-modules() {
-  git ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty node "$WIN_SCRIPT_DIR/scripts/jsmodules.js"
+  git ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty node "$WIN_SCRIPT_DIR/scripts/jsmodules.js" 2>&1
 }
 check "$SKIP_JS_MODULES" "WARNING" "js-modules" "30 min/error" "use JavaScript modules" ""
 

@@ -387,7 +387,7 @@ You can't import a Python file unless it has alphanumeric letters. Using lowerca
 ## `flake8`
 
 ```text
-ERROR (flake8) fix Python errors. 5 min/error
+ERROR (flake8) fix Python errors. 1 min/error
 ```
 
 [Flake8](https://flake8.pycqa.org//) reports Python errors with the
@@ -421,7 +421,7 @@ Common errors:
 ## `bandit`
 
 ```text
-ERROR (bandit) fix Python security errors. 60 min/error
+ERROR (bandit) fix Python security errors. 30 min/error
 ```
 
 [Bandit](https://bandit.readthedocs.io/) reports security errors in Python.
@@ -436,7 +436,7 @@ ERROR (bandit) fix Python security errors. 60 min/error
 ## `eslint`
 
 ```text
-ERROR (eslint) fix JavaScript errors. 2 min/error
+ERROR (eslint) fix JavaScript errors. 0.5 min/error
 ```
 
 [ESLint](https://eslint.org/) reports JavaScript errors in JS and HTML files -- including HTML templates.

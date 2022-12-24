@@ -22,6 +22,7 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
 - [`commitlint`](https://commitlint.js.org/#/) for Conventional commits
 - Documentation linters for Python, JavaScript and README (e.g. overview, setup instructions, contact)
 - Security & containers
+  - [`tfsec`](https://github.com/aquasecurity/tfsec)
   - [`snyk`](https://snyk.io/). It's [paid](https://snyk.io/plans/) but has a free tier
   - [`hadolint`](https://github.com/hadolint/hadolint) for Dockerfile
   - [`checkov`](https://github.com/bridgecrewio/checkov) for containers & secrets

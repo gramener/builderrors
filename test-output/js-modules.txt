@@ -2,8 +2,8 @@
 WARNING (js-modules) use JavaScript modules.
 HELP https://github.com/gramener/builderrors/#js-modules
 
-    index.html:10:3: <script>
-    index.html:12:3: <script src="test.js">
+    index.html:12:3: <script>
+    index.html:14:3: <script src="test.js">
 
 
 INFO (folders) review folder structure and files.
