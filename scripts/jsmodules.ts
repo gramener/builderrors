@@ -7,23 +7,26 @@ async function reportNoModules(paths) {
   for await (const path of paths) {
     const html = await fs.readFile(path);
     let dom: JSDOM;
-    // Try parsing the HTML. If it fails, skip and log error
+    // Parse the HTML. Log error and skip if it fails
     try {
       dom = new JSDOM(html, { includeNodeLocations: true, virtualConsole });
     } catch (e) {
       console.error(`${path}: ${e}`);
       continue;
     }
-    // Log <script> with type="text/javascript" or nothing
     for (const script of dom.window.document.querySelectorAll("script")) {
-      if (script.type === "text/javascript" || !script.type) {
+      // <script type="text/javascript"> or <script> without type are non-module scripts.
+      // Ignore <script type="text/html">, etc. They're not scripts.
+      const nonModuleScript = script.type === "text/javascript" || !script.type;
+      // Ignore external scripts. Developers can't control them.
+      const externalSource = script.src?.match(/^https?:\/\//);
+      if (nonModuleScript && !externalSource) {
+        // Print the line number and script with attributes
         const location = dom.nodeLocation(script);
         const attrs = Array.from(script.attributes as NamedNodeMap)
           .map((a) => ` ${a.name}="${a.value.replace(/\s+/gis, " ")}"`)
           .join("");
-        console.log(
-          `${path}:${location?.startLine}:${location?.startCol}: <script${attrs}>`
-        );
+        console.log(`${path}:${location?.startLine}:${location?.startCol}: <script${attrs}>`);
       }
     }
   }
