@@ -9,6 +9,9 @@ BROWN="\033[33;1m"
 YELLOW="\033[93;1m"
 CLEAR="\033[0m"
 
+# Run git with default options
+GIT="git -c core.quotePath=false -c core.longPaths=true"
+
 # Define a regular expression for matching minified files
 RE_MINIFIED='[\.\-](min|pack)\.(js|css)$'
 
@@ -128,12 +131,12 @@ fi
 cd "$TARGET_DIR" 2>&1 >/dev/null
 
 check-lib() {
-  git ls-files | grep -E 'node_modules/|bower_components/' | sort
+  $GIT ls-files | grep -E 'node_modules/|bower_components/' | sort
 }
 check "$SKIP_LIB" "ERROR" "lib" "15 min" "don't commit libraries" ""
 
 check-minified() {
-  git ls-files | grep -E "$RE_MINIFIED" | sort
+  $GIT ls-files | grep -E "$RE_MINIFIED" | sort
 }
 check "$SKIP_MINIFIED" "ERROR" "minified" "15 min" "don't commit minified files" ""
 
@@ -142,17 +145,18 @@ check-lfs() {
   #   #1: git files > 1 MB, sorted
   #   #2: git lfs files, sorted
   # Note: git ls-tree --format is supported only in Git 2.36+ (Apr 2022), so use --long instead
-  comm -23 <(git ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > ${LFS_SIZE:-1000000} { print(\$2) }" | sort) <(git lfs ls-files -n | sort)
+  comm -23 <($GIT ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > ${LFS_SIZE:-1000000} { print(\$2) }" | sort) <($GIT lfs ls-files -n | sort)
 }
 check "$SKIP_LFS" "ERROR" "lfs" "15 min" "use Git LFS for large files" ""
 
 check-useless() {
-  git ls-files | grep -E '(\.lnk$|^~\$|~$|\.sublime\-|\.ipynb_checkpoints$|\.stackdump$|^thumbs.db$|\.log$)' | sort
+  $GIT ls-files | grep -E '(\.lnk$|^~\$|~$|\.sublime\-|\.ipynb_checkpoints$|\.stackdump$|^thumbs.db$|\.log$)' | sort
 }
 check "$SKIP_USELESS" "ERROR" "useless" "15 min" "don't commit useless/generated files" ""
 
 check-duplicate-files() {
   # List commited files  - git ls-tree ...
+  #   unicode intact     -   -c core.quotePath=false
   # that are big enough  - awk ...
   # Calculate MD5 hash   - xargs md5sum
   # Sort by MD5 hash     - sort
@@ -160,7 +164,7 @@ check-duplicate-files() {
   # Print as groups      - awk '...;sub(/^\*/, "", $2);...'
   #                      -          ^ strip leading * if Cygwin treats file as binary
   # Note: git ls-tree --format is supported only in Git 2.36+ (Apr 2022), so use --long instead
-  git ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > ${DUPLICATE_FILESIZE:-100} { print(\$2) }" | tr '\n' '\0' | \
+  $GIT ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > ${DUPLICATE_FILESIZE:-100} { print(\$2) }" | tr '\n' '\0' | \
     xargs -0 --no-run-if-empty md5sum | sort | uniq -w32 -dD | \
     awk '{if(h!=$1){printf "\n"};sub(/^\*/, "", $2);for (i=2; i<=NF; ++i) printf "%s ", $i;h=$1}'
 }
@@ -171,20 +175,20 @@ check-duplicate-lines() {
   #   grep '^[a-zA-Z]'        # cut out the table
   #   grep -v '^Found '       # remove "Found <nn> clones"
   #   grep -v '^Detection '   # remove "Detection time: <nn>ms"
-  git ls-files | grep -E '\.(js|mjs|ts|jsx|tsx|vue|py|css|scss)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/jscpd" --min-lines="${DUPLICATE_LINES:-50}" --mode=weak 2>&1 | grep '^[a-zA-Z ]' | grep -v '^Found ' | grep -v '^Detection '
+  $GIT ls-files | grep -E '\.(js|mjs|ts|jsx|tsx|vue|py|css|scss)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/jscpd" --min-lines="${DUPLICATE_LINES:-50}" --mode=weak 2>&1 | grep '^[a-zA-Z ]' | grep -v '^Found ' | grep -v '^Detection '
 }
 check "$SKIP_DUPLICATE_LINES" "ERROR" "duplicate-lines" "15 min/error" "reduce duplicate lines" ""
 
 check-prettier() {
   # NOTE: Don't run prettier on minified files. No point, and it bloats errors
   # NOTE: Don't run prettier on HTML files. It does not handle Tornado / Lodash templates
-  git ls-files | grep -E '\.(js|mjs|ts|jsx|tsx|vue|css|scss|sass|yaml|md)$' | grep -v -E "$RE_MINIFIED" | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/prettier" --list-different 2>&1
+  $GIT ls-files | grep -E '\.(js|mjs|ts|jsx|tsx|vue|css|scss|sass|yaml|md)$' | grep -v -E "$RE_MINIFIED" | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/prettier" --list-different 2>&1
 }
 check "$SKIP_PRETTIER" "ERROR" "prettier" "2 min" "auto-format JS/CSS with Prettier" "npx prettier --write \"**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}\""
 
 check-black() {
   # black prints "All done!" and "Oh no!" and "<nn> files would be left unchanged." with unicode characters and color. Strip with "grep -v ..."
-  git ls-files | grep -E '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty black --check --skip-string-normalization --line-length=${PY_LINE_LENGTH:-99} 2>&1 |
+  $GIT ls-files | grep -E '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty black --check --skip-string-normalization --line-length=${PY_LINE_LENGTH:-99} 2>&1 |
     grep -v "^All done!" | \
     grep -v "^Oh no!" | \
     grep -v "would be left unchanged." | \
@@ -193,7 +197,7 @@ check-black() {
 check "$SKIP_BLACK" "ERROR" "black" "2 min" "auto-format Python with Black" "black . --skip-string-normalization --line-length=${PY_LINE_LENGTH:-99}"
 
 check-py-filenames() {
-  git ls-files | grep '\.py$' | sort | grep -e '[^a-z0-9_./]'
+  $GIT ls-files | grep '\.py$' | sort | grep -e '[^a-z0-9_./]'
 }
 check "$SKIP_PY_FILENAMES" "ERROR" "py-filenames" "5 min/error" "use lower_alpha Python paths" ""
 
@@ -202,7 +206,7 @@ check-flake8() {
   # https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#slices
   # flake8: ignore E501 which black handles
   # https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
-  git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501
+  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501
 }
 check "$SKIP_FLAKE8" "ERROR" "flake8" "1 min/error" "fix Python errors" ""
 
@@ -214,7 +218,7 @@ check "$SKIP_BANDIT" "ERROR" "bandit" "30 min/error" "fix Python security errors
 
 check-eslint() {
   # eslint prints ".. problems" at the end. Strip with "grep -v ..."
-  git ls-files | grep -E '\.(html|js|mjs)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" $ESLINT_OPTIONS --quiet --format unix 2>&1 | \
+  $GIT ls-files | grep -E '\.(html|js|mjs)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" $ESLINT_OPTIONS --quiet --format unix 2>&1 | \
     grep -v "^[0-9]* problems"
 }
 if [[ -z "$SKIP_ESLINT" ]]; then
@@ -229,14 +233,11 @@ if [[ -z "$SKIP_ESLINT" ]]; then
     ESLINT_OPTIONS="--resolve-plugins-relative-to ."
   fi
   check "$SKIP_ESLINT" "ERROR" "eslint" "30 sec/error" "fix JavaScript errors" "npx eslint --fix"
-  if [[ -n "$CREATED_NODE_MODULES" ]]; then
-    git -c core.longPaths=true clean -fd > /dev/null
-  fi
 fi
 
 check-stylelint() {
   # stylelint prints "3 problems" at the end. Strip with "grep -v ..."
-  git ls-files | grep -E '\.s?css$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/stylelint" --allow-empty-input --config-basedir "$WIN_SCRIPT_DIR" --custom-syntax "$WIN_SCRIPT_DIR/node_modules/postcss-scss" --formatter unix 2>&1 | \
+  $GIT ls-files | grep -E '\.s?css$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/stylelint" --allow-empty-input --config-basedir "$WIN_SCRIPT_DIR" --custom-syntax "$WIN_SCRIPT_DIR/node_modules/postcss-scss" --formatter unix 2>&1 | \
     grep -v "^[0-9]* problems"
 }
 if [[ -z "$SKIP_STYLELINT" ]]; then
@@ -254,7 +255,7 @@ fi
 
 check-htmlhint() {
   # htmlhint prints "3 problems" at the end. Strip with "grep -v ..."
-  git ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/htmlhint" --nocolor --format unix | \
+  $GIT ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/htmlhint" --nocolor --format unix | \
     grep -v "^[0-9]* problems"
 }
 if [[ -z "$SKIP_HTMLHINT" ]]; then
@@ -276,7 +277,7 @@ elif [[ -f "${SCRIPT_DIR}/venv-extra/Scripts/activate" ]]; then
 fi
 
 check-js-modules() {
-  git ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty node "$WIN_SCRIPT_DIR/scripts/jsmodules.js" 2>&1
+  $GIT ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty node "$WIN_SCRIPT_DIR/scripts/jsmodules.js" 2>&1
 }
 check "$SKIP_JS_MODULES" "WARNING" "js-modules" "30 min/error" "use JavaScript modules" ""
 
@@ -293,13 +294,13 @@ check-gitleaks() {
 check "$SKIP_GITLEAKS" "WARNING" "gitleaks" "30 min/error" "don't commit secrets" ""
 
 check-flake8-extra() {
-  git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501
+  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501
 }
 check "$SKIP_FLAKE8_EXTRA" "WARNING" "flake8-extra" "5 min/error" "improve Python code" ""
 
 check-complexity() {
   # Avoid config file. Put in all options here
-  git ls-files | grep -E '\.(html|js|mjs)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" \
+  $GIT ls-files | grep -E '\.(html|js|mjs)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" \
     --no-eslintrc \
     --parser-options ecmaVersion:latest \
     --plugin html --plugin template \
@@ -307,7 +308,7 @@ check-complexity() {
     --rule "complexity: [error, {max: ${MAX_JS_COMPLEXITY:-10}}]" \
     --quiet --format unix 2>&1 | \
     grep -v "^[0-9]* problems"
-  git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 \
+  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 \
     --isolated \
     --ignore=A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z \
     --max-complexity="${MAX_PY_COMPLEXITY:-10}" \
@@ -316,27 +317,27 @@ check-complexity() {
 check "$SKIP_COMPLEXITY" "WARNING" "complexity" "120 min/error" "review complex code" ""
 
 check-pydoc() {
-  git ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty pydocstyle --select=D1
+  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty pydocstyle --select=D1
 }
 check "$SKIP_PYDOC" "WARNING" "pydoc" "15 min/error" "document Python code" ""
 
 check-absolute-urls() {
-  git ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty grep -e 'href\s*=\s*"/[^/]' -e 'src\s*=\s*"/[^/]'
+  $GIT ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty grep -e 'href\s*=\s*"/[^/]' -e 'src\s*=\s*"/[^/]'
 }
 check "$SKIP_ABSOLUTE_URLS" "WARNING" "absolute-urls" "10 min/error" "avoid absolute URLs" ""
 
 check-folders() {
-  git ls-files | python "$WIN_SCRIPT_DIR/scripts/printfiles.py"
+  $GIT ls-files | python "$WIN_SCRIPT_DIR/scripts/printfiles.py"
 }
 check "$SKIP_FOLDERS" "INFO" "folders" "0 min" "review folder structure and files" ""
 
 check-css-size() {
-  git ls-files | grep -E '\.s?css$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty wc | sort -nrk 1
+  $GIT ls-files | grep -E '\.s?css$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty wc | sort -nrk 1
 }
 check "$SKIP_CSS_SIZE" "INFO" "css-size" "0 min" "review largest CSS code" ""
 
 check-code-size() {
-  git ls-files | grep -E '\.(py|js|mjs|ts|jsx|tsx|vue)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty wc | sort -nrk 1
+  $GIT ls-files | grep -E '\.(py|js|mjs|ts|jsx|tsx|vue)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty wc | sort -nrk 1
 }
 check "$SKIP_CODE_SIZE" "INFO" "code-size" "0 min" "review largest PY/JS code" ""
 

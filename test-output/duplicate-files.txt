@@ -4,7 +4,7 @@ HELP https://github.com/gramener/builderrors/#duplicate-files
 
     file 1.py file 2.py
     file 1.js file 2.js
-    conf1.yaml conf2.yaml
+    Côte d'Ivoire.txt conf1.yaml conf2.yaml
     file1.yaml file2.yaml
 
 
@@ -54,6 +54,7 @@ HELP https://github.com/gramener/builderrors/#pydoc
 INFO (folders) review folder structure and files.
 HELP https://github.com/gramener/builderrors/#folders
 
+    Côte d'Ivoire.txt
     conf1.yaml
     conf2.yaml
     file 1.js

@@ -436,7 +436,7 @@ ERROR (bandit) fix Python security errors. 30 min/error
 ## `eslint`
 
 ```text
-ERROR (eslint) fix JavaScript errors. 0.5 min/error
+ERROR (eslint) fix JavaScript errors. 30 sec/error
 ```
 
 [ESLint](https://eslint.org/) reports JavaScript errors in JS and HTML files -- including HTML templates.
