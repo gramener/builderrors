@@ -41,8 +41,8 @@ Run automated checks on repositories to improve code quality.
 
 If you used `gramex init` from [gramex](https://github.com/gramener/gramex) before version 1.84, change the following:
 
-- Delete `.editorconfig`, `.htmllintrc` and `.stylelintrc.js`
-- Copy this [`.eslintrc.js`](.eslintrc.js) and run `npm install --save-dev eslint eslint-plugin-html eslint-plugin-template`
+- Delete `.editorconfig`, `.htmllintrc` and `.stylelintrc.*`
+- Copy this [`.eslintrc.yml`](.eslintrc.yml) and run `npm install --save-dev eslint eslint-plugin-html eslint-plugin-template`
 - If you have a `.flake8` or [equivalent](https://flake8.pycqa.org/en/latest/user/configuration.html), add `extend-ignore=E203,E501`
 
 ## Gitlab CI usage
@@ -187,38 +187,39 @@ SKIP_LFS=1 SKIP_ESLINT=1 SKIP_STYLELINT=1 bash /path/to/builderrors
 On Gitlab, set [environment variables](https://docs.gitlab.com/ce/ci/variables/)
 under Settings > CI / CD > Variables.
 
-| Environment variable     | Command line              | Meaning                                                                               |
-| ------------------------ | ------------------------- | ------------------------------------------------------------------------------------- |
-| `SKIP_LIB=1`             | `--skip=lib`              | Skip [libraries](#lib) error                                                          |
-| `SKIP_MINIFIED=1`        | `--skip=minified`         | Skip [minified file](#minified) error                                                 |
-| `SKIP_LFS=1`             | `--skip=lfs`              | Skip [Git LFS](#lfs) error                                                            |
-| `SKIP_PRETTIER=1`        | `--skip=prettier`         | Skip [Prettier](#prettier) error                                                      |
-| `SKIP_USELESS=1`         | `--skip=useless`          | Skip [useless files](#useless) error                                                  |
-| `SKIP_DUPLICATE_FILES=1` | `--skip=duplicate-files`  | Skip [duplicate files](#duplicate-files) error                                        |
-| `SKIP_DUPLICATE_LINES=1` | `--skip=duplicate-lines`  | Skip [duplicate lines](#duplicate-lines) error                                        |
-| `SKIP_PY_FILENAMES=1`    | `--skip=py-filenames`     | Skip [Python filename](#py-filenames) error                                           |
-| `SKIP_BLACK=1`           | `--skip=black`            | Skip [Python Black](#black) error                                                     |
-| `SKIP_FLAKE8=1`          | `--skip=flake8`           | Skip [flake8](#flake8) error                                                          |
-| `SKIP_BANDIT=1`          | `--skip=bandit`           | Skip [bandit](#bandit) error                                                          |
-| `SKIP_ESLINT=1`          | `--skip=eslint`           | Skip [eslint](#eslint) error                                                          |
-| `SKIP_ESLINT_DEFAULT=1`  | `--skip=eslint-default`   | Skip [eslint extra](#eslint) error                                                    |
-| `SKIP_STYLELINT=1`       | `--skip=stylelint`        | Skip [stylelint](#stylelint) error                                                    |
-| `SKIP_HTMLHINT=1`        | `--skip=htmlhint`         | Skip [htmlhint](#htmlhint) error                                                      |
-| `SKIP_NPM_AUDIT=1`       | `--skip=npm-audit`        | Skip [npm audit](#npm-audit) warning                                                  |
-| `SKIP_GITLEAKS=1`        | `--skip=gitleaks`         | Skip [gitleaks](#gitleaks) warning                                                    |
-| `SKIP_FLAKE8_EXTRA=1`    | `--skip=flake8-extra`     | Skip [flake8 extra](#flake8-extra) warning                                            |
-| `SKIP_ABSOLUTE_URLS=1`   | `--skip=absolute-urls`    | Skip [absolute URLs](#absolute-urls) warning                                          |
-| `SKIP_FOLDERS=1`         | `--skip=folders`          | Skip [folders](#folders) info                                                         |
-| `SKIP_CSS_SIZE=1`        | `--skip=css-size`         | Skip [CSS size](#css-size) info                                                       |
-| `SKIP_CODE_SIZE=1`       | `--skip=code-size`        | Skip [PY/JS size](#code-size) info                                                    |
-| `LFS_SIZE=n`             | `--lfs-size=n`            | Files over `n` bytes should use Git LFS (default: 1,000,000)                          |
-| `DUPLICATE_FILESIZE=n`   | `--duplicate-filesize=n`  | Files over `n` bytes should not be duplicated (default: 100)                          |
-| `DUPLICATE_LINES=n`      | `--duplicate-lines=n`     | Duplicate code over `n` lines are not allowed (default: 50)                           |
-| `PY_LINE_LENGTH=n`       | `--py-line-length=n`      | Approx line length of Python code used by Black (default: 99)                         |
-| `BANDIT_CONFIDENCE=low`  | `--bandit-confidence=low` | Show bandit errors with `low` or more confidence. `medium`, `high`, `all` are allowed |
-| `BANDIT_SEVERITY=low`    | `--bandit-severity=low`   | Show bandit errors with `low` or more severity. `medium`, `high`, `all` are allowed   |
-| `MAX_JS_COMPLEXITY=n`    | `--max-js-complexity=n`   | Report JS functions with `>n` cyclomatic complexity                                   |
-| `MAX_PY_COMPLEXITY=n`    | `--max-py-complexity=n`   | Report PY functions with `>n` cyclomatic complexity                                   |
+| Environment variable       | Command line               | Meaning                                                                               |
+| -------------------------- | -------------------------- | ------------------------------------------------------------------------------------- |
+| `SKIP_LIB=1`               | `--skip=lib`               | Skip [libraries](#lib) error                                                          |
+| `SKIP_MINIFIED=1`          | `--skip=minified`          | Skip [minified file](#minified) error                                                 |
+| `SKIP_LFS=1`               | `--skip=lfs`               | Skip [Git LFS](#lfs) error                                                            |
+| `SKIP_PRETTIER=1`          | `--skip=prettier`          | Skip [Prettier](#prettier) error                                                      |
+| `SKIP_USELESS=1`           | `--skip=useless`           | Skip [useless files](#useless) error                                                  |
+| `SKIP_DUPLICATE_FILES=1`   | `--skip=duplicate-files`   | Skip [duplicate files](#duplicate-files) error                                        |
+| `SKIP_DUPLICATE_LINES=1`   | `--skip=duplicate-lines`   | Skip [duplicate lines](#duplicate-lines) error                                        |
+| `SKIP_PY_FILENAMES=1`      | `--skip=py-filenames`      | Skip [Python filename](#py-filenames) error                                           |
+| `SKIP_BLACK=1`             | `--skip=black`             | Skip [Python Black](#black) error                                                     |
+| `SKIP_FLAKE8=1`            | `--skip=flake8`            | Skip [flake8](#flake8) error                                                          |
+| `SKIP_BANDIT=1`            | `--skip=bandit`            | Skip [bandit](#bandit) error                                                          |
+| `SKIP_ESLINT=1`            | `--skip=eslint`            | Skip [eslint](#eslint) error                                                          |
+| `SKIP_ESLINT_DEFAULT=1`    | `--skip=eslint-default`    | Don't copy `.eslintrc.yml` even if `.eslintrc.*` is missing                           |
+| `SKIP_STYLELINT=1`         | `--skip=stylelint`         | Skip [stylelint](#stylelint) error                                                    |
+| `SKIP_STYLELINT_DEFAULT=1` | `--skip=stylelint-default` | Don't copy `.stylelintrc.yml` even if `.stylelintrc.*` is missing                     |
+| `SKIP_HTMLHINT=1`          | `--skip=htmlhint`          | Skip [htmlhint](#htmlhint) error                                                      |
+| `SKIP_NPM_AUDIT=1`         | `--skip=npm-audit`         | Skip [npm audit](#npm-audit) warning                                                  |
+| `SKIP_GITLEAKS=1`          | `--skip=gitleaks`          | Skip [gitleaks](#gitleaks) warning                                                    |
+| `SKIP_FLAKE8_EXTRA=1`      | `--skip=flake8-extra`      | Skip [flake8 extra](#flake8-extra) warning                                            |
+| `SKIP_ABSOLUTE_URLS=1`     | `--skip=absolute-urls`     | Skip [absolute URLs](#absolute-urls) warning                                          |
+| `SKIP_FOLDERS=1`           | `--skip=folders`           | Skip [folders](#folders) info                                                         |
+| `SKIP_CSS_SIZE=1`          | `--skip=css-size`          | Skip [CSS size](#css-size) info                                                       |
+| `SKIP_CODE_SIZE=1`         | `--skip=code-size`         | Skip [PY/JS size](#code-size) info                                                    |
+| `LFS_SIZE=n`               | `--lfs-size=n`             | Files over `n` bytes should use Git LFS (default: 1,000,000)                          |
+| `DUPLICATE_FILESIZE=n`     | `--duplicate-filesize=n`   | Files over `n` bytes should not be duplicated (default: 100)                          |
+| `DUPLICATE_LINES=n`        | `--duplicate-lines=n`      | Duplicate code over `n` lines are not allowed (default: 50)                           |
+| `PY_LINE_LENGTH=n`         | `--py-line-length=n`       | Approx line length of Python code used by Black (default: 99)                         |
+| `BANDIT_CONFIDENCE=low`    | `--bandit-confidence=low`  | Show bandit errors with `low` or more confidence. `medium`, `high`, `all` are allowed |
+| `BANDIT_SEVERITY=low`      | `--bandit-severity=low`    | Show bandit errors with `low` or more severity. `medium`, `high`, `all` are allowed   |
+| `MAX_JS_COMPLEXITY=n`      | `--max-js-complexity=n`    | Report JS functions with `>n` cyclomatic complexity                                   |
+| `MAX_PY_COMPLEXITY=n`      | `--max-py-complexity=n`    | Report PY functions with `>n` cyclomatic complexity                                   |
 
 Instead of `--skip={check}` you can use `--only={check}`. This only runs the check(s) you specify. For example:
 
@@ -362,7 +363,7 @@ to auto-format your code.
 
 - To auto-fix, run:
   - `pip install black` (one-time)
-  - `black . --skip=string-normalization --line-length=99`
+  - `black . --skip-string-normalization --line-length=99`
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`pyproject.toml`](https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#configuration-via-a-file) file
 - To skip this check, use `builderrors --skip=black` (e.g. if you temporarily need the build to pass)
 
@@ -443,14 +444,14 @@ ERROR (eslint) fix JavaScript errors. 30 sec/error
 
 - To auto-fix, run `npx eslint --fix`
 - To ignore a specific line, add a [`// eslint-disable-line`](https://eslint.org/docs/latest/user-guide/configuring/rules#disabling-rules) at the end
-- To ignore specific rules, add a [`.eslintrc.js`](http://eslint.org/docs/rules/) based on the [default](.eslintrc.js)
+- To ignore specific rules, add a [`.eslintrc.yml`](http://eslint.org/docs/rules/) based on the [default](.eslintrc.yml)
 - To skip this check, use `builderrors --skip=eslint` (e.g. if you temporarily need the build to pass)
 
 Common errors:
 
 - **[`'x' is not defined. [Error/no-undef]`](http://eslint.org/docs/rules/no-undef)**
   - [Add in your `.js`](https://eslint.org/docs/latest/user-guide/configuring/language-options#using-configuration-comments-1): `/* globals x, ... */`.
-  - [Add in `.eslintrc.js`](https://eslint.org/docs/latest/user-guide/configuring/language-options#using-configuration-files-1) for libraries like `d3`, `$`, `_`, etc.: `"globals": {"d3": "readonly", ...}`
+  - [Add in `.eslintrc.yml`](https://eslint.org/docs/latest/user-guide/configuring/language-options#using-configuration-files-1) for libraries like `d3`, `$`, `_`, etc.: `"globals": {"d3": "readonly", ...}`
 - **[`'x' is assigned a value but never used. [Error/no-unused-vars]`](http://eslint.org/docs/rules/no-unused-vars)**
   - [Add in your `.js`](https://eslint.org/docs/latest/rules/no-unused-vars#exported): `/* exported x, ... */` (or don't assign to the variable)
 
@@ -464,7 +465,7 @@ ERROR (stylelint) fix CSS errors. 3 min/error
 
 - Re-write the code based on advice from stylelint
 - To ignore a specific line, add a [`/* stylelint-disable-line */`](https://stylelint.io/user-guide/ignore-code) at the end
-- To ignore specific rules, add a [`.stylelintrc.js`](https://stylelint.io/user-guide/configure) file based on the [default](.stylelintrc.js). For example:
+- To ignore specific rules, add a [`.stylelintrc.yml`](https://stylelint.io/user-guide/configure) file based on the [default](.stylelintrc.yml). For example:
   - `"selector-no-unknown": null` allows styling custom web components
 - To skip this check, use `builderrors --skip=stylelint` (e.g. if you're using third-party provided CSS)
 

@@ -4,6 +4,10 @@
 
 If you have more tests to suggest, please raise an [issue](https://github.com/gramener/builderrors/issues). Here are some we're considering:
 
+- [`commitlint`](https://commitlint.js.org/#/) for Conventional commits
+- [`pyright`](https://github.com/microsoft/pyright) or
+  [`mypy`](https://github.com/python/mypy) for Python static type checking
+- [`safety`](https://github.com/pyupio/safety) for Python security scanning
 - Flake8 plugins
   - [flake8-annotations](https://pypi.org/project/flake8-annotations) ⭐116
   - [flake8-cognitive-complexity](https://pypi.org/project/flake8-cognitive-complexity) ⭐54. More apt than McCabe complexity
@@ -12,22 +16,23 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
   - [eslint-plugin-unicorn](https://github.com/sindresorhus/eslint-plugin-unicorn) ⭐2,800
   - [eslint-formatter-summary](https://github.com/mhipszki/eslint-formatter-summary) ⭐37
 - [`codeclimate-duplication`](https://github.com/codeclimate/codeclimate-duplication) for fuzzy duplication
-- [`pyright`](https://github.com/microsoft/pyright) or
-  [`mypy`](https://github.com/python/mypy) for Python static type checking
 - [`curlylint`](https://github.com/thibaudcolas/curlylint) or
   [`djlint`](https://github.com/Riverside-Healthcare/djLint) for HTML templates
 - [`markdownlint`](https://www.npmjs.com/package/markdownlint). But Prettier does most of this
 - [`yamllint`](https://yamllint.readthedocs.io/). But Prettier handles most of this, except `empty-values`, `key-duplicates`
 - [`sqlfluff`](https://github.com/sqlfluff/sqlfluff) for SQL
-- [`commitlint`](https://commitlint.js.org/#/) for Conventional commits
 - Documentation linters for Python, JavaScript and README (e.g. overview, setup instructions, contact)
 - Security & containers
+  - `docker scan`, which uses snyk
   - [`tfsec`](https://github.com/aquasecurity/tfsec)
   - [`snyk`](https://snyk.io/). It's [paid](https://snyk.io/plans/) but has a free tier
   - [`hadolint`](https://github.com/hadolint/hadolint) for Dockerfile
   - [`checkov`](https://github.com/bridgecrewio/checkov) for containers & secrets
   - devskim, dustilock, git_diff, goodcheck, secretlint, semgrep, syft, trivy
 - Spelling: textllint, misspell, cspell, proselint
+- Tools
+  - [Sonarqube](https://docs.sonarqube.org/latest/setup-and-upgrade/install-the-server/)
+  - [Deepsource](https://deepsource.io/docs/analyzer/python/)
 - Testing output (DAST)
   - [Gitlab DAST](https://docs.gitlab.com/ee/user/application_security/dast/)
   - [OWASP ZAP](https://www.zaproxy.org/docs/docker/)
@@ -44,7 +49,7 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
 <!--
 
 - Custom [Semgrep](https://semgrep.dev/) rules, or [CodeQL](https://codeql.github.com/)?
-
+- See <https://semgrep.dev/blog/2021/python-static-analysis-comparison-bandit-semgrep>
 -->
 
 Here are some we don't plan to add:
