@@ -1,5 +1,10 @@
+# Ensure build error script is executable
+chmod +x builderrors
+
 # Install node packages exactly as-is
 npm ci --omit=dev
+# Build dependencies
+npm run build
 
 # Extra packages (from requirements-extra.txt) will be run via flake8, but not raise build erros
 python -m venv venv-extra
