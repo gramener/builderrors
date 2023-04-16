@@ -479,7 +479,7 @@ ERROR (htmlhint) fix HTML errors. 5 min/error
 
 - Re-write the code based on advice from htmlhint
 - To ignore specific rules, add a [`.htmlhintrc`](https://htmlhint.com/docs/user-guide/getting-started) file based on the [default](.htmlhintrc)
-- To skip this check, use `builderrors --skip=htmllint` (e.g. if you're building a Lodash template library)
+- To skip this check, use `builderrors --skip=htmlhint` (e.g. if you're building a Lodash template library)
 
 ## `js-modules`
 

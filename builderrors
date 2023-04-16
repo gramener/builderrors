@@ -214,7 +214,7 @@ check-bandit() {
   # Don't use git ls-files and then run bandit. Bandit ignores any `.bandit` files in such cases
   bandit -r . --format custom --severity-level ${BANDIT_SEVERITY:-all} --confidence-level ${BANDIT_CONFIDENCE:-all} --exclude="*/*test*/*,*/node_modules/*,*/venv*/*" --quiet 2>/dev/null
 }
-check "$SKIP_BANDIT" "ERROR" "bandit" "30 min/error" "fix Python security errors" ""
+check "$SKIP_BANDIT" "ERROR" "bandit" "10 min/error" "fix Python security errors" ""
 
 check-eslint() {
   # eslint prints ".. problems" at the end. Strip with "grep -v ..."
@@ -232,7 +232,7 @@ if [[ -z "$SKIP_ESLINT" ]]; then
     CREATED_NODE_MODULES=1
     ESLINT_OPTIONS="--resolve-plugins-relative-to ."
   fi
-  check "$SKIP_ESLINT" "ERROR" "eslint" "30 sec/error" "fix JavaScript errors" "npx eslint --fix"
+  check "$SKIP_ESLINT" "ERROR" "eslint" "10 sec/error" "fix JavaScript errors" "npx eslint --fix"
 fi
 
 check-stylelint() {
