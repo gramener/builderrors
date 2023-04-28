@@ -52,7 +52,7 @@ def main():
         '--duplicate-filesize', metavar='N', help='max duplicate file size allowed (100)'
     )
     parser.add_argument(
-        '--duplicate-lines', metavar='N', help='max # duplicate lines allowed (50)'
+        '--duplicate-lines', metavar='N', help='max # duplicate lines allowed (25)'
     )
     parser.add_argument('--py-line-length', metavar='N', help='max Python line length (99)')
     # NOTE: Bandit catches SQL injections only at low confidence.

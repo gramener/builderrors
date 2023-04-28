@@ -175,7 +175,7 @@ check-duplicate-lines() {
   #   grep '^[a-zA-Z]'        # cut out the table
   #   grep -v '^Found '       # remove "Found <nn> clones"
   #   grep -v '^Detection '   # remove "Detection time: <nn>ms"
-  $GIT ls-files | grep -E '\.(js|mjs|ts|jsx|tsx|vue|py|css|scss)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/jscpd" --min-lines="${DUPLICATE_LINES:-50}" --mode=weak 2>&1 | grep '^[a-zA-Z ]' | grep -v '^Found ' | grep -v '^Detection '
+  $GIT ls-files | grep -E '\.(js|mjs|ts|jsx|tsx|vue|py|css|scss)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/jscpd" --min-lines="${DUPLICATE_LINES:-25}" --mode=weak 2>&1 | grep '^[a-zA-Z ]' | grep -v '^Found ' | grep -v '^Detection '
 }
 check "$SKIP_DUPLICATE_LINES" "ERROR" "duplicate-lines" "15 min/error" "reduce duplicate lines" ""
 

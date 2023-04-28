@@ -214,7 +214,7 @@ under Settings > CI / CD > Variables.
 | `SKIP_CODE_SIZE=1`         | `--skip=code-size`         | Skip [PY/JS size](#code-size) info                                                    |
 | `LFS_SIZE=n`               | `--lfs-size=n`             | Files over `n` bytes should use Git LFS (default: 1,000,000)                          |
 | `DUPLICATE_FILESIZE=n`     | `--duplicate-filesize=n`   | Files over `n` bytes should not be duplicated (default: 100)                          |
-| `DUPLICATE_LINES=n`        | `--duplicate-lines=n`      | Duplicate code over `n` lines are not allowed (default: 50)                           |
+| `DUPLICATE_LINES=n`        | `--duplicate-lines=n`      | Duplicate code over `n` lines are not allowed (default: 25)                           |
 | `PY_LINE_LENGTH=n`         | `--py-line-length=n`       | Approx line length of Python code used by Black (default: 99)                         |
 | `BANDIT_CONFIDENCE=low`    | `--bandit-confidence=low`  | Show bandit errors with `low` or more confidence. `medium`, `high`, `all` are allowed |
 | `BANDIT_SEVERITY=low`      | `--bandit-severity=low`    | Show bandit errors with `low` or more severity. `medium`, `high`, `all` are allowed   |
