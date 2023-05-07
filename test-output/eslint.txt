@@ -6,7 +6,7 @@ To fix, run: npx prettier --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yam
     script.js
 
 
-ERROR (eslint) fix JavaScript errors. 4 min
+ERROR (eslint) fix JavaScript errors. 1 min
 HELP https://github.com/gramener/builderrors/#eslint
 To fix, run: npx eslint --fix
 
@@ -47,5 +47,5 @@ HELP https://github.com/gramener/builderrors/#code-size
      51 140 866 script.js
 
 ---------------------------------------------------------------------
-BUILD FAILED. 6 min to fix
+BUILD FAILED. 3 min to fix
 HELP https://github.com/gramener/builderrors

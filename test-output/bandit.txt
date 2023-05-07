@@ -1,5 +1,5 @@
 
-ERROR (bandit) fix Python security errors. 30 min
+ERROR (bandit) fix Python security errors. 10 min
 HELP https://github.com/gramener/builderrors/#bandit
 
     bandit_error.py:5: B608[bandit]: MEDIUM: Possible SQL injection vector through string-based query construction.
@@ -26,5 +26,5 @@ HELP https://github.com/gramener/builderrors/#code-size
       6  18 134 bandit_error.py
 
 ---------------------------------------------------------------------
-BUILD FAILED. 30 min to fix
+BUILD FAILED. 10 min to fix
 HELP https://github.com/gramener/builderrors
