@@ -7,7 +7,7 @@
     "space-tab-mixed-disabled": true,   // Just stick to spaces, don't use tabs
     "tag-pair": true,                   // Close opened tags. (Disable in complex templates)
     // Avoid upper or mixed case tag names, except on valid SVG tags
-    "tagname-lowercase": ["clipPath", "componentTransferFunction", "feBlend", "feColorMatrix", "feComponentTransfer", "feComposite", "feConvolveMatrix", "feDiffuseLighting", "feDisplacementMap", "feDistantLight", "feFlood", "feFuncA", "feFuncB", "feFuncG", "feFuncR", "feGaussianBlur", "feImage", "feMerge", "feMergeNode", "feMorphology", "feOffset", "fePointLight", "feSpecularLighting", "feSpotLight", "feTile", "feTurbulence", "foreignObject", "linearGradient", "radialGradient", "textContent", "textPath", "textPositioning"],
+    "tagname-lowercase": ["clipPath", "componentTransferFunction", "feBlend", "feColorMatrix", "feComponentTransfer", "feComposite", "feConvolveMatrix", "feDiffuseLighting", "feDisplacementMap", "feDistantLight", "feDropShadow", "feFlood", "feFuncA", "feFuncB", "feFuncG", "feFuncR", "feGaussianBlur", "feImage", "feMerge", "feMergeNode", "feMorphology", "feOffset", "fePointLight", "feSpecularLighting", "feSpotLight", "feTile", "feTurbulence", "foreignObject", "linearGradient", "radialGradient", "textContent", "textPath", "textPositioning"],
     "tagname-specialchars": true,       // Use only letters in tag names
 
     "attr-no-unnecessary-whitespace": false,    // OK to use attr = "value" with spaces
