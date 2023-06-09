@@ -19,7 +19,10 @@ async function reportNoModules(paths) {
       // Ignore <script type="text/html">, etc. They're not scripts.
       const nonModuleScript = script.type === "text/javascript" || !script.type;
       // Ignore external scripts. Developers can't control them.
-      const externalSource = script.src?.match(/^https?:\/\//);
+      const externalSource =
+        script.src?.match(/node_modules/) ||
+        script.src?.startsWith("http") ||
+        script.src?.startsWith("//");
       if (nonModuleScript && !externalSource) {
         // Print the line number and script with attributes
         const location = dom.nodeLocation(script);
