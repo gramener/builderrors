@@ -23,6 +23,7 @@ checks = [
     'gitleaks',
     'flake8-extra',
     'complexity',
+    'data-blocks',
     'pydoc',
     'absolute-urls',
     'folders',

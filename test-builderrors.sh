@@ -80,6 +80,7 @@ check eslint-config --skip=gitleaks
 check stylelint --skip=gitleaks
 check htmlhint --skip=gitleaks
 check flake8-extra --skip=gitleaks --skip=bandit --skip=flake8  # Test --skip=* flags and that build passes
+check data-blocks --only=data-blocks  # Test --only= option
 check js-modules --skip=gitleaks
 check npm-audit --skip=gitleaks
 check gitleaks

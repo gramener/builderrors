@@ -30,6 +30,7 @@ Run automated checks on repositories to improve code quality.
   - [WARNING (gitleaks) don't commit secrets](#gitleaks)
   - [WARNING (flake8-extra) improve Python code](#flake8-extra)
   - [WARNING (complexity) review complex code](#complexity)
+  - [WARNING (data-blocks) move large data to JSON](#data-blocks)
   - [WARNING (pydoc) document Python code](#pydoc)
   - [WARNING (absolute-urls) avoid absolute URLs](#absolute-urls)
   - [INFO (folders): review folder structure and files](#folders)
@@ -572,6 +573,18 @@ WARNING (complexity) review complex code. 120 min/error
 ```
 
 Break your code into smaller functions. Use clear function names. Re-use as much as possible.
+
+## `data-blocks`
+
+```text
+WARNING (data-blocks) move large data to JSON. 5 min/error
+```
+
+Avoid large data blocks in your code. Keep code and data separate.
+
+Move data into JSON files (or CSV or any other data file).
+
+Reference: [eslint-plugin-no-data-blocks](https://www.npmjs.com/package/eslint-plugin-no-data-blocks)
 
 ## `pydoc`
 

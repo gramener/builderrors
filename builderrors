@@ -317,6 +317,19 @@ check-complexity() {
 }
 check "$SKIP_COMPLEXITY" "WARNING" "complexity" "120 min/error" "review complex code" ""
 
+check-data-blocks() {
+  # Avoid config file. Put in all options here
+  $GIT ls-files | grep -E '\.(html|js|mjs)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" \
+    --no-eslintrc \
+    --parser-options ecmaVersion:latest \
+    --plugin html --plugin template --plugin no-data-blocks \
+    --resolve-plugins-relative-to "$WIN_SCRIPT_DIR" \
+    --rule "no-data-blocks/no-data-blocks: [error, 100]" \
+    --quiet \
+    --format unix 2>&1
+}
+check "$SKIP_DATA_BLOCKS" "WARNING" "data-blocks" "5 min/error" "move large data to JSON" ""
+
 check-pydoc() {
   $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty pydocstyle --select=D1
 }

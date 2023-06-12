@@ -1,0 +1,10 @@
+
+WARNING (data-blocks) move large data to JSON.
+HELP https://github.com/gramener/builderrors/#data-blocks
+
+    script.js:4:11: Data block with 130 items [Error/no-data-blocks/no-data-blocks]
+    1 problem
+
+---------------------------------------------------------------------
+BUILD PASSED.
+HELP https://github.com/gramener/builderrors
