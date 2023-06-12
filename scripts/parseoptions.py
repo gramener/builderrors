@@ -7,16 +7,15 @@ checks = [
     'lib',
     'minified',
     'lfs',
-    'prettier',
     'useless',
     'duplicate-files',
     'duplicate-lines',
-    'py-filenames',
+    'prettier',
     'black',
+    'py-filenames',
     'flake8',
     'bandit',
     'eslint',
-    'eslint-default',
     'stylelint',
     'htmlhint',
     'js-modules',
@@ -30,19 +29,30 @@ checks = [
     'css-size',
     'code-size',
 ]
+options = [
+    'eslint-default',
+]
 
 
 def main():
     parser = argparse.ArgumentParser(prog='builderrors')
     parser.add_argument('target-dir', nargs='?', default='.', help='directory to run in (.)')
-    kwargs = {
-        'choices': checks,
-        'action': 'append',
-        'metavar': '{%s,...}' % ','.join(checks[:3]),
-    }
+    metavar = '{%s,...}' % ','.join(checks[:3])
     group = parser.add_mutually_exclusive_group()
-    group.add_argument('--skip', help="don't run specified check(s)", **kwargs)
-    group.add_argument('--only', help='run only specified checks(s)', **kwargs)
+    group.add_argument(
+        '--skip',
+        help="don't run specified check(s)",
+        choices=checks + options,
+        action='append',
+        metavar=metavar,
+    )
+    group.add_argument(
+        '--only',
+        help='run only specified checks(s)',
+        choices=checks,
+        action='append',
+        metavar=metavar,
+    )
     # Note: Though help mentions a default, DON'T add default=.
     # This overrides user's environment variables. Allow THOSE to be the default.
     parser.add_argument(
