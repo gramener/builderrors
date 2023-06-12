@@ -1,3 +1,5 @@
+'''Parse command line options and print environment variables to set'''
+
 import os
 import argparse
 import sys
@@ -36,6 +38,7 @@ options = [
 
 
 def main():
+    '''Parse command line options and print environment variables to set'''
     parser = argparse.ArgumentParser(prog='builderrors')
     parser.add_argument('target-dir', nargs='?', default='.', help='directory to run in (.)')
     metavar = '{%s,...}' % ','.join(checks[:3])
