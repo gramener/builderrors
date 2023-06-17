@@ -216,24 +216,23 @@ check-bandit() {
 }
 check "$SKIP_BANDIT" "ERROR" "bandit" "10 min/error" "fix Python security errors" ""
 
+# Set up ESLINT_OPTIONS
+# If user didn't skip default ESLINT checks, and there's no .eslintrc.*, use eslint from root
+if [[ ! -n "$SKIP_ESLINT_DEFAULT" ]] && ! compgen -G ".eslintrc.*" > /dev/null; then
+  # When using default config, resolve plugins relative to builderrors
+  ESLINT_OPTIONS="--config $WIN_SCRIPT_DIR/.eslintrc.yml"
+else
+  # When using project config, resolve plugins relative current directory
+  npm install > /dev/null 2>&1
+  ESLINT_OPTIONS="--resolve-plugins-relative-to ."
+fi
+
 check-eslint() {
   # eslint prints ".. problems" at the end. Strip with "grep -v ..."
   $GIT ls-files | grep -E '\.(html|js|mjs)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" $ESLINT_OPTIONS --quiet --format unix 2>&1 | \
     grep -v "^[0-9]* problems"
 }
-if [[ -z "$SKIP_ESLINT" ]]; then
-  # If user didn't skip default ESLINT checks, and there's no .eslintrc.*, use eslint from root
-  if [[ ! -n "$SKIP_ESLINT_DEFAULT" ]] && ! compgen -G ".eslintrc.*" > /dev/null; then
-    # When using default config, resolve plugins relative to builderrors
-    ESLINT_OPTIONS="--config $WIN_SCRIPT_DIR/.eslintrc.yml"
-  else
-    # When using project config, resolve plugins relative current directory
-    npm install > /dev/null 2>&1
-    CREATED_NODE_MODULES=1
-    ESLINT_OPTIONS="--resolve-plugins-relative-to ."
-  fi
-  check "$SKIP_ESLINT" "ERROR" "eslint" "10 sec/error" "fix JavaScript errors" "npx eslint --fix"
-fi
+check "$SKIP_ESLINT" "ERROR" "eslint" "10 sec/error" "fix JavaScript errors" "npx eslint --fix"
 
 check-stylelint() {
   # stylelint prints "3 problems" at the end. Strip with "grep -v ..."
@@ -300,15 +299,12 @@ check-flake8-extra() {
 check "$SKIP_FLAKE8_EXTRA" "WARNING" "flake8-extra" "5 min/error" "improve Python code" ""
 
 check-complexity() {
-  # Avoid config file. Put in all options here
+  # Add the complexity rule ot default ESLINT_OPTIONS
   $GIT ls-files | grep -E '\.(html|js|mjs)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" \
-    --no-eslintrc \
-    --parser-options ecmaVersion:latest \
-    --plugin html --plugin template \
-    --resolve-plugins-relative-to "$WIN_SCRIPT_DIR" \
+    $ESLINT_OPTIONS \
     --rule "complexity: [error, {max: ${MAX_JS_COMPLEXITY:-10}}]" \
     --quiet --format unix 2>&1 | \
-    grep -v "^[0-9]* problems"
+    grep "Error/complexity"
   $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 \
     --isolated \
     --ignore=A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z \
@@ -318,15 +314,17 @@ check-complexity() {
 check "$SKIP_COMPLEXITY" "WARNING" "complexity" "120 min/error" "review complex code" ""
 
 check-data-blocks() {
-  # Avoid config file. Put in all options here
+  # NOTE: we use existing .eslintrc if available. This helps identify the source type as module or script.
+  # BUT: we run plugins from the builderrors folder. This lets us use the no-data-blocks plugin without installing.
+  # PROBLEM: If .eslintrc has plugins NOT present in builderrors, the rules will fail
   $GIT ls-files | grep -E '\.(html|js|mjs)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" \
-    --no-eslintrc \
     --parser-options ecmaVersion:latest \
     --plugin html --plugin template --plugin no-data-blocks \
     --resolve-plugins-relative-to "$WIN_SCRIPT_DIR" \
     --rule "no-data-blocks/no-data-blocks: [error, 100]" \
     --quiet \
-    --format unix 2>&1
+    --format unix 2>&1 | \
+    grep "Error/no-data-blocks/no-data-blocks"
 }
 check "$SKIP_DATA_BLOCKS" "WARNING" "data-blocks" "5 min/error" "move large data to JSON" ""
 
