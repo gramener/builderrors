@@ -30,7 +30,7 @@ async function reportNoModules(paths) {
           .map((a) => ` ${a.name}="${a.value.replace(/\s+/gis, " ")}"`)
           .join("");
         console.log(
-          `${path}:${location?.startLine}:${location?.startCol}: <script${attrs}>`
+          `${path}:${location?.startLine}:${location?.startCol}: <script${attrs}>`,
         );
       }
     }

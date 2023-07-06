@@ -35,7 +35,7 @@ process.stdin.on("end", () => {
         vulnerability.severity.toUpperCase(),
         vulnerability.fixAvailable ? "fixable" : "",
         vulnerability.isDirect ? "(direct)" : "",
-      ].join(" ")
+      ].join(" "),
     );
   }
 });
