@@ -63,6 +63,7 @@ check() {
 }
 
 # Note: Black file order is unpredictable. So --skip=black when there are multiple .py files.
+# Note: npm-audit may throw up new errors. So --skip=npm-audit when there are JS files.
 check libraries-node --skip=gitleaks
 check libraries-bower --skip=gitleaks
 check minified --skip=gitleaks
@@ -76,11 +77,11 @@ check python-filenames --skip=gitleaks
 check flake8 --skip=black --skip=gitleaks
 check bandit --skip=gitleaks
 check eslint --skip=gitleaks
-check eslint-config --skip=gitleaks
+check eslint-config --skip=gitleaks --skip=npm-audit
 check stylelint --skip=gitleaks
 check htmlhint --skip=gitleaks
 check flake8-extra --skip=gitleaks --skip=bandit --skip=flake8  # Test --skip=* flags and that build passes
-check complexity --skip=gitleaks
+check complexity --skip=gitleaks --skip=npm-audit
 check data-blocks --only=data-blocks  # Test --only= option
 check js-modules --skip=gitleaks
 check npm-audit --skip=gitleaks

@@ -14,10 +14,10 @@ ERROR (prettier) auto-format JS/CSS with Prettier. 2 min
 HELP https://github.com/gramener/builderrors/#prettier
 To fix, run: npx prettier --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"
 
-    bower_components\color-obj\README.md
-    bower_components\color-obj\dist\Color.js
-    bower_components\color-obj\src\Color.js
-    bower_components\color-obj\test\Color.spec.js
+    bower_components/color-obj/README.md
+    bower_components/color-obj/dist/Color.js
+    bower_components/color-obj/src/Color.js
+    bower_components/color-obj/test/Color.spec.js
 
 
 INFO (folders) review folder structure and files.
