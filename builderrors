@@ -290,7 +290,7 @@ fi
 
 check-gitleaks() {
   # Limit leak checking to the last 10 commits
-  gitleaks detect --no-git --no-banner --verbose --log_opts="-n 10" 2>/dev/null
+  gitleaks detect --no-git --no-banner --verbose --log-opts="-n 10" 2>/dev/null
 }
 check "$SKIP_GITLEAKS" "WARNING" "gitleaks" "30 min/error" "don't commit secrets" ""
 
