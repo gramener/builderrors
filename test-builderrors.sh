@@ -64,27 +64,27 @@ check() {
 
 # Note: Black file order is unpredictable. So --skip=black when there are multiple .py files.
 # Note: npm-audit may throw up new errors. So --skip=npm-audit when there are JS files.
-check libraries-node --skip=gitleaks
-check libraries-bower --skip=gitleaks
-check minified --skip=gitleaks
-check git-lfs --skip=gitleaks
-check useless --skip=gitleaks
-check duplicate-files --skip=gitleaks --skip=black --skip=flake8-extra
-check duplicate-lines --skip=gitleaks --skip=black --skip=pydoc
-check prettier --skip=gitleaks
-check black --skip=gitleaks
-check python-filenames --skip=gitleaks
-check flake8 --skip=black --skip=gitleaks
-check bandit --skip=gitleaks
-check eslint --skip=gitleaks
-check eslint-config --skip=gitleaks --skip=npm-audit
-check stylelint --skip=gitleaks
-check htmlhint --skip=gitleaks
-check flake8-extra --skip=gitleaks --skip=bandit --skip=flake8  # Test --skip=* flags and that build passes
-check complexity --skip=gitleaks --skip=npm-audit
+check libraries-node
+check libraries-bower
+check minified
+check git-lfs
+check useless
+check duplicate-files --skip=black --skip=flake8-extra
+check duplicate-lines --skip=black --skip=pydoc
+check prettier
+check black
+check python-filenames
+check flake8 --skip=black
+check bandit
+check eslint
+check eslint-config --skip=npm-audit
+check stylelint
+check htmlhint
+check flake8-extra --skip=bandit --skip=flake8  # Test --skip=* flags and that build passes
+check complexity --skip=npm-audit
 check data-blocks --only=data-blocks  # Test --only= option
-check js-modules --skip=gitleaks
-check npm-audit --skip=gitleaks
+check js-modules
+check npm-audit
 check gitleaks
 check absolute-urls --skip=gitleaks
 
