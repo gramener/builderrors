@@ -217,8 +217,8 @@ check-bandit() {
 check "$SKIP_BANDIT" "ERROR" "bandit" "10 min/error" "fix Python security errors" ""
 
 # Set up ESLINT_OPTIONS
-# If user didn't skip default ESLINT checks, and there's no .eslintrc.*, use eslint from root
-if [[ ! -n "$SKIP_ESLINT_DEFAULT" ]] && ! compgen -G ".eslintrc.*" > /dev/null; then
+# If user didn't skip default ESLINT checks, and there's no .eslintrc.*, eslint.config.js, or eslintConfig in package.json, use eslint from root
+if [[ ! -n "$SKIP_ESLINT_DEFAULT" ]] && ! compgen -G ".eslintrc.*" > /dev/null && ! compgen -G "eslint.config.js" && ! grep -q '"eslintConfig"' package.json 2>/dev/null ; then
   # When using default config, resolve plugins relative to builderrors
   ESLINT_OPTIONS="--config $WIN_SCRIPT_DIR/.eslintrc.yml"
 else

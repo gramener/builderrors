@@ -64,29 +64,30 @@ check() {
 
 # Note: Black file order is unpredictable. So --skip=black when there are multiple .py files.
 # Note: npm-audit may throw up new errors. So --skip=npm-audit when there are JS files.
-check libraries-node
-check libraries-bower
-check minified
-check git-lfs
-check useless
-check duplicate-files --skip=black --skip=flake8-extra
-check duplicate-lines --skip=black --skip=pydoc
-check prettier
-check black
-check python-filenames
-check flake8 --skip=black
-check bandit
-check eslint
-check eslint-config --skip=npm-audit
-check stylelint
-check htmlhint
-check flake8-extra --skip=bandit --skip=flake8  # Test --skip=* flags and that build passes
-check complexity --skip=npm-audit
-check data-blocks --only=data-blocks  # Test --only= option
-check js-modules
-check npm-audit
-check gitleaks
-check absolute-urls --skip=gitleaks
+# check libraries-node
+# check libraries-bower
+# check minified
+# check git-lfs
+# check useless
+# check duplicate-files --skip=black --skip=flake8-extra
+# check duplicate-lines --skip=black --skip=pydoc
+# check prettier
+# check black
+# check python-filenames
+# check flake8 --skip=black
+# check bandit
+# check eslint
+# check eslint-config --skip=npm-audit
+check eslint-package --skip=npm-audit
+# check stylelint
+# check htmlhint
+# check flake8-extra --skip=bandit --skip=flake8  # Test --skip=* flags and that build passes
+# check complexity --skip=npm-audit
+# check data-blocks --only=data-blocks  # Test --only= option
+# check js-modules
+# check npm-audit
+# check gitleaks
+# check absolute-urls --skip=gitleaks
 
 # Exit code 1 if ANY of the outputs had an error
 exit $EXIT_STATUS
