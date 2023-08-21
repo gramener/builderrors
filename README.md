@@ -115,11 +115,11 @@ add this to your [`Jenkinsfile`](https://www.jenkins.io/doc/book/pipeline/jenkin
 
 ```jenkinsfile
 pipeline {
-    agent {
-        docker { image 'gramener/builderrors' }
-    }
     stages {
-        stage('Validate') {
+        stage('Build errors') {
+            agent {
+                docker { image 'gramener/builderrors' }
+            }
             steps {
                 sh 'builderrors'
             }
