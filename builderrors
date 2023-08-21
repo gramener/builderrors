@@ -150,7 +150,7 @@ check-lfs() {
 check "$SKIP_LFS" "ERROR" "lfs" "15 min" "use Git LFS for large files" ""
 
 check-useless() {
-  $GIT ls-files | grep -E '(\.lnk$|^~\$|~$|\.sublime\-|\.ipynb_checkpoints$|\.stackdump$|^thumbs.db$|\.log$)' | sort
+  $GIT ls-files | grep -E '(\.lnk$|^~\$|~$|\.sublime-|\.ipynb_checkpoints$|\.stackdump$|^thumbs.db$|\.log$)' | sort
 }
 check "$SKIP_USELESS" "ERROR" "useless" "15 min" "don't commit useless/generated files" ""
 
