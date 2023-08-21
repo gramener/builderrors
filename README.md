@@ -104,7 +104,8 @@ pipelines:
     - step:
         name: validate
         image: gramener/builderrors
-        script: builderrors
+        script:
+          - builderrors
 ```
 
 ## Jenkins usage
