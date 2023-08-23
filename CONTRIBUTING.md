@@ -90,9 +90,14 @@ Here are some we don't plan to add:
    npm audit || npm upgrade
    ```
 
-3. Test for errors
+3. Test for errors.
 
    ```bash
+   # One-time setup
+   git clone "https://code.gramener.com/s.anand/build-errors-test" "build-errors-test"`
+   ./setup.sh
+
+   # Run tests
    npm run build
    ./builderrors
    ./test-builderrors.sh

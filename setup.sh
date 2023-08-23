@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Ensure build error script is executable
 chmod +x builderrors
 
