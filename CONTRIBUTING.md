@@ -110,6 +110,7 @@ Here are some we don't plan to add:
    docker pull nikolaik/python-nodejs:python3.10-nodejs18-bullseye
    docker build --tag gramener/builderrors:$VERSION --tag gramener/builderrors:latest .
    docker run --rm -v `pwd`:/src gramener/builderrors:latest
+   # docker login  # log in as any user with push access to gramener/builderrors
    docker push gramener/builderrors:$VERSION
    docker push gramener/builderrors:latest
    ```
