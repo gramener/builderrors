@@ -347,7 +347,7 @@ to auto-format your code.
 - Unibeautify supports templates: https://github.com/unibeautify/unibeautify
 -->
 
-- To auto-fix, run `npx prettier --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"`
+- To auto-fix, run `npx prettier@3 --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"`
 - To ignore specific files, add a [`.prettierignore`](https://prettier.io/docs/en/ignore.html) file (e.g. add `*.html`)
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`.prettierrc`](https://prettier.io/docs/en/configuration.html) file
 - To skip this check, use `builderrors --skip=prettier` (e.g. if you temporarily need the build to pass)
@@ -393,7 +393,7 @@ You can't import a Python file unless it has alphanumeric letters. Using lowerca
 ERROR (flake8) fix Python errors. 1 min/error
 ```
 
-[Flake8](https://flake8.pycqa.org//) reports Python errors with the
+[Flake8](https://flake8.pycqa.org/) reports Python errors with the
 [flake8-blind-except](https://pypi.org/package/flake8-blind-except),
 [flake8-print](https://pypi.org/package/flake8-print),
 [flake8-debugger](https://pypi.org/package/flake8-debugger),
