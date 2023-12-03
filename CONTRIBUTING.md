@@ -21,6 +21,7 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
 - [`markdownlint`](https://www.npmjs.com/package/markdownlint). But Prettier does most of this
 - [`yamllint`](https://yamllint.readthedocs.io/). But Prettier handles most of this, except `empty-values`, `key-duplicates`
 - [`sqlfluff`](https://github.com/sqlfluff/sqlfluff) for SQL
+- [`webhint`](https://webhint.io/) as an alternative to htmlhint is promising, but has many false positives that need customization for our work (e.g. inline-style warnings, requiring meta viewport, etc.)
 - Documentation linters for Python, JavaScript and README (e.g. overview, setup instructions, contact)
 - Security & containers
   - `docker scan`, which uses snyk
