@@ -242,7 +242,7 @@ check-stylelint() {
 if [[ -z "$SKIP_STYLELINT" ]]; then
   # stylelint uses v8-compile-cache. Disable it since there's nothing to cache on CI
   export DISABLE_V8_COMPILE_CACHE=1
-  # If user didn't skip default ESLINT checks, and there's no .eslintrc.*, use eslint from root
+  # If user didn't skip default STYLELINT checks, and there's no .stylelint.*, use eslint from root
   if [[ ! -n "$SKIP_STYLELINT_DEFAULT" ]] && ! compgen -G ".stylelintrc.*" > /dev/null; then
     cp "$SCRIPT_DIR/.stylelintrc.yml" .
     CREATED_STYLELINTRC=1
