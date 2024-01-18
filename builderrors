@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=2.13.0
+VERSION=2.13.2
 
 # Enable Gitlab collapsible sections from Gitlab 12.0 onwards
 # https://docs.gitlab.com/ee/ci/jobs/index.html#custom-collapsible-sections
@@ -21,6 +21,7 @@ fi
 
 # Run git with default options
 GIT="git -c core.quotePath=false -c core.longPaths=true"
+$GIT config --global --add safe.directory "$(pwd)"
 
 # Define a regular expression for matching minified files
 RE_MINIFIED='[\.\-](min|pack)\.(js|css)$'

@@ -21,7 +21,6 @@ COPY . .
 
 # Install builderrors
 RUN bash setup.sh && \
-  git config --global --add safe.directory '*' && \
   ln -s -t /usr/bin /usr/share/builderrors/builderrors
 
 # Default command is to run builderrors on /src

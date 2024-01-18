@@ -121,7 +121,7 @@ Here are some we don't plan to add:
    ```bash
    export VERSION=2.x.x
    git commit . -m"DOC: Release $VERSION"
-   git tag -a v$VERSION -m"Release $VERSION"
+   git tag v$VERSION
    git push --follow-tags
    ```
 
