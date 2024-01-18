@@ -31,6 +31,7 @@ Run automated checks on repositories to improve code quality.
   - [WARNING (flake8-extra) improve Python code](#flake8-extra)
   - [WARNING (complexity) review complex code](#complexity)
   - [WARNING (data-blocks) move large data to JSON](#data-blocks)
+  - [WARNING (url-templates) use URLSearchParams to construct URLs](#url-templates)
   - [WARNING (pydoc) document Python code](#pydoc)
   - [WARNING (absolute-urls) avoid absolute URLs](#absolute-urls)
   - [INFO (folders): review folder structure and files](#folders)
@@ -210,6 +211,10 @@ under Settings > CI / CD > Variables.
 | `SKIP_NPM_AUDIT=1`         | `--skip=npm-audit`         | Skip [npm audit](#npm-audit) warning                                                  |
 | `SKIP_GITLEAKS=1`          | `--skip=gitleaks`          | Skip [gitleaks](#gitleaks) warning                                                    |
 | `SKIP_FLAKE8_EXTRA=1`      | `--skip=flake8-extra`      | Skip [flake8 extra](#flake8-extra) warning                                            |
+| `SKIP_COMPLEXIY=1`         | `--skip=complexity`        | Skip [complexity](#complexity) warning                                            |
+| `SKIP_DATA_BLOCKS=1`       | `--skip=data-blocks`       | Skip [data-blocks](#data-blocks) warning                                              |
+| `SKIP_URL_TEMPLATES=1`     | `--skip=url-templates`     | Skip [url-templates](#url-templates) warning                                          |
+| `SKIP_PYDOC=1`             | `--skip=pydoc`             | Skip [pydoc](#pydoc) warning                                                          |
 | `SKIP_ABSOLUTE_URLS=1`     | `--skip=absolute-urls`     | Skip [absolute URLs](#absolute-urls) warning                                          |
 | `SKIP_FOLDERS=1`           | `--skip=folders`           | Skip [folders](#folders) info                                                         |
 | `SKIP_CSS_SIZE=1`          | `--skip=css-size`          | Skip [CSS size](#css-size) info                                                       |
@@ -587,6 +592,32 @@ Move data into JSON files (or CSV or any other data file).
 
 Reference: [eslint-plugin-no-data-blocks](https://www.npmjs.com/package/eslint-plugin-no-data-blocks)
 
+## `url-templates`
+
+```text
+WARNING (url-templates) move large data to JSON. 5 min/error
+```
+
+Construct URL params with URLSearchParams not template literals. Instead of:
+
+```js
+const url = `path?city=${city}&time=${now}`;
+```
+
+... use:
+
+```js
+const url = `path?` + new URLSearchParams({ city, time: now }).toString();
+```
+
+This offers:
+
+- Automatic Encoding: Special characters are safely encoded.
+- Readability: The syntax is cleaner and more readable. It abstracts away the manual construction of the query string.
+- Error Reduction: Reduces the chance of errors like missing an & or incorrectly encoding values.
+
+Reference: [eslint-plugin-no-url-params-template](https://www.npmjs.com/package/eslint-plugin-no-url-params-template)
+
 ## `pydoc`
 
 ```text
@@ -644,7 +675,7 @@ Shows the number of lines, words and characters in all Python / JavaScript files
 
 # Alternatives
 
-Comprehensive multi-linting tools are available at:
+Comprehensive open-source multi-linting tools are available at:
 
 - [Super-Linter](https://github.com/github/super-linter)
 - [MegaLinter Runner](https://github.com/oxsecurity/megalinter)

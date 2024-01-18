@@ -84,6 +84,7 @@ check htmlhint
 check flake8-extra --skip=bandit --skip=flake8  # Test --skip=* flags and that build passes
 check complexity --skip=npm-audit
 check data-blocks --only=data-blocks  # Test --only= option
+check url-templates --only=url-templates  # Test --only= option
 check js-modules
 check npm-audit
 check gitleaks

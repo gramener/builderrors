@@ -3,10 +3,10 @@ WARNING (npm-audit) avoid unsafe npm packages.
 HELP https://github.com/gramener/builderrors/#npm-audit
 To fix, run: npm audit fix
 
-    axios <=0.21.1 HIGH fixable
+    axios <=1.5.1 HIGH fixable
     eclint >=2.0.0 HIGH fixable (direct)
     emphasize <=3.0.0 MODERATE fixable
-    follow-redirects <=1.14.7 HIGH fixable
+    follow-redirects * HIGH fixable
     glob-parent <5.1.2 HIGH fixable
     glob-stream 5.3.0 - 6.1.0 HIGH fixable
     gulp-reporter >=1.5.0 MODERATE fixable

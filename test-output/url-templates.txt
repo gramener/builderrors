@@ -1,0 +1,10 @@
+
+WARNING (url-templates) use URLSearchParams to construct URLs.
+HELP https://github.com/gramener/builderrors/#url-templates
+
+    index.js:4:13: URL constructed with template literal [Error/no-url-params-template/no-url-params-template]
+    index.js:5:13: URL constructed with template literal [Error/no-url-params-template/no-url-params-template]
+
+---------------------------------------------------------------------
+BUILD PASSED.
+HELP https://github.com/gramener/builderrors

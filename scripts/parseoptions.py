@@ -26,6 +26,7 @@ checks = [
     'flake8-extra',
     'complexity',
     'data-blocks',
+    'url-templates',
     'pydoc',
     'absolute-urls',
     'folders',

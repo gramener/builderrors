@@ -314,20 +314,33 @@ check-complexity() {
 }
 check "$SKIP_COMPLEXITY" "WARNING" "complexity" "120 min/error" "review complex code" ""
 
-check-data-blocks() {
+# Usage: run-local-eslint $PLUGIN $RULE $PATTERN
+run-local-eslint() {
+  PLUGIN="$1"   # e.g. "no-data-blocks"
+  RULE="$2"     # e.g. "no-data-blocks/no-data-blocks: [error, 100]"
+  PATTERN="$3"  # e.g. "Error/no-data-blocks/no-data-blocks"
   # NOTE: we use existing .eslintrc if available. This helps identify the source type as module or script.
   # BUT: we run plugins from the builderrors folder. This lets us use the no-data-blocks plugin without installing.
   # PROBLEM: If .eslintrc has plugins NOT present in builderrors, the rules will fail
   $GIT ls-files | grep -E '\.(html|js|mjs)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" \
     --parser-options ecmaVersion:latest \
-    --plugin html --plugin template --plugin no-data-blocks \
+    --plugin html --plugin template --plugin "$PLUGIN" \
     --resolve-plugins-relative-to "$WIN_SCRIPT_DIR" \
-    --rule "no-data-blocks/no-data-blocks: [error, 100]" \
+    --rule "$RULE" \
     --quiet \
     --format unix 2>&1 | \
-    grep "Error/no-data-blocks/no-data-blocks"
+    grep "$PATTERN"
+}
+
+check-data-blocks() {
+  run-local-eslint "no-data-blocks" "no-data-blocks/no-data-blocks: [error, 100]" "Error/no-data-blocks/no-data-blocks"
 }
 check "$SKIP_DATA_BLOCKS" "WARNING" "data-blocks" "5 min/error" "move large data to JSON" ""
+
+check-url-templates() {
+  run-local-eslint "no-url-params-template" "no-url-params-template/no-url-params-template: [error]" "Error/no-url-params-template/no-url-params-template"
+}
+check "$SKIP_URL_TEMPLATES" "WARNING" "url-templates" "5 min/error" "use URLSearchParams to construct URLs" ""
 
 check-pydoc() {
   $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty pydocstyle --select=D1
