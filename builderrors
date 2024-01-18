@@ -2,12 +2,22 @@
 
 VERSION=2.12.0
 
-# Define colors to use for output messages as foreground colors (ANSI escape codes)
-RED="\033[31;1m"
-GREEN="\033[32;1m"
-BROWN="\033[33;1m"
-YELLOW="\033[93;1m"
-CLEAR="\033[0m"
+# Enable Gitlab collapsible sections from Gitlab 12.0 onwards
+# https://docs.gitlab.com/ee/ci/jobs/index.html#custom-collapsible-sections
+GITLAB_VERSION_REQUIRED=12
+if [[ $CI_SERVER_VERSION_MAJOR -ge $GITLAB_VERSION_REQUIRED ]]; then
+  SECTION_START="\e[0Ksection_start:${START_TIME}:${CODE}[collapsed=true]\r\e[0K"
+  SECTION_END="\e[0Ksection_end:${END_TIME}:${CODE}\r\e[0K"
+fi
+
+# If Gitlab is modern enough, or the terminal supports colors, define colors
+if [[ "$CI_SERVER_VERSION_MAJOR" -ge "$GITLAB_VERSION_REQUIRED" ]] || { [[ -t 1 ]] && { tput colors &> /dev/null && [ -n "$(tput colors)" ] && [ "$(tput colors)" -ge 8 ]; }; }; then
+  RED="\033[31;1m"
+  GREEN="\033[32;1m"
+  BROWN="\033[33;1m"
+  YELLOW="\033[93;1m"
+  CLEAR="\033[0m"
+fi
 
 # Run git with default options
 GIT="git -c core.quotePath=false -c core.longPaths=true"
@@ -69,13 +79,6 @@ check() {
     OUTPUT=$(check-$CODE)
     END_TIME="$(date +%s)"
 
-    # Enable Gitlab collapsible sections from Gitlab 12.0 onwards
-    # https://docs.gitlab.com/ee/ci/jobs/index.html#custom-collapsible-sections
-    GITLAB_VERSION_REQUIRED=12
-    if [[ $CI_SERVER_VERSION_MAJOR -ge $GITLAB_VERSION_REQUIRED ]]; then
-      SECTION_START="\e[0Ksection_start:${START_TIME}:${CODE}[collapsed=true]\r\e[0K"
-      SECTION_END="\e[0Ksection_end:${END_TIME}:${CODE}\r\e[0K"
-    fi
     # Print the output if there's an output unless it's an INFO outside a CI environment
     # TODO: Set BUILD_ENV based on CI environment
     if [[ -n "$OUTPUT" && ( "$TYPE" != "INFO" || -n "$BUILD_ENV" ) ]]; then
