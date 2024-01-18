@@ -211,7 +211,7 @@ under Settings > CI / CD > Variables.
 | `SKIP_NPM_AUDIT=1`         | `--skip=npm-audit`         | Skip [npm audit](#npm-audit) warning                                                  |
 | `SKIP_GITLEAKS=1`          | `--skip=gitleaks`          | Skip [gitleaks](#gitleaks) warning                                                    |
 | `SKIP_FLAKE8_EXTRA=1`      | `--skip=flake8-extra`      | Skip [flake8 extra](#flake8-extra) warning                                            |
-| `SKIP_COMPLEXIY=1`         | `--skip=complexity`        | Skip [complexity](#complexity) warning                                            |
+| `SKIP_COMPLEXIY=1`         | `--skip=complexity`        | Skip [complexity](#complexity) warning                                                |
 | `SKIP_DATA_BLOCKS=1`       | `--skip=data-blocks`       | Skip [data-blocks](#data-blocks) warning                                              |
 | `SKIP_URL_TEMPLATES=1`     | `--skip=url-templates`     | Skip [url-templates](#url-templates) warning                                          |
 | `SKIP_PYDOC=1`             | `--skip=pydoc`             | Skip [pydoc](#pydoc) warning                                                          |
