@@ -39,7 +39,15 @@ Run automated checks on repositories to improve code quality.
   - [INFO (code-size) review largest PY/JS code](#code-size)
 - [Alternatives](#alternatives)
 
-## Migrate from Gramex < 1.84
+## Gitlab CI usage
+
+Add this on top of your [`.gitlab-ci.yml`](https://docs.gitlab.com/ee/ci/yaml/) file:
+
+```yaml
+validate:
+  image: gramener/builderrors
+  script: builderrors
+```
 
 If you used `gramex init` from [gramex](https://github.com/gramener/gramex) before version 1.84, change the following:
 
@@ -47,15 +55,19 @@ If you used `gramex init` from [gramex](https://github.com/gramener/gramex) befo
 - Copy this [`.eslintrc.yml`](.eslintrc.yml) and run `npm install --save-dev eslint eslint-plugin-html eslint-plugin-template`
 - If you have a `.flake8` or [equivalent](https://flake8.pycqa.org/en/latest/user/configuration.html), add `extend-ignore=E203,E501`
 
-## Gitlab CI usage
+## Github Actions usage
 
-To run checks on every push with [Gitlab](https://docs.gitlab.com/ee/ci/pipelines/),
-add this on top of your [`.gitlab-ci.yml`](https://docs.gitlab.com/ee/ci/yaml/) file:
+Create a [`.github/workflows/validate.yml`](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions):
 
 ```yaml
-validate:
-  image: gramener/builderrors
-  script: builderrors
+name: Run build errors
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker://gramener/builderrors
 ```
 
 ## Docker usage
