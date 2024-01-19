@@ -186,7 +186,7 @@ check "$SKIP_DUPLICATE_LINES" "ERROR" "duplicate-lines" "15 min/error" "reduce d
 check-prettier() {
   # NOTE: Don't run prettier on minified files. No point, and it bloats errors
   # NOTE: Don't run prettier on HTML files. It does not handle Tornado / Lodash templates
-  $GIT ls-files | grep -E '\.(js|mjs|ts|jsx|tsx|vue|css|scss|sass|yaml|md)$' | grep -v -E "$RE_MINIFIED" | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/prettier" --list-different 2>&1
+  $GIT ls-files | grep -E '\.(js|mjs|ts|jsx|tsx|vue|css|scss|sass|yml|yaml|md)$' | grep -v -E "$RE_MINIFIED" | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/prettier" --list-different 2>&1
 }
 check "$SKIP_PRETTIER" "ERROR" "prettier" "2 min" "auto-format JS/CSS with Prettier" "npx prettier@3 --write \"**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}\""
 
