@@ -10,7 +10,9 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
 - [`safety`](https://github.com/pyupio/safety) for Python security scanning
 - Flake8 plugins
   - [flake8-annotations](https://pypi.org/project/flake8-annotations) ⭐116
+  - [flake8-type-checking](https://pypi.org/project/flake8-type-checking) ⭐105. Lets you avoid importing libraries JUST for type-checking
   - [flake8-cognitive-complexity](https://pypi.org/project/flake8-cognitive-complexity) ⭐54. More apt than McCabe complexity
+  - [flake8-internal-name-import](https://pypi.org/project/flake8-internal-name-import) ⭐3. Check for imports that clash with internal names
 - ESLint plugins
   - [@typescript-eslint/eslint-plugin](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin) ⭐12,400
   - [eslint-plugin-unicorn](https://github.com/sindresorhus/eslint-plugin-unicorn) ⭐2,800
@@ -64,6 +66,7 @@ Here are some we don't plan to add:
   - [flake8-import-order](https://pypi.org/project/flake8-import-order) ⭐266. It's OK to import in any order
   - [pandas-vet](https://pypi.org/project/pandas-vet) ⭐142. [False positives](https://github.com/deppen8/pandas-vet/issues/74), cribs about `inplace=`
   - [flake8-isort](https://pypi.org/project/flake8-isort) ⭐. It's OK to import in any order
+  - [flake8-broken-line](https://pypi.org/project/flake8-broken-line) ⭐111. I don't think we use \ to break lines a lot
   - [flake8-logging-format](https://pypi.org/project/flake8-logging-format) ⭐104. OK to use `.format` in logging
   - [flake8-builtins](https://pypi.org/project/flake8-builtins) ⭐92. Too many false positives, e.g. arg type=, gramex.cache.open, id
   - [flake8-pie](https://pypi.org/project/flake8-pie) ⭐48. False positives about len(df), `pass` usage. Cribs about except Exception, `.format` in logging. But has some good checks
@@ -79,6 +82,7 @@ Here are some we don't plan to add:
   - [flake8-todos](https://pypi.org/project/flake8-todos) ⭐18. We want to ENCOURAGE TODO statements. This discourages them
   - [flake8-string-format](https://pypi.org/project/flake8-string-format) ⭐18. It's crazy. Doesn't work. Only false positives
   - [flake8-datetime-utcnow-plugin](https://pypi.org/project/flake8-datetime-utcnow-plugin) ⭐1. Error message is unclear. Very minor impact
+  - [flake8-github](https://pypi.org/project/flake8-github) ⭐1. Format for Github. We want to generate our own cross-CI format
 - [`synt`](https://github.com/brentlintner/synt) uses [esprima](https://www.npmjs.com/package/esprima) which doesn't parse [`?.`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) and other modern JS features
 
 ## Release

@@ -23,14 +23,14 @@ Run automated checks on repositories to improve code quality.
   - [ERROR (flake8) fix Python errors](#flake8)
   - [ERROR (bandit) fix Python security errors](#bandit)
   - [ERROR (eslint) fix JavaScript errors](#eslint)
+  - [ERROR (data-blocks) move large data to JSON](#data-blocks)
   - [ERROR (stylelint) fix CSS errors](#stylelint)
   - [ERROR (htmlhint) fix HTML errors](#htmlhint)
+  - [ERROR (gitleaks) don't commit secrets](#gitleaks)
   - [WARNING (js-modules) use JavaScript modules](#js-modules)
   - [WARNING (npm-audit) avoid unsafe npm packages](#npm-audit)
-  - [WARNING (gitleaks) don't commit secrets](#gitleaks)
   - [WARNING (flake8-extra) improve Python code](#flake8-extra)
   - [WARNING (complexity) review complex code](#complexity)
-  - [WARNING (data-blocks) move large data to JSON](#data-blocks)
   - [WARNING (url-templates) use URLSearchParams to construct URLs](#url-templates)
   - [WARNING (pydoc) document Python code](#pydoc)
   - [WARNING (absolute-urls) avoid absolute URLs](#absolute-urls)
@@ -410,12 +410,17 @@ You can't import a Python file unless it has alphanumeric letters. Using lowerca
 ERROR (flake8) fix Python errors. 1 min/error
 ```
 
-[Flake8](https://flake8.pycqa.org/) reports Python errors with the
-[flake8-blind-except](https://pypi.org/package/flake8-blind-except),
-[flake8-print](https://pypi.org/package/flake8-print),
-[flake8-debugger](https://pypi.org/package/flake8-debugger),
-[flake8-2020](https://pypi.org/package/flake8-2020), and
-[pep8-naming](https://pypi.org/package/pep8-naming) plugins.
+[Flake8](https://flake8.pycqa.org/) reports Python errors with these plugins:
+
+- [flake8-2020](https://pypi.org/project/flake8-2020): catches misuse of `sys.version` or `sys.version_info`
+- [flake8-blind-except](https://pypi.org/project/flake8-blind-except): catches blind (catch-all) exceptions
+- [flake8-bugbear](https://pypi.org/project/flake8-bugbear): catches potential bugs
+- [flake8-comprehensions](https://pypi.org/project/flake8-comprehensions): simplifies list comprehensions
+- [flake8-debugger](https://pypi.org/project/flake8-debugger): catches `pdb`, `ipdb` and `breakpoint()`
+- [flake8-print](https://pypi.org/project/flake8-print): catches print statements (use `logging` instead)
+- [pep8-naming](https://pypi.org/project/pep8-naming)
+
+Notes:
 
 - To ignore a specific line, add [`# noqa: <error-number>`](https://flake8.pycqa.org/en/latest/user/violations.html) at the end, e.g. `print("\n") # noqa: T201`
 - To ignore specific rules, add a [`.flake8`](https://flake8.pycqa.org/en/latest/user/configuration.html) file
@@ -474,6 +479,18 @@ Common errors:
 - **[`'x' is assigned a value but never used. [Error/no-unused-vars]`](http://eslint.org/docs/rules/no-unused-vars)**
   - [Add in your `.js`](https://eslint.org/docs/latest/rules/no-unused-vars#exported): `/* exported x, ... */` (or don't assign to the variable)
 
+## `data-blocks`
+
+```text
+ERROR (data-blocks) move large data to JSON. 5 min/error
+```
+
+Avoid large data blocks in your code. Keep code and data separate.
+
+Move data into JSON files (or CSV or any other data file).
+
+Reference: [eslint-plugin-no-data-blocks](https://www.npmjs.com/package/eslint-plugin-no-data-blocks)
+
 ## `stylelint`
 
 ```text
@@ -499,6 +516,23 @@ ERROR (htmlhint) fix HTML errors. 5 min/error
 - Re-write the code based on advice from htmlhint
 - To ignore specific rules, add a [`.htmlhintrc`](https://htmlhint.com/docs/user-guide/getting-started) file based on the [default](.htmlhintrc)
 - To skip this check, use `builderrors --skip=htmlhint` (e.g. if you're building a Lodash template library)
+
+## `gitleaks`
+
+```text
+ERROR (gitleaks) don't commit secrets. 30 min/error
+```
+
+[gitleaks](https://github.com/zricethezav/gitleaks) detects hardcoded passwords, API keys, and tokens in git repos.
+
+To fix these, change the password, key or token and delete the key.
+
+[`.gitleaksignore` file](https://github.com/zricethezav/gitleaks#gitleaksignore) ignores fragments. Use with care.
+
+<!--
+Optionally, [rewrite the commit history](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+using [BFG repo-cleaner](https://rtyley.github.io/bfg-repo-cleaner/) or [git filter-repo](https://github.com/newren/git-filter-repo).
+-->
 
 ## `js-modules`
 
@@ -526,37 +560,16 @@ WARNING (npm-audit) avoid unsafe npm packages. 15 min/error
 - To upgrade all packages to the latest compatible version, run `npm upgrade`
 - Change package versions manually and retry
 
-## `gitleaks`
-
-```text
-WARNING (gitleaks) don't commit secrets. 30 min/error
-```
-
-[gitleaks](https://github.com/zricethezav/gitleaks) detects hardcoded passwords, API keys, and tokens in git repos.
-
-To fix these, change the password, key or token.
-
-<!--
-
-[`.gitleaksignore` file](https://github.com/zricethezav/gitleaks#gitleaksignore) ignores fragments, but is experimental.
-
-Optionally, [rewrite the commit history](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
-using [BFG repo-cleaner](https://rtyley.github.io/bfg-repo-cleaner/) or [git filter-repo](https://github.com/newren/git-filter-repo).
-
--->
-
 ## `flake8-extra`
 
 ```text
 WARNING (flake8-extra) improve Python code. 5 min/error
 ```
 
-[Flake8](https://flake8.pycqa.org//) reports Python warnings based on experimental plugins. These are **OPTIONAL but GOOD** to fix.
+[Flake8](https://flake8.pycqa.org/) reports Python warnings based on experimental plugins. These are **OPTIONAL but GOOD** to fix.
 
-- [flake8-bugbear](https://pypi.org/package/flake8-bugbear): catches potential bugs
-- [flake8-comprehensions](https://pypi.org/package/flake8-comprehensions): simplifies list comprehensions
-- [flake8-eradicate](https://pypi.org/package/flake8-eradicate): reports commented code
-- [flake8-simplify](https://pypi.org/package/flake8-simplify): suggests code simplifications
+- [flake8-eradicate](https://pypi.org/project/flake8-eradicate): reports commented code
+- [flake8-simplify](https://pypi.org/project/flake8-simplify): suggests code simplifications
 
 You can fix these exactly like [flake8 errors](#flake8)
 
@@ -591,18 +604,6 @@ WARNING (complexity) review complex code. 120 min/error
 ```
 
 Break your code into smaller functions. Use clear function names. Re-use as much as possible.
-
-## `data-blocks`
-
-```text
-WARNING (data-blocks) move large data to JSON. 5 min/error
-```
-
-Avoid large data blocks in your code. Keep code and data separate.
-
-Move data into JSON files (or CSV or any other data file).
-
-Reference: [eslint-plugin-no-data-blocks](https://www.npmjs.com/package/eslint-plugin-no-data-blocks)
 
 ## `url-templates`
 

@@ -1,16 +1,20 @@
 
-ERROR (flake8) fix Python errors. 17 min
+ERROR (flake8) fix Python errors. 21 min
 HELP https://github.com/gramener/builderrors/#flake8
 
     complexity.py:17:37: E128 continuation line under-indented for visual indent
     complexity.py:21:21: E128 continuation line under-indented for visual indent
     complexity.py:123:6: N802 function name 'yearChanged' should be lowercase
+    complexity.py:401:16: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
     complexity.py:415:5: E303 too many blank lines (2)
     complexity.py:428:9: F841 local variable 'row_count_17' is assigned to but never used
+    complexity.py:485:20: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
     complexity.py:570:7: E275 missing whitespace after keyword
     complexity.py:594:13: F841 local variable 'str1_17' is assigned to but never used
     complexity.py:595:13: F841 local variable 'str2_17' is assigned to but never used
     complexity.py:607:15: E275 missing whitespace after keyword
+    complexity.py:714:16: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
+    complexity.py:796:20: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
     complexity.py:988:27: E225 missing whitespace around operator
     debugger.py:1:1: T100 import for pdb found
     debugger.py:2:1: T100 trace found: pdb.set_trace used
@@ -30,23 +34,19 @@ HELP https://github.com/gramener/builderrors/#flake8-extra
     complexity.py:269:1: E800 Found commented out code
     complexity.py:276:1: E800 Found commented out code
     complexity.py:363:13: SIM113 Use enumerate for 'count'
-    complexity.py:401:16: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
     complexity.py:411:1: E800 Found commented out code
     complexity.py:415:5: E303 too many blank lines (2)
     complexity.py:428:9: F841 local variable 'row_count_17' is assigned to but never used
     complexity.py:446:17: SIM113 Use enumerate for 'count'
-    complexity.py:485:20: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
     complexity.py:570:7: E275 missing whitespace after keyword
     complexity.py:594:13: F841 local variable 'str1_17' is assigned to but never used
     complexity.py:595:13: F841 local variable 'str2_17' is assigned to but never used
     complexity.py:607:15: E275 missing whitespace after keyword
     complexity.py:675:13: SIM113 Use enumerate for 'count'
-    complexity.py:714:16: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
     complexity.py:731:1: E800 Found commented out code
     complexity.py:738:1: E800 Found commented out code
     complexity.py:740:1: E800 Found commented out code
     complexity.py:757:17: SIM113 Use enumerate for 'count'
-    complexity.py:796:20: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
     complexity.py:875:13: SIM113 Use enumerate for 'count'
     complexity.py:922:1: E800 Found commented out code
     complexity.py:927:1: E800 Found commented out code
@@ -104,5 +104,5 @@ HELP https://github.com/gramener/builderrors/#code-size
         1     3    26 debugger.py
 
 ---------------------------------------------------------------------
-BUILD FAILED. 17 min to fix
+BUILD FAILED. 21 min to fix
 HELP https://github.com/gramener/builderrors
