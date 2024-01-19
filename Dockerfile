@@ -3,14 +3,14 @@ FROM nikolaik/python-nodejs:python3.10-nodejs18-bullseye
 
 # Install Git LFS
 RUN cd /tmp && \
-  curl --silent --location https://github.com/git-lfs/git-lfs/releases/download/v3.2.0/git-lfs-linux-amd64-v3.2.0.tar.gz | tar -xzf - && \
-  git-lfs-3.2.0/install.sh && \
-  rm -rf git-lfs-3.2.0/
+  curl --silent --location https://github.com/git-lfs/git-lfs/releases/download/v3.4.1/git-lfs-linux-amd64-v3.4.1.tar.gz | tar -xzf - && \
+  git-lfs-3.4.1/install.sh && \
+  rm -rf git-lfs-3.4.1/
 
 # Install Gitleaks
 RUN mkdir -p /usr/share/gitleaks/ && \
   cd /usr/share/gitleaks/ && \
-  curl --silent --location https://github.com/zricethezav/gitleaks/releases/download/v8.17.0/gitleaks_8.17.0_linux_x64.tar.gz | tar -xzf - && \
+  curl --silent --location https://github.com/zricethezav/gitleaks/releases/download/v8.18.1/gitleaks_8.18.1_linux_x64.tar.gz | tar -xzf - && \
   ln -s -t /usr/bin /usr/share/gitleaks/gitleaks
 
 # Install in a shared location
