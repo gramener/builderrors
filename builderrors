@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=2.14.0
+VERSION=2.15.0
 
 # Enable Gitlab collapsible sections from Gitlab 12.0 onwards
 # https://docs.gitlab.com/ee/ci/jobs/index.html#custom-collapsible-sections
@@ -137,12 +137,12 @@ cd "$TARGET_DIR" 2>&1 >/dev/null
 check-lib() {
   $GIT ls-files | grep -E 'node_modules/|bower_components/' | sort
 }
-check "$SKIP_LIB" "ERROR" "lib" "15 min" "don't commit libraries" ""
+check "$SKIP_LIB" "$ERROR_LIB" "lib" "15 min" "don't commit libraries" ""
 
 check-minified() {
   $GIT ls-files | grep -E "$RE_MINIFIED" | sort
 }
-check "$SKIP_MINIFIED" "ERROR" "minified" "15 min" "don't commit minified files" ""
+check "$SKIP_MINIFIED" "$ERROR_MINIFIED" "minified" "15 min" "don't commit minified files" ""
 
 check-lfs() {
   # comm -23 prints lines unique to file list #1
@@ -151,12 +151,12 @@ check-lfs() {
   # Note: git ls-tree --format is supported only in Git 2.36+ (Apr 2022), so use --long instead
   comm -23 <($GIT ls-tree -r --long HEAD | cut -c53- | awk -F'\t' "\$1 > ${LFS_SIZE:-1000000} { print(\$2) }" | sort) <($GIT lfs ls-files -n | sort)
 }
-check "$SKIP_LFS" "ERROR" "lfs" "15 min" "use Git LFS for large files" ""
+check "$SKIP_LFS" "$ERROR_LFS" "lfs" "15 min" "use Git LFS for large files" ""
 
 check-useless() {
   $GIT ls-files | grep -E '(\.lnk$|^~\$|~$|\.sublime-|\.ipynb_checkpoints$|\.stackdump$|^thumbs.db$|\.log$)' | sort
 }
-check "$SKIP_USELESS" "ERROR" "useless" "15 min" "don't commit useless/generated files" ""
+check "$SKIP_USELESS" "$ERROR_USELESS" "useless" "15 min" "don't commit useless/generated files" ""
 
 check-duplicate-files() {
   # List commited files  - git ls-tree ...
@@ -172,7 +172,7 @@ check-duplicate-files() {
     xargs -0 --no-run-if-empty md5sum | sort | uniq -w32 -dD | \
     awk '{if(h!=$1){printf "\n"};sub(/^\*/, "", $2);for (i=2; i<=NF; ++i) printf "%s ", $i;h=$1}'
 }
-check "$SKIP_DUPLICATE_FILES" "ERROR" "duplicate-files" "10 min/error" "delete duplicate files" ""
+check "$SKIP_DUPLICATE_FILES" "$ERROR_DUPLICATE_FILES" "duplicate-files" "10 min/error" "delete duplicate files" ""
 
 check-duplicate-lines() {
   # jscpd prints a table of results and "Found <nn> clones" and "Detection time: <nn>ms". Ignore these lines at the end using:
@@ -181,14 +181,14 @@ check-duplicate-lines() {
   #   grep -v '^Detection '   # remove "Detection time: <nn>ms"
   $GIT ls-files | grep -E '\.(js|mjs|ts|jsx|tsx|vue|py|css|scss)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/jscpd" --min-lines="${DUPLICATE_LINES:-25}" --mode=weak 2>&1 | grep '^[a-zA-Z ]' | grep -v '^Found ' | grep -v '^Detection '
 }
-check "$SKIP_DUPLICATE_LINES" "ERROR" "duplicate-lines" "15 min/error" "reduce duplicate lines" ""
+check "$SKIP_DUPLICATE_LINES" "$ERROR_DUPLICATE_LINES" "duplicate-lines" "15 min/error" "reduce duplicate lines" ""
 
 check-prettier() {
   # NOTE: Don't run prettier on minified files. No point, and it bloats errors
   # NOTE: Don't run prettier on HTML files. It does not handle Tornado / Lodash templates
   $GIT ls-files | grep -E '\.(js|mjs|ts|jsx|tsx|vue|css|scss|sass|yml|yaml|md)$' | grep -v -E "$RE_MINIFIED" | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/prettier" --list-different 2>&1
 }
-check "$SKIP_PRETTIER" "ERROR" "prettier" "2 min" "auto-format JS/CSS with Prettier" "npx prettier@3 --write \"**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}\""
+check "$SKIP_PRETTIER" "$ERROR_PRETTIER" "prettier" "2 min" "auto-format JS/CSS with Prettier" "npx prettier@3 --write \"**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}\""
 
 check-black() {
   # black prints "All done!" and "Oh no!" and "<nn> files would be left unchanged." with unicode characters and color. Strip with "grep -v ..."
@@ -198,12 +198,12 @@ check-black() {
     grep -v "would be left unchanged." | \
     grep -v "would be reformatted."
 }
-check "$SKIP_BLACK" "ERROR" "black" "2 min" "auto-format Python with Black" "black . --skip-string-normalization --line-length=${PY_LINE_LENGTH:-99}"
+check "$SKIP_BLACK" "$ERROR_BLACK" "black" "2 min" "auto-format Python with Black" "black . --skip-string-normalization --line-length=${PY_LINE_LENGTH:-99}"
 
 check-py-filenames() {
   $GIT ls-files | grep '\.py$' | sort | grep -e '[^a-z0-9_./]'
 }
-check "$SKIP_PY_FILENAMES" "ERROR" "py-filenames" "5 min/error" "use lower_alpha Python paths" ""
+check "$SKIP_PY_FILENAMES" "$ERROR_PY_FILENAMES" "py-filenames" "5 min/error" "use lower_alpha Python paths" ""
 
 check-flake8() {
   # flake8: ignore E203 which is not PEP8 compliant
@@ -212,13 +212,13 @@ check-flake8() {
   # https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
   $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501
 }
-check "$SKIP_FLAKE8" "ERROR" "flake8" "1 min/error" "fix Python errors" ""
+check "$SKIP_FLAKE8" "$ERROR_FLAKE8" "flake8" "1 min/error" "fix Python errors" ""
 
 check-bandit() {
   # Don't use git ls-files and then run bandit. Bandit ignores any `.bandit` files in such cases
   bandit -r . --format custom --severity-level ${BANDIT_SEVERITY:-all} --confidence-level ${BANDIT_CONFIDENCE:-all} --exclude="*/*test*/*,*/node_modules/*,*/venv*/*" --quiet 2>/dev/null
 }
-check "$SKIP_BANDIT" "ERROR" "bandit" "10 min/error" "fix Python security errors" ""
+check "$SKIP_BANDIT" "$ERROR_BANDIT" "bandit" "10 min/error" "fix Python security errors" ""
 
 # Set up ESLINT_OPTIONS
 # If user didn't skip default ESLINT checks, and there's no .eslintrc.*, eslint.config.js, or eslintConfig in package.json, use eslint from root
@@ -236,7 +236,7 @@ check-eslint() {
   $GIT ls-files | grep -E '\.(html|js|mjs)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" $ESLINT_OPTIONS --quiet --format unix 2>&1 | \
     grep -v "^[0-9]* problems"
 }
-check "$SKIP_ESLINT" "ERROR" "eslint" "10 sec/error" "fix JavaScript errors" "npx eslint --fix"
+check "$SKIP_ESLINT" "$ERROR_ESLINT" "eslint" "10 sec/error" "fix JavaScript errors" "npx eslint --fix"
 
 # Usage: run-local-eslint $PLUGIN $RULE $PATTERN
 run-local-eslint() {
@@ -259,7 +259,7 @@ run-local-eslint() {
 check-data-blocks() {
   run-local-eslint "no-data-blocks" "no-data-blocks/no-data-blocks: [error, 100]" "Error/no-data-blocks/no-data-blocks"
 }
-check "$SKIP_DATA_BLOCKS" "ERROR" "data-blocks" "5 min/error" "move large data to JSON" ""
+check "$SKIP_DATA_BLOCKS" "$ERROR_DATA_BLOCKS" "data-blocks" "5 min/error" "move large data to JSON" ""
 
 check-stylelint() {
   # stylelint prints "3 problems" at the end. Strip with "grep -v ..."
@@ -274,7 +274,7 @@ if [[ -z "$SKIP_STYLELINT" ]]; then
     cp "$SCRIPT_DIR/.stylelintrc.yml" .
     CREATED_STYLELINTRC=1
   fi
-  check "$SKIP_STYLELINT" "ERROR" "stylelint" "3 min/error" "fix CSS errors" ""
+  check "$SKIP_STYLELINT" "$ERROR_STYLELINT" "stylelint" "3 min/error" "fix CSS errors" ""
   if [[ -n "$CREATED_STYLELINTRC" ]]; then
     rm .stylelintrc.yml
   fi
@@ -290,7 +290,7 @@ if [[ -z "$SKIP_HTMLHINT" ]]; then
     cp "$SCRIPT_DIR/.htmlhintrc" .
     CREATED_HTMLHINTRC=1
   fi
-  check "$SKIP_HTMLHINT" "ERROR" "htmlhint" "5 min/error" "fix HTML errors" ""
+  check "$SKIP_HTMLHINT" "$ERROR_HTMLHINT" "htmlhint" "5 min/error" "fix HTML errors" ""
   if [[ -n "$CREATED_HTMLHINTRC" ]]; then
     rm .htmlhintrc
   fi
@@ -300,7 +300,7 @@ check-gitleaks() {
   # Limit checks to 10 commits for speed (if we have history)
   gitleaks detect --no-color --no-banner --verbose --log-opts="-n 10" 2>/dev/null
 }
-check "$SKIP_GITLEAKS" "ERROR" "gitleaks" "30 min/error" "don't commit secrets" ""
+check "$SKIP_GITLEAKS" "$ERROR_GITLEAKS" "gitleaks" "30 min/error" "don't commit secrets" ""
 
 # For warnings, use the venv-extra Python environment
 if [[ -f "${SCRIPT_DIR}/venv-extra/bin/activate" ]]; then
@@ -312,19 +312,19 @@ fi
 check-js-modules() {
   $GIT ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty node "$WIN_SCRIPT_DIR/scripts/jsmodules.js" 2>&1
 }
-check "$SKIP_JS_MODULES" "WARNING" "js-modules" "30 min/error" "use JavaScript modules" ""
+check "$SKIP_JS_MODULES" "$ERROR_JS_MODULES" "js-modules" "30 min/error" "use JavaScript modules" ""
 
 check-npm-audit() {
   npm audit --prefer-offline --progress=false --json | node "$WIN_SCRIPT_DIR/scripts/format-npm-audit.js"
 }
 if [[ -f "package-lock.json" ]]; then
-  check "$SKIP_NPM_AUDIT" "WARNING" "npm-audit" "15 min/error" "avoid unsafe npm packages" "npm audit fix"
+  check "$SKIP_NPM_AUDIT" "$ERROR_NPM_AUDIT" "npm-audit" "15 min/error" "avoid unsafe npm packages" "npm audit fix"
 fi
 
 check-flake8-extra() {
   $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501
 }
-check "$SKIP_FLAKE8_EXTRA" "WARNING" "flake8-extra" "5 min/error" "improve Python code" ""
+check "$SKIP_FLAKE8_EXTRA" "$ERROR_FLAKE8_EXTRA" "flake8-extra" "5 min/error" "improve Python code" ""
 
 check-complexity() {
   # Add the complexity rule ot default ESLINT_OPTIONS
@@ -339,37 +339,37 @@ check-complexity() {
     --max-complexity="${MAX_PY_COMPLEXITY:-10}" \
     --select=C901
 }
-check "$SKIP_COMPLEXITY" "WARNING" "complexity" "120 min/error" "review complex code" ""
+check "$SKIP_COMPLEXITY" "$ERROR_COMPLEXITY" "complexity" "120 min/error" "review complex code" ""
 
 check-url-templates() {
   run-local-eslint "no-url-params-template" "no-url-params-template/no-url-params-template: [error]" "Error/no-url-params-template/no-url-params-template"
 }
-check "$SKIP_URL_TEMPLATES" "WARNING" "url-templates" "5 min/error" "use URLSearchParams to construct URLs" ""
+check "$SKIP_URL_TEMPLATES" "$ERROR_URL_TEMPLATES" "url-templates" "5 min/error" "use URLSearchParams to construct URLs" ""
 
 check-pydoc() {
   $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty pydocstyle --select=D1
 }
-check "$SKIP_PYDOC" "WARNING" "pydoc" "15 min/error" "document Python code" ""
+check "$SKIP_PYDOC" "$ERROR_PYDOC" "pydoc" "15 min/error" "document Python code" ""
 
 check-absolute-urls() {
   $GIT ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty grep -e 'href\s*=\s*"/[^/]' -e 'src\s*=\s*"/[^/]'
 }
-check "$SKIP_ABSOLUTE_URLS" "WARNING" "absolute-urls" "10 min/error" "avoid absolute URLs" ""
+check "$SKIP_ABSOLUTE_URLS" "$ERROR_ABSOLUTE_URLS" "absolute-urls" "10 min/error" "avoid absolute URLs" ""
 
 check-folders() {
   $GIT ls-files | python "$WIN_SCRIPT_DIR/scripts/printfiles.py"
 }
-check "$SKIP_FOLDERS" "INFO" "folders" "0 min" "review folder structure and files" ""
+check "$SKIP_FOLDERS" "$ERROR_FOLDERS" "folders" "0 min" "review folder structure and files" ""
 
 check-css-size() {
   $GIT ls-files | grep -E '\.s?css$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty wc | sort -nrk 1
 }
-check "$SKIP_CSS_SIZE" "INFO" "css-size" "0 min" "review largest CSS code" ""
+check "$SKIP_CSS_SIZE" "$ERROR_CSS_SIZE" "css-size" "0 min" "review largest CSS code" ""
 
 check-code-size() {
   $GIT ls-files | grep -E '\.(py|js|mjs|ts|jsx|tsx|vue)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty wc | sort -nrk 1
 }
-check "$SKIP_CODE_SIZE" "INFO" "code-size" "0 min" "review largest PY/JS code" ""
+check "$SKIP_CODE_SIZE" "$ERROR_CODE_SIZE" "code-size" "0 min" "review largest PY/JS code" ""
 
 # If ANY of the ERRORS above failed, exit with an error message
 if [[ $EXIT_STATUS -ne 0 ]]; then

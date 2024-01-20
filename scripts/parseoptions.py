@@ -5,34 +5,35 @@ import argparse
 import sys
 
 
-checks = [
-    'lib',
-    'minified',
-    'lfs',
-    'useless',
-    'duplicate-files',
-    'duplicate-lines',
-    'prettier',
-    'black',
-    'py-filenames',
-    'flake8',
-    'bandit',
-    'eslint',
-    'stylelint',
-    'htmlhint',
-    'js-modules',
-    'npm-audit',
-    'gitleaks',
-    'flake8-extra',
-    'complexity',
-    'data-blocks',
-    'url-templates',
-    'pydoc',
-    'absolute-urls',
-    'folders',
-    'css-size',
-    'code-size',
-]
+types = {
+    "lib": "ERROR",
+    "minified": "ERROR",
+    "lfs": "ERROR",
+    "useless": "ERROR",
+    "duplicate-files": "ERROR",
+    "duplicate-lines": "ERROR",
+    "prettier": "ERROR",
+    "black": "ERROR",
+    "py-filenames": "ERROR",
+    "flake8": "ERROR",
+    "bandit": "ERROR",
+    "eslint": "ERROR",
+    "data-blocks": "ERROR",
+    "stylelint": "ERROR",
+    "htmlhint": "ERROR",
+    "gitleaks": "ERROR",
+    "js-modules": "WARNING",
+    "npm-audit": "WARNING",
+    "flake8-extra": "WARNING",
+    "complexity": "WARNING",
+    "url-templates": "WARNING",
+    "pydoc": "WARNING",
+    "absolute-urls": "WARNING",
+    "folders": "INFO",
+    "css-size": "INFO",
+    "code-size": "INFO",
+}
+checks = list(types)
 options = [
     'eslint-default',
 ]
@@ -42,22 +43,12 @@ def main():
     '''Parse command line options and print environment variables to set'''
     parser = argparse.ArgumentParser(prog='builderrors')
     parser.add_argument('target-dir', nargs='?', default='.', help='directory to run in (.)')
-    metavar = '{%s,...}' % ','.join(checks[:3])
+    kwargs = {'action': 'append', 'metavar': '{%s,...}' % ','.join(checks[:3])}
     group = parser.add_mutually_exclusive_group()
-    group.add_argument(
-        '--skip',
-        help="don't run specified check(s)",
-        choices=checks + options,
-        action='append',
-        metavar=metavar,
-    )
-    group.add_argument(
-        '--only',
-        help='run only specified checks(s)',
-        choices=checks,
-        action='append',
-        metavar=metavar,
-    )
+    group.add_argument('--skip', help="skip this check(s)", choices=checks + options, **kwargs)
+    group.add_argument('--only', help='run only this checks(s)', choices=checks, **kwargs)
+    parser.add_argument('--error', help="fail on this check(s)", choices=checks, **kwargs)
+    parser.add_argument('--warning', help="only warn on this check(s)", choices=checks, **kwargs)
     # Note: Though help mentions a default, DON'T add default=.
     # This overrides user's environment variables. Allow THOSE to be the default.
     parser.add_argument(
@@ -101,22 +92,27 @@ def main():
     parser.add_argument('--code-chars-error', metavar='N', help=argparse.SUPPRESS)
 
     args = vars(parser.parse_args(sys.argv[1:]))
-    envs = {'BUILDERROR_OPTIONS_PARSED=1'}
+    envs = {'BUILDERROR_OPTIONS_PARSED': '1'}
+    for check, type in types.items():
+        envs[f'ERROR_{check.upper().replace("-", "_")}'] = type
     for key, vals in args.items():
         if vals is None:
             continue
         if key == 'skip':
-            for arg in vals:
-                envs.add(f'SKIP_{arg.upper().replace("-", "_")}=1')
+            for check in vals:
+                envs[f'SKIP_{check.upper().replace("-", "_")}'] = '1'
         elif key == 'only':
             for check in checks:
                 if check not in vals:
-                    envs.add(f'SKIP_{check.upper().replace("-", "_")}=1')
+                    envs[f'SKIP_{check.upper().replace("-", "_")}'] = '1'
+        elif key in {'warning', 'error'}:
+            for check in vals:
+                envs[f'ERROR_{check.upper().replace("-", "_")}'] = key.upper()
         else:
-            envs.add(f'{key.upper().replace("-", "_")}={vals}')
+            envs[f'{key.upper().replace("-", "_")}'] = vals
 
-    for env in envs:
-        print(env)  # noqa: T201 This function exists to print the env vars
+    for key, val in envs.items():
+        print(f'{key}={val}')  # noqa: T201 This function exists to print the env vars
 
 
 if __name__ == '__main__':

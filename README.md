@@ -179,13 +179,47 @@ It **WON'T** check untracked or `.gitignore`d files.
 You can pass options as command-line parameters. For example:
 
 ```bash
-# Skip flake8. Report errors only if 100+ lines are duplicated
+# Report errors only if 100+ lines are duplicated or if Python code lines are over 120 chars
 docker run --rm -it -v $(pwd):/src gramener/builderrors \
-  builderrors --skip=flake8 --duplicate-lines=100000
+  builderrors --duplicate-lines=100000 --py-line-length=120
 
-# Skip Git LFS, eslint and stylelint
-bash /path/to/builderrors --skip=lfs --skip=eslint --skip=stylelint
+# Same check for local usage
+bash /path/to/builderrors --duplicate-lines=100000 --py-line-length=120
 ```
+
+### Skip checks
+
+To skip specific checks, use `--skip=`. For example, to skip Flake8 and ESLint, use:
+`--skip=flake8 --skip=eslint`.
+
+See [List of checks](#list-of-checks) for the full list of checks.
+
+You cannot use [`--only`](#run-only-specific-checks) along with `--skip`.
+
+### Run only specific checks
+
+To run only specific checks, use `--only=`. For example, to only run Flake8 and ESLint, use:
+`--only=flake8 --only=eslint`
+
+See [List of checks](#list-of-checks) for the full list of checks.
+
+You cannot use [`--skip`](#skip-checks) along with `--only`.
+
+### Convert to warnings
+
+To run specific checks as a warning (i.e. report it but don't fail the build), use `--warning=`.
+For example, to only warn on Flake8 and ESlint, use `--warning=flake8 --warning=eslint`
+
+See [List of checks](#list-of-checks) for the full list of checks and the default error/warning status.
+
+### Convert to errors
+
+To run specific checks as errors (i.e. fail the build if the check fails), use `--error=`.
+For example, to raise an error on NPM Audit and PyDoc, use `--error=npm-audit --error=pydoc`
+
+See [List of checks](#list-of-checks) for the full list of checks and the default error/warning status.
+
+### Environment variable options
 
 You can also pass options as environment variables. (Command line overrides environment variables.) For example:
 
@@ -202,35 +236,50 @@ SKIP_LFS=1 SKIP_ESLINT=1 SKIP_STYLELINT=1 bash /path/to/builderrors
 On Gitlab, set [environment variables](https://docs.gitlab.com/ce/ci/variables/)
 under Settings > CI / CD > Variables.
 
+### List of checks
+
+Here are list of [`--skip`](#skip-checks) options for checks:
+
+| Environment variable     | Command line             | Type    | Meaning                                  |
+| ------------------------ | ------------------------ | ------- | ---------------------------------------- |
+| `SKIP_LIB=1`             | `--skip=lib`             | ERROR   | Skip [libraries](#lib)                   |
+| `SKIP_MINIFIED=1`        | `--skip=minified`        | ERROR   | Skip [minified file](#minified)          |
+| `SKIP_LFS=1`             | `--skip=lfs`             | ERROR   | Skip [Git LFS](#lfs)                     |
+| `SKIP_PRETTIER=1`        | `--skip=prettier`        | ERROR   | Skip [Prettier](#prettier)               |
+| `SKIP_USELESS=1`         | `--skip=useless`         | ERROR   | Skip [useless files](#useless)           |
+| `SKIP_DUPLICATE_FILES=1` | `--skip=duplicate-files` | ERROR   | Skip [duplicate files](#duplicate-files) |
+| `SKIP_DUPLICATE_LINES=1` | `--skip=duplicate-lines` | ERROR   | Skip [duplicate lines](#duplicate-lines) |
+| `SKIP_PY_FILENAMES=1`    | `--skip=py-filenames`    | ERROR   | Skip [Python filename](#py-filenames)    |
+| `SKIP_BLACK=1`           | `--skip=black`           | ERROR   | Skip [Python Black](#black)              |
+| `SKIP_FLAKE8=1`          | `--skip=flake8`          | ERROR   | Skip [flake8](#flake8)                   |
+| `SKIP_BANDIT=1`          | `--skip=bandit`          | ERROR   | Skip [bandit](#bandit)                   |
+| `SKIP_ESLINT=1`          | `--skip=eslint`          | ERROR   | Skip [eslint](#eslint)                   |
+| `SKIP_STYLELINT=1`       | `--skip=stylelint`       | ERROR   | Skip [stylelint](#stylelint)             |
+| `SKIP_HTMLHINT=1`        | `--skip=htmlhint`        | ERROR   | Skip [htmlhint](#htmlhint)               |
+| `SKIP_NPM_AUDIT=1`       | `--skip=npm-audit`       | WARNING | Skip [npm audit](#npm-audit)             |
+| `SKIP_GITLEAKS=1`        | `--skip=gitleaks`        | WARNING | Skip [gitleaks](#gitleaks)               |
+| `SKIP_FLAKE8_EXTRA=1`    | `--skip=flake8-extra`    | WARNING | Skip [flake8 extra](#flake8-extra)       |
+| `SKIP_COMPLEXIY=1`       | `--skip=complexity`      | WARNING | Skip [complexity](#complexity)           |
+| `SKIP_DATA_BLOCKS=1`     | `--skip=data-blocks`     | WARNING | Skip [data-blocks](#data-blocks)         |
+| `SKIP_URL_TEMPLATES=1`   | `--skip=url-templates`   | WARNING | Skip [url-templates](#url-templates)     |
+| `SKIP_PYDOC=1`           | `--skip=pydoc`           | WARNING | Skip [pydoc](#pydoc)                     |
+| `SKIP_ABSOLUTE_URLS=1`   | `--skip=absolute-urls`   | WARNING | Skip [absolute URLs](#absolute-urls)     |
+| `SKIP_FOLDERS=1`         | `--skip=folders`         | INFO    | Skip [folders](#folders)                 |
+| `SKIP_CSS_SIZE=1`        | `--skip=css-size`        | INFO    | Skip [CSS size](#css-size)               |
+| `SKIP_CODE_SIZE=1`       | `--skip=code-size`       | INFO    | Skip [PY/JS size](#code-size)            |
+
+Replace `--skip=` or `SKIP_` with:
+
+- [`--only=` or `ONLY_` to run only specific checks](#run-only-specific-checks)
+- [`--warning=` or `WARN_` to convert to warnings](#convert-to-warnings)
+- [`--error=` or `ERROR_` to convert to errors](#convert-to-errors)
+
+Other options include:
+
 | Environment variable       | Command line               | Meaning                                                                               |
 | -------------------------- | -------------------------- | ------------------------------------------------------------------------------------- |
-| `SKIP_LIB=1`               | `--skip=lib`               | Skip [libraries](#lib) error                                                          |
-| `SKIP_MINIFIED=1`          | `--skip=minified`          | Skip [minified file](#minified) error                                                 |
-| `SKIP_LFS=1`               | `--skip=lfs`               | Skip [Git LFS](#lfs) error                                                            |
-| `SKIP_PRETTIER=1`          | `--skip=prettier`          | Skip [Prettier](#prettier) error                                                      |
-| `SKIP_USELESS=1`           | `--skip=useless`           | Skip [useless files](#useless) error                                                  |
-| `SKIP_DUPLICATE_FILES=1`   | `--skip=duplicate-files`   | Skip [duplicate files](#duplicate-files) error                                        |
-| `SKIP_DUPLICATE_LINES=1`   | `--skip=duplicate-lines`   | Skip [duplicate lines](#duplicate-lines) error                                        |
-| `SKIP_PY_FILENAMES=1`      | `--skip=py-filenames`      | Skip [Python filename](#py-filenames) error                                           |
-| `SKIP_BLACK=1`             | `--skip=black`             | Skip [Python Black](#black) error                                                     |
-| `SKIP_FLAKE8=1`            | `--skip=flake8`            | Skip [flake8](#flake8) error                                                          |
-| `SKIP_BANDIT=1`            | `--skip=bandit`            | Skip [bandit](#bandit) error                                                          |
-| `SKIP_ESLINT=1`            | `--skip=eslint`            | Skip [eslint](#eslint) error                                                          |
 | `SKIP_ESLINT_DEFAULT=1`    | `--skip=eslint-default`    | Don't copy `.eslintrc.yml` even if `.eslintrc.*` is missing                           |
-| `SKIP_STYLELINT=1`         | `--skip=stylelint`         | Skip [stylelint](#stylelint) error                                                    |
 | `SKIP_STYLELINT_DEFAULT=1` | `--skip=stylelint-default` | Don't copy `.stylelintrc.yml` even if `.stylelintrc.*` is missing                     |
-| `SKIP_HTMLHINT=1`          | `--skip=htmlhint`          | Skip [htmlhint](#htmlhint) error                                                      |
-| `SKIP_NPM_AUDIT=1`         | `--skip=npm-audit`         | Skip [npm audit](#npm-audit) warning                                                  |
-| `SKIP_GITLEAKS=1`          | `--skip=gitleaks`          | Skip [gitleaks](#gitleaks) warning                                                    |
-| `SKIP_FLAKE8_EXTRA=1`      | `--skip=flake8-extra`      | Skip [flake8 extra](#flake8-extra) warning                                            |
-| `SKIP_COMPLEXIY=1`         | `--skip=complexity`        | Skip [complexity](#complexity) warning                                                |
-| `SKIP_DATA_BLOCKS=1`       | `--skip=data-blocks`       | Skip [data-blocks](#data-blocks) warning                                              |
-| `SKIP_URL_TEMPLATES=1`     | `--skip=url-templates`     | Skip [url-templates](#url-templates) warning                                          |
-| `SKIP_PYDOC=1`             | `--skip=pydoc`             | Skip [pydoc](#pydoc) warning                                                          |
-| `SKIP_ABSOLUTE_URLS=1`     | `--skip=absolute-urls`     | Skip [absolute URLs](#absolute-urls) warning                                          |
-| `SKIP_FOLDERS=1`           | `--skip=folders`           | Skip [folders](#folders) info                                                         |
-| `SKIP_CSS_SIZE=1`          | `--skip=css-size`          | Skip [CSS size](#css-size) info                                                       |
-| `SKIP_CODE_SIZE=1`         | `--skip=code-size`         | Skip [PY/JS size](#code-size) info                                                    |
 | `LFS_SIZE=n`               | `--lfs-size=n`             | Files over `n` bytes should use Git LFS (default: 1,000,000)                          |
 | `DUPLICATE_FILESIZE=n`     | `--duplicate-filesize=n`   | Files over `n` bytes should not be duplicated (default: 100)                          |
 | `DUPLICATE_LINES=n`        | `--duplicate-lines=n`      | Duplicate code over `n` lines are not allowed (default: 25)                           |
@@ -239,13 +288,6 @@ under Settings > CI / CD > Variables.
 | `BANDIT_SEVERITY=low`      | `--bandit-severity=low`    | Show bandit errors with `low` or more severity. `medium`, `high`, `all` are allowed   |
 | `MAX_JS_COMPLEXITY=n`      | `--max-js-complexity=n`    | Report JS functions with `>n` cyclomatic complexity                                   |
 | `MAX_PY_COMPLEXITY=n`      | `--max-py-complexity=n`    | Report PY functions with `>n` cyclomatic complexity                                   |
-
-Instead of `--skip={check}` you can use `--only={check}`. This only runs the check(s) you specify. For example:
-
-```bash
-# Run only flake8 and eslint checks, nothing else
-bash /path/to/builderrors --only=flake8 --only=eslint
-```
 
 # How to fix errors
 

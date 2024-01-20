@@ -76,7 +76,7 @@ check black
 check python-filenames
 check flake8 --skip=black
 check bandit
-check eslint
+check eslint --error=js-modules --warn=prettier  # Test --error= and --warn= option
 check eslint-config --skip=npm-audit
 check eslint-package --skip=npm-audit
 check stylelint
