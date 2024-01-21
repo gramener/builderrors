@@ -1,17 +1,13 @@
 #!/usr/bin/env bash
 
-VERSION=2.15.0
+VERSION=2.15.1
 
 # Enable Gitlab collapsible sections from Gitlab 12.0 onwards
 # https://docs.gitlab.com/ee/ci/jobs/index.html#custom-collapsible-sections
-GITLAB_VERSION_REQUIRED=12
-if [[ $CI_SERVER_VERSION_MAJOR -ge $GITLAB_VERSION_REQUIRED ]]; then
-  SECTION_START="\e[0Ksection_start:${START_TIME}:${CODE}[collapsed=true]\r\e[0K"
-  SECTION_END="\e[0Ksection_end:${END_TIME}:${CODE}\r\e[0K"
-fi
+GITLAB_MIN_VERSION=12
 
 # If Gitlab is modern enough, or the terminal supports colors, define colors
-if [[ "$CI_SERVER_VERSION_MAJOR" -ge "$GITLAB_VERSION_REQUIRED" ]] || { [[ -t 1 ]] && { tput colors &> /dev/null && [ -n "$(tput colors)" ] && [ "$(tput colors)" -ge 8 ]; }; }; then
+if [[ "$CI_SERVER_VERSION_MAJOR" -ge "$GITLAB_MIN_VERSION" ]] || { [[ -t 1 ]] && { tput colors &> /dev/null && [ -n "$(tput colors)" ] && [ "$(tput colors)" -ge 8 ]; }; }; then
   RED="\033[31;1m"
   GREEN="\033[32;1m"
   BROWN="\033[33;1m"
@@ -79,6 +75,12 @@ check() {
     START_TIME="$(date +%s)"
     OUTPUT=$(check-$CODE)
     END_TIME="$(date +%s)"
+
+    # Enable collapsible sections for newer Gitlab versions
+    if [[ $CI_SERVER_VERSION_MAJOR -ge $GITLAB_MIN_VERSION ]]; then
+      SECTION_START="\e[0Ksection_start:${START_TIME}:${CODE}[collapsed=true]\r\e[0K"
+      SECTION_END="\e[0Ksection_end:${END_TIME}:${CODE}\r\e[0K"
+    fi
 
     # Print the output if there's an output unless it's an INFO outside a CI environment
     # TODO: Set BUILD_ENV based on CI environment
