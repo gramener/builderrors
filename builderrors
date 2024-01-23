@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=2.15.1
+VERSION=2.15.2
 
 # Enable Gitlab collapsible sections from Gitlab 12.0 onwards
 # https://docs.gitlab.com/ee/ci/jobs/index.html#custom-collapsible-sections
@@ -299,8 +299,8 @@ if [[ -z "$SKIP_HTMLHINT" ]]; then
 fi
 
 check-gitleaks() {
-  # Limit checks to 10 commits for speed (if we have history)
-  gitleaks detect --no-color --no-banner --verbose --log-opts="-n 10" 2>/dev/null
+  # -n 1 limits checks to latest commit
+  gitleaks detect --no-color --no-banner --verbose --log-opts="-n 1" 2>/dev/null
 }
 check "$SKIP_GITLEAKS" "$ERROR_GITLEAKS" "gitleaks" "30 min/error" "don't commit secrets" ""
 

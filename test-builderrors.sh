@@ -79,15 +79,15 @@ check bandit
 check eslint --error=js-modules --warn=prettier  # Test --error= and --warn= option
 check eslint-config --skip=npm-audit
 check eslint-package --skip=npm-audit
+check data-blocks --only=data-blocks  # Test --only= option
 check stylelint
 check htmlhint
+check gitleaks
 check flake8-extra --skip=bandit  # Test --skip=* flags and that build passes
 check complexity --skip=npm-audit
-check data-blocks --only=data-blocks  # Test --only= option
 check url-templates --only=url-templates  # Test --only= option
 check js-modules
 check npm-audit
-check gitleaks
 check absolute-urls --skip=gitleaks
 
 # Exit code 1 if ANY of the outputs had an error
