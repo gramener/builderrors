@@ -1,4 +1,4 @@
-flake8==5.0.4   # TODO 6.0 has backward-incompatible changes https://flake8.pycqa.org/en/latest/release-notes/index.html
-flake8-simplify==0.19.3
-flake8-eradicate==1.4.0
-pydocstyle==6.1.1
+flake8==7.0.0
+flake8-simplify==0.21.0
+flake8-eradicate==1.5.0
+pydocstyle==6.3.0

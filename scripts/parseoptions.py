@@ -37,6 +37,11 @@ checks = list(types)
 options = [
     'eslint-default',
 ]
+build_envs = {
+    'GITLAB_CI': 'gitlab-ci',
+    'GITHUB_ACTION': 'github-action',
+    'JENKINS_URL': 'jenkins-ci',
+}
 
 
 def main():
@@ -78,13 +83,7 @@ def main():
     parser.add_argument(
         '--build-env',
         choices=['gitlab-ci', 'github-actions', 'jenkins-ci'],
-        default='gitlab-ci'
-        if 'GITLAB_CI' in os.environ
-        else 'github-action'
-        if 'GITHUB_ACTION' in os.environ
-        else 'jenkins-ci'
-        if 'JENKINS_URL' in os.environ
-        else None,
+        default=next((build_envs[key] for key in build_envs if key in os.environ), None),
         help='build environment',
     )
     # Allow legacy arguments but ignore them
@@ -93,21 +92,22 @@ def main():
 
     args = vars(parser.parse_args(sys.argv[1:]))
     envs = {'BUILDERROR_OPTIONS_PARSED': '1'}
+
+    def set_env(prefix, value, vals):
+        for check in vals:
+            envs[f'{prefix}_{check.upper().replace("-", "_")}'] = value
+
     for check, type in types.items():
         envs[f'ERROR_{check.upper().replace("-", "_")}'] = type
     for key, vals in args.items():
         if vals is None:
             continue
-        if key == 'skip':
-            for check in vals:
-                envs[f'SKIP_{check.upper().replace("-", "_")}'] = '1'
+        elif key == 'skip':
+            set_env('SKIP', '1', vals)
         elif key == 'only':
-            for check in checks:
-                if check not in vals:
-                    envs[f'SKIP_{check.upper().replace("-", "_")}'] = '1'
+            set_env('SKIP', '1', [check for check in checks if check not in vals])
         elif key in {'warning', 'error'}:
-            for check in vals:
-                envs[f'ERROR_{check.upper().replace("-", "_")}'] = key.upper()
+            set_env('ERROR', key.upper(), vals)
         else:
             envs[f'{key.upper().replace("-", "_")}'] = vals
 

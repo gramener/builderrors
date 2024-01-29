@@ -4,22 +4,33 @@
 
 If you have more tests to suggest, please raise an [issue](https://github.com/gramener/builderrors/issues). Here are some we're considering:
 
-- [`commitlint`](https://commitlint.js.org/#/) for Conventional commits
-- [`pyright`](https://github.com/microsoft/pyright) or
-  [`mypy`](https://github.com/python/mypy) for Python static type checking
-- [`safety`](https://github.com/pyupio/safety) for Python security scanning
+- [`nbqa`](https://pypi.org/project/nbqa/) for Jupyter notebooks -- applying flake8 may be too restrictive. Strongly recommend fixing, but it's not a check
+- Python checks
+  - [`blacken-docs`](https://pypi.org/project/blacken-docs/) for Python docstrings
+  - [`pyupgrade`](https://pypi.org/project/pyupgrade/) for safe language-specific upgrades. Strongly recommend running, but it's not a check
+  - [`pyright`](https://github.com/microsoft/pyright) or
+    [`mypy`](https://github.com/python/mypy) for Python static type checking
+  - [`safety`](https://github.com/pyupio/safety) for Python security scanning
 - Flake8 plugins
   - [flake8-annotations](https://pypi.org/project/flake8-annotations) ⭐116
   - [flake8-type-checking](https://pypi.org/project/flake8-type-checking) ⭐105. Lets you avoid importing libraries JUST for type-checking
   - [flake8-cognitive-complexity](https://pypi.org/project/flake8-cognitive-complexity) ⭐54. More apt than McCabe complexity
   - [flake8-internal-name-import](https://pypi.org/project/flake8-internal-name-import) ⭐3. Check for imports that clash with internal names
-- ESLint plugins
+- [Python Typing](https://github.com/typeddjango/awesome-python-typing)
+  - [pyre-check](https://pypi.org/project/pyre-check/) ⭐6.6k type checker
+  - [MonkeyType](https://pypi.org/project/MonkeyType/) ⭐4.5k automatically adds type annotations
+- ESLint plugins / rules
+  - [eslint-plugin-etc/no-commented-out-code](https://github.com/cartant/eslint-plugin-etc/blob/main/docs/rules/no-commented-out-code.md)
+  - [eslint-plugin-no-jquery/no-ajax](https://github.com/wikimedia/eslint-plugin-no-jquery/blob/master/docs/rules/no-ajax.md): Avoid $.ajax / $.get / $.post. Use fetch instead.
+  - [eslint-plugin-promise/prefer-await-to-then](https://github.com/eslint-community/eslint-plugin-promise/blob/main/docs/rules/prefer-await-to-then.md)
+  - [no-var](https://eslint.org/docs/latest/rules/no-var): Avoid `var`. Use `let` or `const` instead
   - [@typescript-eslint/eslint-plugin](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin) ⭐12,400
   - [eslint-plugin-unicorn](https://github.com/sindresorhus/eslint-plugin-unicorn) ⭐2,800
   - [eslint-formatter-summary](https://github.com/mhipszki/eslint-formatter-summary) ⭐37
 - [`codeclimate-duplication`](https://github.com/codeclimate/codeclimate-duplication) for fuzzy duplication
 - [`curlylint`](https://github.com/thibaudcolas/curlylint) or
   [`djlint`](https://github.com/Riverside-Healthcare/djLint) for HTML templates
+- [`commitlint`](https://commitlint.js.org/#/) for Conventional commits
 - [`markdownlint`](https://www.npmjs.com/package/markdownlint). But Prettier does most of this
 - [`yamllint`](https://yamllint.readthedocs.io/). But Prettier handles most of this, except `empty-values`, `key-duplicates`
 - [`sqlfluff`](https://github.com/sqlfluff/sqlfluff) for SQL
@@ -84,6 +95,7 @@ Here are some we don't plan to add:
   - [flake8-datetime-utcnow-plugin](https://pypi.org/project/flake8-datetime-utcnow-plugin) ⭐1. Error message is unclear. Very minor impact
   - [flake8-github](https://pypi.org/project/flake8-github) ⭐1. Format for Github. We want to generate our own cross-CI format
 - [`synt`](https://github.com/brentlintner/synt) uses [esprima](https://www.npmjs.com/package/esprima) which doesn't parse [`?.`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) and other modern JS features
+- [escomplex](https://github.com/escomplex/escomplex) ⭐257 and [typhonjs-escomplex](https://github.com/typhonjs-node-escomplex/typhonjs-escomplex) ⭐106. Unmaintained
 
 ## Release
 

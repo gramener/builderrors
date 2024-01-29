@@ -55,17 +55,34 @@ HELP https://github.com/gramener/builderrors/#flake8
 WARNING (flake8-extra) improve Python code.
 HELP https://github.com/gramener/builderrors/#flake8-extra
 
+    file1.py:58:22: B006 Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
+    file1.py:58:31: B006 Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
+    file1.py:176:23: B006 Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
+    file1.py:176:32: B006 Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
+    file1.py:294:23: B006 Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
+    file1.py:294:32: B006 Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
+    file2.py:10:22: B006 Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
+    file2.py:10:31: B006 Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
+    file2.py:176:23: B006 Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
+    file2.py:176:32: B006 Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
+    file2.py:294:23: B006 Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
+    file2.py:294:32: B006 Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them.
     file3.py:59:1: SIM120 Use 'class HTTPClient:' instead of 'class HTTPClient(object):'
     file3.py:297:13: SIM102 Use a single if-statement instead of nested if-statements
     file3.py:336:1: SIM120 Use 'class HTTPRequest:' instead of 'class HTTPRequest(object):'
+    file3.py:344:17: C408 Unnecessary dict call - rewrite as a literal.
     file3.py:567:1: SIM120 Use 'class HTTPResponse:' instead of 'class HTTPResponse(object):'
     file3.py:725:1: SIM120 Use 'class _RequestProxy:' instead of 'class _RequestProxy(object):'
+    file3.py:742:20: SIM910 Use 'self.defaults.get(name)' instead of 'self.defaults.get(name, None)'
+    file4.py:164:27: C408 Unnecessary dict call - rewrite as a literal.
     file4.py:799:9: SIM105 Use 'contextlib.suppress(OSError)'
     file4.py:808:1: SIM120 Use 'class _Timeout:' instead of 'class _Timeout(object):'
     file4.py:837:1: SIM120 Use 'class PeriodicCallback:' instead of 'class PeriodicCallback(object):'
+    file5.py:164:27: C408 Unnecessary dict call - rewrite as a literal.
     file5.py:799:9: SIM105 Use 'contextlib.suppress(OSError)'
     file5.py:808:1: SIM120 Use 'class _Timeout:' instead of 'class _Timeout(object):'
     file5.py:837:1: SIM120 Use 'class PeriodicCallback:' instead of 'class PeriodicCallback(object):'
+    file6.py:164:27: C408 Unnecessary dict call - rewrite as a literal.
     file6.py:799:9: SIM105 Use 'contextlib.suppress(OSError)'
     file6.py:808:1: SIM120 Use 'class _Timeout:' instead of 'class _Timeout(object):'
     file6.py:837:1: SIM120 Use 'class PeriodicCallback:' instead of 'class PeriodicCallback(object):'

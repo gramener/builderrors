@@ -10,7 +10,7 @@ HELP https://github.com/gramener/builderrors/#duplicate-files
 
 ERROR (prettier) auto-format JS/CSS with Prettier. 2 min
 HELP https://github.com/gramener/builderrors/#prettier
-To fix, run: npx prettier@3 --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"
+To fix, run: npx prettier@3.2 --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"
 
     conf1.yaml
     conf2.yaml
@@ -30,9 +30,9 @@ HELP https://github.com/gramener/builderrors/#py-filenames
 ERROR (flake8) fix Python errors. 4 min
 HELP https://github.com/gramener/builderrors/#flake8
 
-    file 1.py:1:1: B015 Result of comparison is not used. This line doesn't doanything. Did you intend to prepend it with assert?
+    file 1.py:1:1: B015 Result of comparison is not used. This line doesn't do anything. Did you intend to prepend it with assert?
     file 1.py:1:2: E221 multiple spaces before operator
-    file 2.py:1:1: B015 Result of comparison is not used. This line doesn't doanything. Did you intend to prepend it with assert?
+    file 2.py:1:1: B015 Result of comparison is not used. This line doesn't do anything. Did you intend to prepend it with assert?
     file 2.py:1:2: E221 multiple spaces before operator
 
 

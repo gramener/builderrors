@@ -1,4 +1,5 @@
 '''Given git ls-files output, print a tree-like structure of the files and folders'''
+
 import fileinput
 
 prev_parts = []

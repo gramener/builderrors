@@ -34,19 +34,23 @@ HELP https://github.com/gramener/builderrors/#flake8-extra
     complexity.py:269:1: E800 Found commented out code
     complexity.py:276:1: E800 Found commented out code
     complexity.py:363:13: SIM113 Use enumerate for 'count'
+    complexity.py:401:16: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
     complexity.py:411:1: E800 Found commented out code
     complexity.py:415:5: E303 too many blank lines (2)
     complexity.py:428:9: F841 local variable 'row_count_17' is assigned to but never used
     complexity.py:446:17: SIM113 Use enumerate for 'count'
+    complexity.py:485:20: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
     complexity.py:570:7: E275 missing whitespace after keyword
     complexity.py:594:13: F841 local variable 'str1_17' is assigned to but never used
     complexity.py:595:13: F841 local variable 'str2_17' is assigned to but never used
     complexity.py:607:15: E275 missing whitespace after keyword
     complexity.py:675:13: SIM113 Use enumerate for 'count'
+    complexity.py:714:16: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
     complexity.py:731:1: E800 Found commented out code
     complexity.py:738:1: E800 Found commented out code
     complexity.py:740:1: E800 Found commented out code
     complexity.py:757:17: SIM113 Use enumerate for 'count'
+    complexity.py:796:20: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
     complexity.py:875:13: SIM113 Use enumerate for 'count'
     complexity.py:922:1: E800 Found commented out code
     complexity.py:927:1: E800 Found commented out code

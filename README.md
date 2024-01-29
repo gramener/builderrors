@@ -52,7 +52,7 @@ validate:
 If you used `gramex init` from [gramex](https://github.com/gramener/gramex) before version 1.84, change the following:
 
 - Delete `.editorconfig`, `.htmllintrc` and `.stylelintrc.*`
-- Copy this [`.eslintrc.yml`](.eslintrc.yml) and run `npm install --save-dev eslint eslint-plugin-html eslint-plugin-template`
+- Copy this [`.eslintrc.yml`](.eslintrc.yml ":ignore") and run `npm install --save-dev eslint eslint-plugin-html eslint-plugin-template`
 - If you have a `.flake8` or [equivalent](https://flake8.pycqa.org/en/latest/user/configuration.html), add `extend-ignore=E203,E501`
 
 ## Github Actions usage
@@ -291,7 +291,7 @@ Other options include:
 
 # How to fix errors
 
-[`builderrors`](builderrors) reports these errors:
+[`builderrors`](builderrors ":ignore") reports these errors:
 
 ## `lib`
 
@@ -406,7 +406,7 @@ to auto-format your code.
 - Unibeautify supports templates: https://github.com/unibeautify/unibeautify
 -->
 
-- To auto-fix, run `npx prettier@3 --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"`
+- To auto-fix, run `npx prettier@3.2 --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"`
 - To ignore specific files, add a [`.prettierignore`](https://prettier.io/docs/en/ignore.html) file (e.g. add `*.html`)
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`.prettierrc`](https://prettier.io/docs/en/configuration.html) file
 - To skip this check, use `builderrors --skip=prettier` (e.g. if you temporarily need the build to pass)
@@ -510,7 +510,7 @@ ERROR (eslint) fix JavaScript errors. 30 sec/error
 
 - To auto-fix, run `npx eslint --fix`
 - To ignore a specific line, add a [`// eslint-disable-line`](https://eslint.org/docs/latest/user-guide/configuring/rules#disabling-rules) at the end
-- To ignore specific rules, add a [`.eslintrc.yml`](http://eslint.org/docs/rules/) based on the [default](.eslintrc.yml)
+- To ignore specific rules, add a [`.eslintrc.yml`](http://eslint.org/docs/rules/) based on the [default](.eslintrc.yml ":ignore")
 - To skip this check, use `builderrors --skip=eslint` (e.g. if you temporarily need the build to pass)
 
 Common errors:
@@ -543,7 +543,7 @@ ERROR (stylelint) fix CSS errors. 3 min/error
 
 - Re-write the code based on advice from stylelint
 - To ignore a specific line, add a [`/* stylelint-disable-line */`](https://stylelint.io/user-guide/ignore-code) at the end
-- To ignore specific rules, add a [`.stylelintrc.yml`](https://stylelint.io/user-guide/configure) file based on the [default](.stylelintrc.yml). For example:
+- To ignore specific rules, add a [`.stylelintrc.yml`](https://stylelint.io/user-guide/configure) file based on the [default](.stylelintrc.yml ":ignore"). For example:
   - `"selector-no-unknown": null` allows styling custom web components
 - To skip this check, use `builderrors --skip=stylelint` (e.g. if you're using third-party provided CSS)
 
@@ -556,7 +556,7 @@ ERROR (htmlhint) fix HTML errors. 5 min/error
 [htmlhint](https://htmlhint.com/) checks HTML and reports errors.
 
 - Re-write the code based on advice from htmlhint
-- To ignore specific rules, add a [`.htmlhintrc`](https://htmlhint.com/docs/user-guide/getting-started) file based on the [default](.htmlhintrc)
+- To ignore specific rules, add a [`.htmlhintrc`](https://htmlhint.com/docs/user-guide/getting-started) file based on the [default](.htmlhintrc ":ignore")
 - To skip this check, use `builderrors --skip=htmlhint` (e.g. if you're building a Lodash template library)
 
 ## `gitleaks`

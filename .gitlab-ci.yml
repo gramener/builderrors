@@ -9,3 +9,6 @@ deploy:
     SERVER: gramener.com
     URL: builderrors
     VERSION: static
+  environment:
+    name: production
+    url: https://gramener.com/builderrors/
