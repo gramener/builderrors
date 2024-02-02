@@ -111,7 +111,7 @@ Here are some we don't plan to add:
 4. Build and push Docker container
 
    ```bash
-   export VERSION=2.x.x
+   export VERSION=3.x.x
    docker pull nikolaik/python-nodejs:python3.10-nodejs18-bullseye
    docker build --tag gramener/builderrors:$VERSION --tag gramener/builderrors:latest .
    docker run --rm -v `pwd`:/src gramener/builderrors:latest
@@ -123,7 +123,7 @@ Here are some we don't plan to add:
 5. Commit and push git repo
 
    ```bash
-   export VERSION=2.x.x
+   export VERSION=3.x.x
    git commit . -m"DOC: Release $VERSION"
    git tag v$VERSION
    git push --follow-tags
