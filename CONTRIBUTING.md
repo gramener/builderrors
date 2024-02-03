@@ -4,6 +4,8 @@
 
 If you have more tests to suggest, please raise an [issue](https://github.com/gramener/builderrors/issues). Here are some we're considering:
 
+- Code approximate similarity
+- Git branching structure
 - [`nbqa`](https://pypi.org/project/nbqa/) for Jupyter notebooks -- applying flake8 may be too restrictive. Strongly recommend fixing, but it's not a check
 - Python checks
   - [`blacken-docs`](https://pypi.org/project/blacken-docs/) for Python docstrings
@@ -27,6 +29,36 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
   - [@typescript-eslint/eslint-plugin](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin) ⭐12,400
   - [eslint-plugin-unicorn](https://github.com/sindresorhus/eslint-plugin-unicorn) ⭐2,800
   - [eslint-formatter-summary](https://github.com/mhipszki/eslint-formatter-summary) ⭐37
+- ESLint rules to evaluate
+  - `array-callback-return`
+  - `default-param-last`
+  - `no-array-constructor`
+  - `no-constant-binary-expression`
+  - `no-duplicate-imports`
+  - `no-invalid-this`
+  - `no-lone-blocks`
+  - `no-lonely-if`
+  - `no-return-assign`
+  - `no-self-compare`
+  - `no-sequences`
+  - `no-template-curly-in-string`
+  - `no-unmodified-loop-condition`
+  - `no-unneeded-ternary`
+  - `no-unreachable-loop`
+  - `no-unused-expressions`
+  - `no-use-before-define`
+  - `no-useless-call`
+  - `no-useless-return`
+  - `no-var`
+  - `prefer-const`
+  - `prefer-destructuring`
+  - `prefer-exponentiation-operator`
+  - `prefer-numeric-literals`
+  - `prefer-object-has-own`
+  - `prefer-object-spread`
+  - `prefer-rest-params`
+  - `prefer-spread`
+  - `prefer-template`
 - [`codeclimate-duplication`](https://github.com/codeclimate/codeclimate-duplication) for fuzzy duplication
 - [`curlylint`](https://github.com/thibaudcolas/curlylint) or
   [`djlint`](https://github.com/Riverside-Healthcare/djLint) for HTML templates

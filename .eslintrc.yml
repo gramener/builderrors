@@ -12,6 +12,6 @@ env:
 plugins: [html, template]
 # Use eslint recommended rules by default
 extends: eslint:recommended
-# Issue a warning when JS functions are too complex
 rules:
+  # Issue a warning when JS functions are too complex
   complexity: ["warn", { max: 10 }]

@@ -406,7 +406,7 @@ to auto-format your code.
 - Unibeautify supports templates: https://github.com/unibeautify/unibeautify
 -->
 
-- To auto-fix, run `npx prettier@3.2 --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yaml,md}"`
+- To auto-fix, run `npx prettier@3.2 --write "**/*.{js,mjs,ts,jsx,tsx,vue,css,scss,sass,yml,yaml,md}"`
 - To ignore specific files, add a [`.prettierignore`](https://prettier.io/docs/en/ignore.html) file (e.g. add `*.html`)
 - To ignore [specific rules](https://prettier.io/docs/en/options.html), add a [`.prettierrc`](https://prettier.io/docs/en/configuration.html) file
 - To skip this check, use `builderrors --skip=prettier` (e.g. if you temporarily need the build to pass)
