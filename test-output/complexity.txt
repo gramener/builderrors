@@ -11,6 +11,17 @@ HELP https://github.com/gramener/builderrors/#complexity
     complex-module.js:1:8: Function 'alpha' has a complexity of 11. Maximum allowed is 10. [Error/complexity]
     complex-script.js:2:1: Function 'alpha' has a complexity of 11. Maximum allowed is 10. [Error/complexity]
     index.html:12:5: Function 'beta' has a complexity of 11. Maximum allowed is 10. [Error/complexity]
+    complex.py:6:5: C901 `get_data` is too complex (8 > 5)
+    complex.py:56:5: C901 `filter_values` is too complex (8 > 5)
+    Found 2 errors.
+
+
+WARNING (pydoc) document Python code.
+HELP https://github.com/gramener/builderrors/#pydoc
+
+    complex.py:1:1: D100 Missing docstring in public module
+    complex.py:6:5: D103 Missing docstring in public function
+    Found 2 errors.
 
 
 INFO (folders) review folder structure and files.
@@ -20,6 +31,7 @@ HELP https://github.com/gramener/builderrors/#folders
     .gitignore
     complex-module.js
     complex-script.js
+    complex.py
     index.html
     package-lock.json
     package.json
@@ -28,7 +40,8 @@ HELP https://github.com/gramener/builderrors/#folders
 INFO (code-size) review largest PY/JS code.
 HELP https://github.com/gramener/builderrors/#code-size
 
-     29 165 764 total
+     129  390 4400 total
+     100  225 3636 complex.py
      15  84 389 complex-script.js
      14  81 375 complex-module.js
 

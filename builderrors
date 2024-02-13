@@ -27,7 +27,7 @@ SCRIPT_DIR=`dirname "$(realpath "$0")"`
 # Set the directory where node modules are installed
 NODE_DIR="$SCRIPT_DIR/node_modules/.bin"
 
-# stylelint can't process Cygwin paths. Convert to Windows path if required
+# stylelint, ruff can't process Cygwin paths. Convert to Windows path if required
 CYGPATH="$(which cygpath)"
 WIN_SCRIPT_DIR="$SCRIPT_DIR"
 if [ -x "$CYGPATH" ] ; then
@@ -207,18 +207,31 @@ check-py-filenames() {
 }
 check "$SKIP_PY_FILENAMES" "$ERROR_PY_FILENAMES" "py-filenames" "5 min/error" "use lower_alpha Python paths" ""
 
+# If there's no ruff.toml or [tool.ruff] in pyproject.toml, use default options
+if ! compgen -G ".ruff.toml" > /dev/null && ! compgen -G "ruff.toml" > /dev/null && ! grep -F -q '[tool.ruff' pyproject.toml 2>/dev/null ; then
+  # When using default config, resolve plugins relative to builderrors
+  # Select
+  #   E     # pycodestyle
+  #   W     # pycodestyle
+  #   F     # pyflakes
+  #   YTT   # flake8-2020
+  #   B     # flake8-bugbear
+  #   C4    # flake8-comprehensions
+  #   T10   # flake8-debugger
+  #   T20   # flake8-print
+  #   N     # pep8-naming
+  # Ignore
+  #   E203  # Whitespace before ':' is not PEP8 compliant. https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#slices
+  #   E501  # Line too long is handled by black. https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
+  RUFF_OPTIONS="--extend-select E,W,F,YTT,B,C4,T10,T20,N  --ignore E203,E501"
+fi
 check-flake8() {
-  # flake8: ignore E203 which is not PEP8 compliant
-  # https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#slices
-  # flake8: ignore E501 which black handles
-  # https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
-  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501
+  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty ruff check $RUFF_OPTIONS
 }
 check "$SKIP_FLAKE8" "$ERROR_FLAKE8" "flake8" "1 min/error" "fix Python errors" ""
 
 check-bandit() {
-  # Don't use git ls-files and then run bandit. Bandit ignores any `.bandit` files in such cases
-  bandit -r . --format custom --severity-level ${BANDIT_SEVERITY:-all} --confidence-level ${BANDIT_CONFIDENCE:-all} --exclude="*/*test*/*,*/node_modules/*,*/venv*/*" --quiet 2>/dev/null
+  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty ruff check --select "S"
 }
 check "$SKIP_BANDIT" "$ERROR_BANDIT" "bandit" "10 min/error" "fix Python security errors" ""
 
@@ -304,13 +317,6 @@ check-gitleaks() {
 }
 check "$SKIP_GITLEAKS" "$ERROR_GITLEAKS" "gitleaks" "30 min/error" "don't commit secrets" ""
 
-# For warnings, use the venv-extra Python environment
-if [[ -f "${SCRIPT_DIR}/venv-extra/bin/activate" ]]; then
-  source "${SCRIPT_DIR}/venv-extra/bin/activate"
-elif [[ -f "${SCRIPT_DIR}/venv-extra/Scripts/activate" ]]; then
-  source "${SCRIPT_DIR}/venv-extra/Scripts/activate"
-fi
-
 check-js-modules() {
   $GIT ls-files | grep '\.html$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty node "$WIN_SCRIPT_DIR/scripts/jsmodules.js" 2>&1
 }
@@ -324,22 +330,20 @@ if [[ -f "package-lock.json" ]]; then
 fi
 
 check-flake8-extra() {
-  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 --extend-ignore=E203,E501
+  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty ruff check --select "BLE,ERA,SIM"
 }
 check "$SKIP_FLAKE8_EXTRA" "$ERROR_FLAKE8_EXTRA" "flake8-extra" "5 min/error" "improve Python code" ""
 
 check-complexity() {
-  # Add the complexity rule ot default ESLINT_OPTIONS
+  # Add the complexity rule to default ESLINT_OPTIONS
   $GIT ls-files | grep -E '\.(html|js|mjs)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" \
     $ESLINT_OPTIONS \
     --rule "complexity: [error, {max: ${MAX_JS_COMPLEXITY:-10}}]" \
     --quiet --format unix 2>&1 | \
     grep "Error/complexity"
-  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty flake8 \
-    --isolated \
-    --ignore=A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z \
-    --max-complexity="${MAX_PY_COMPLEXITY:-10}" \
-    --select=C901
+  printf "[lint.mccabe]\nmax-complexity = ${MAX_PY_COMPLEXITY:-10}\n" > .ruff-complexity.toml
+  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty ruff check --config ".ruff-complexity.toml" --select C90
+  rm .ruff-complexity.toml
 }
 check "$SKIP_COMPLEXITY" "$ERROR_COMPLEXITY" "complexity" "120 min/error" "review complex code" ""
 
@@ -349,7 +353,7 @@ check-url-templates() {
 check "$SKIP_URL_TEMPLATES" "$ERROR_URL_TEMPLATES" "url-templates" "5 min/error" "use URLSearchParams to construct URLs" ""
 
 check-pydoc() {
-  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty pydocstyle --select=D1
+  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty ruff check --select="D1"
 }
 check "$SKIP_PYDOC" "$ERROR_PYDOC" "pydoc" "15 min/error" "document Python code" ""
 

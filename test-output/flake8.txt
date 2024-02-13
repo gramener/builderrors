@@ -1,93 +1,75 @@
 
-ERROR (flake8) fix Python errors. 21 min
+ERROR (flake8) fix Python errors. 16 min
 HELP https://github.com/gramener/builderrors/#flake8
 
-    complexity.py:17:37: E128 continuation line under-indented for visual indent
-    complexity.py:21:21: E128 continuation line under-indented for visual indent
-    complexity.py:123:6: N802 function name 'yearChanged' should be lowercase
-    complexity.py:401:16: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
-    complexity.py:415:5: E303 too many blank lines (2)
-    complexity.py:428:9: F841 local variable 'row_count_17' is assigned to but never used
-    complexity.py:485:20: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
-    complexity.py:570:7: E275 missing whitespace after keyword
-    complexity.py:594:13: F841 local variable 'str1_17' is assigned to but never used
-    complexity.py:595:13: F841 local variable 'str2_17' is assigned to but never used
-    complexity.py:607:15: E275 missing whitespace after keyword
-    complexity.py:714:16: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
-    complexity.py:796:20: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
-    complexity.py:988:27: E225 missing whitespace around operator
-    debugger.py:1:1: T100 import for pdb found
-    debugger.py:2:1: T100 trace found: pdb.set_trace used
-    debugger.py:2:16: W292 no newline at end of file
-    error.py:1:1: F401 'pathlib' imported but unused
-    error.py:2:1: F401 'nonexistent' imported but unused
-    error.py:6:1: E303 too many blank lines (3)
-    error.py:6:5: F821 undefined name 'math'
+    complexity.py:123:5: N802 Function name `yearChanged` should be lowercase
+    complexity.py:401:16: B007 Loop control variable `v` not used within loop body
+    complexity.py:428:9: F841 Local variable `row_count_17` is assigned to but never used
+    complexity.py:485:20: B007 Loop control variable `v` not used within loop body
+    complexity.py:594:13: F841 Local variable `str1_17` is assigned to but never used
+    complexity.py:595:13: F841 Local variable `str2_17` is assigned to but never used
+    complexity.py:714:16: B007 Loop control variable `v` not used within loop body
+    complexity.py:796:20: B007 Loop control variable `v` not used within loop body
+    debugger.py:1:1: T100 Import for `pdb` found
+    debugger.py:2:1: T100 Trace found: `pdb.set_trace` used
+    debugger.py:2:16: W292 [*] No newline at end of file
+    error.py:1:8: F401 [*] `pathlib` imported but unused
+    error.py:2:8: F401 [*] `nonexistent` imported but unused
+    error.py:6:5: F821 Undefined name `math`
+    Found 14 errors.
+    [*] 3 fixable with the `--fix` option (3 hidden fixes can be enabled with the `--unsafe-fixes` option).
 
 
 WARNING (flake8-extra) improve Python code.
 HELP https://github.com/gramener/builderrors/#flake8-extra
 
-    complexity.py:17:37: E128 continuation line under-indented for visual indent
-    complexity.py:21:21: E128 continuation line under-indented for visual indent
-    complexity.py:131:9: SIM909 Remove reflexive assignment 'data_17 = data_17'
-    complexity.py:269:1: E800 Found commented out code
-    complexity.py:276:1: E800 Found commented out code
-    complexity.py:363:13: SIM113 Use enumerate for 'count'
-    complexity.py:401:16: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
-    complexity.py:411:1: E800 Found commented out code
-    complexity.py:415:5: E303 too many blank lines (2)
-    complexity.py:428:9: F841 local variable 'row_count_17' is assigned to but never used
-    complexity.py:446:17: SIM113 Use enumerate for 'count'
-    complexity.py:485:20: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
-    complexity.py:570:7: E275 missing whitespace after keyword
-    complexity.py:594:13: F841 local variable 'str1_17' is assigned to but never used
-    complexity.py:595:13: F841 local variable 'str2_17' is assigned to but never used
-    complexity.py:607:15: E275 missing whitespace after keyword
-    complexity.py:675:13: SIM113 Use enumerate for 'count'
-    complexity.py:714:16: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
-    complexity.py:731:1: E800 Found commented out code
-    complexity.py:738:1: E800 Found commented out code
-    complexity.py:740:1: E800 Found commented out code
-    complexity.py:757:17: SIM113 Use enumerate for 'count'
-    complexity.py:796:20: B007 Loop control variable 'v' not used within the loop body. If this is intended, start the name with an underscore.
-    complexity.py:875:13: SIM113 Use enumerate for 'count'
-    complexity.py:922:1: E800 Found commented out code
-    complexity.py:927:1: E800 Found commented out code
-    complexity.py:929:1: E800 Found commented out code
-    complexity.py:945:17: SIM113 Use enumerate for 'count'
-    complexity.py:988:27: E225 missing whitespace around operator
-    complexity.py:1051:5: SIM401 Use 'final_["Don't know"] = final_.get("Don&#39;t know", [0, 0])' instead of an if-block
-    complexity.py:1096:5: SIM909 Remove reflexive assignment 'original_data = original_data'
-    debugger.py:2:16: W292 no newline at end of file
-    error.py:1:1: F401 'pathlib' imported but unused
-    error.py:2:1: F401 'nonexistent' imported but unused
-    error.py:6:1: E303 too many blank lines (3)
-    error.py:6:5: F821 undefined name 'math'
+    complexity.py:269:5: ERA001 Found commented-out code
+    complexity.py:276:9: ERA001 Found commented-out code
+    complexity.py:277:5: SIM108 Use ternary operator `avg = add[0] / add[1] if add[1] != 0.0 else 0` instead of `if`-`else`-block
+    complexity.py:380:5: SIM108 Use ternary operator `total_avg = round(total_avg / length, 2) if length != 0 else 0` instead of `if`-`else`-block
+    complexity.py:411:9: ERA001 Found commented-out code
+    complexity.py:464:9: SIM108 Use ternary operator `total_avg_17 = round(total_avg_17 / length, 2) if length != 0 else 0` instead of `if`-`else`-block
+    complexity.py:606:13: SIM118 Use `key in dict` instead of `key in dict.keys()`
+    complexity.py:692:5: SIM108 Use ternary operator `total_avg = round(total_avg / length, 2) if length != 0 else 0` instead of `if`-`else`-block
+    complexity.py:731:9: ERA001 Found commented-out code
+    complexity.py:738:9: ERA001 Found commented-out code
+    complexity.py:740:9: ERA001 Found commented-out code
+    complexity.py:774:9: SIM108 Use ternary operator `total_avg_17 = round(total_avg_17 / length, 2) if length != 0 else 0` instead of `if`-`else`-block
+    complexity.py:892:5: SIM108 Use ternary operator `total_avg = round(total_avg / length, 2) if length != 0 else 0` instead of `if`-`else`-block
+    complexity.py:922:9: ERA001 Found commented-out code
+    complexity.py:927:9: ERA001 Found commented-out code
+    complexity.py:929:9: ERA001 Found commented-out code
+    complexity.py:962:9: SIM108 Use ternary operator `total_avg_17 = round(total_avg_17 / length, 2) if length != 0 else 0` instead of `if`-`else`-block
+    complexity.py:1034:8: SIM118 Use `key not in dict` instead of `key not in dict.keys()`
+    complexity.py:1036:8: SIM118 Use `key not in dict` instead of `key not in dict.keys()`
+    complexity.py:1038:8: SIM118 Use `key not in dict` instead of `key not in dict.keys()`
+    complexity.py:1051:5: SIM401 Use `final_["Don't know"] = final_.get('Don&#39;t know', [0, 0])` instead of an `if` block
+    complexity.py:1065:8: SIM118 Use `key not in dict` instead of `key not in dict.keys()`
+    complexity.py:1067:8: SIM118 Use `key not in dict` instead of `key not in dict.keys()`
+    complexity.py:1069:8: SIM118 Use `key not in dict` instead of `key not in dict.keys()`
+    Found 24 errors.
+    No fixes available (15 hidden fixes can be enabled with the `--unsafe-fixes` option).
 
 
 WARNING (complexity) review complex code.
 HELP https://github.com/gramener/builderrors/#complexity
 
-    complexity.py:330:1: C901 'everyday_it_rate' is too complex (45)
-    complexity.py:534:1: C901 'security_rate' is too complex (18)
-    complexity.py:645:1: C901 'application_rate' is too complex (45)
-    complexity.py:846:1: C901 'network_rate' is too complex (37)
+    complexity.py:330:5: C901 `everyday_it_rate` is too complex (45 > 10)
+    complexity.py:534:5: C901 `security_rate` is too complex (18 > 10)
+    complexity.py:645:5: C901 `application_rate` is too complex (45 > 10)
+    complexity.py:846:5: C901 `network_rate` is too complex (37 > 10)
+    Found 4 errors.
 
 
 WARNING (pydoc) document Python code.
 HELP https://github.com/gramener/builderrors/#pydoc
 
-    complexity.py:123 in public function `yearChanged`:
-            D103: Missing docstring in public function
-    complexity.py:136 in public function `get_data`:
-            D103: Missing docstring in public function
-    complexity.py:1060 in public function `network_distribution_rate`:
-            D103: Missing docstring in public function
-    debugger.py:1 at module level:
-            D100: Missing docstring in public module
-    error.py:1 at module level:
-            D100: Missing docstring in public module
+    complexity.py:123:5: D103 Missing docstring in public function
+    complexity.py:136:5: D103 Missing docstring in public function
+    complexity.py:1060:5: D103 Missing docstring in public function
+    debugger.py:1:1: D100 Missing docstring in public module
+    error.py:1:1: D100 Missing docstring in public module
+    Found 5 errors.
 
 
 INFO (folders) review folder structure and files.
@@ -108,5 +90,5 @@ HELP https://github.com/gramener/builderrors/#code-size
         1     3    26 debugger.py
 
 ---------------------------------------------------------------------
-BUILD FAILED. 21 min to fix
+BUILD FAILED. 16 min to fix
 HELP https://github.com/gramener/builderrors

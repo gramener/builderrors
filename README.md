@@ -53,7 +53,7 @@ If you used `gramex init` from [gramex](https://github.com/gramener/gramex) befo
 
 - Delete `.editorconfig`, `.htmllintrc` and `.stylelintrc.*`
 - Copy this [`.eslintrc.yml`](.eslintrc.yml ":ignore") and run `npm install --save-dev eslint eslint-plugin-html eslint-plugin-template`
-- If you have a `.flake8` or [equivalent](https://flake8.pycqa.org/en/latest/user/configuration.html), add `extend-ignore=E203,E501`
+- If you have a `.flake8` or [equivalent](https://flake8.pycqa.org/en/latest/user/configuration.html), or [`.bandit`](https://bandit.readthedocs.io/en/latest/config.html#bandit-settings) file, switch to [ruff's pyproject.toml](https://docs.astral.sh/ruff/configuration/)
 
 ## Github Actions usage
 
@@ -276,18 +276,16 @@ Replace `--skip=` or `SKIP_` with:
 
 Other options include:
 
-| Environment variable       | Command line               | Meaning                                                                               |
-| -------------------------- | -------------------------- | ------------------------------------------------------------------------------------- |
-| `SKIP_ESLINT_DEFAULT=1`    | `--skip=eslint-default`    | Don't copy `.eslintrc.yml` even if `.eslintrc.*` is missing                           |
-| `SKIP_STYLELINT_DEFAULT=1` | `--skip=stylelint-default` | Don't copy `.stylelintrc.yml` even if `.stylelintrc.*` is missing                     |
-| `LFS_SIZE=n`               | `--lfs-size=n`             | Files over `n` bytes should use Git LFS (default: 1,000,000)                          |
-| `DUPLICATE_FILESIZE=n`     | `--duplicate-filesize=n`   | Files over `n` bytes should not be duplicated (default: 100)                          |
-| `DUPLICATE_LINES=n`        | `--duplicate-lines=n`      | Duplicate code over `n` lines are not allowed (default: 25)                           |
-| `PY_LINE_LENGTH=n`         | `--py-line-length=n`       | Approx line length of Python code used by Black (default: 99)                         |
-| `BANDIT_CONFIDENCE=low`    | `--bandit-confidence=low`  | Show bandit errors with `low` or more confidence. `medium`, `high`, `all` are allowed |
-| `BANDIT_SEVERITY=low`      | `--bandit-severity=low`    | Show bandit errors with `low` or more severity. `medium`, `high`, `all` are allowed   |
-| `MAX_JS_COMPLEXITY=n`      | `--max-js-complexity=n`    | Report JS functions with `>n` cyclomatic complexity                                   |
-| `MAX_PY_COMPLEXITY=n`      | `--max-py-complexity=n`    | Report PY functions with `>n` cyclomatic complexity                                   |
+| Environment variable       | Command line               | Meaning                                                           |
+| -------------------------- | -------------------------- | ----------------------------------------------------------------- |
+| `SKIP_ESLINT_DEFAULT=1`    | `--skip=eslint-default`    | Don't copy `.eslintrc.yml` even if `.eslintrc.*` is missing       |
+| `SKIP_STYLELINT_DEFAULT=1` | `--skip=stylelint-default` | Don't copy `.stylelintrc.yml` even if `.stylelintrc.*` is missing |
+| `LFS_SIZE=n`               | `--lfs-size=n`             | Files over `n` bytes should use Git LFS (default: 1,000,000)      |
+| `DUPLICATE_FILESIZE=n`     | `--duplicate-filesize=n`   | Files over `n` bytes should not be duplicated (default: 100)      |
+| `DUPLICATE_LINES=n`        | `--duplicate-lines=n`      | Duplicate code over `n` lines are not allowed (default: 25)       |
+| `PY_LINE_LENGTH=n`         | `--py-line-length=n`       | Approx line length of Python code used by Black (default: 99)     |
+| `MAX_JS_COMPLEXITY=n`      | `--max-js-complexity=n`    | Report JS functions with `>n` cyclomatic complexity               |
+| `MAX_PY_COMPLEXITY=n`      | `--max-py-complexity=n`    | Report PY functions with `>n` cyclomatic complexity               |
 
 # How to fix errors
 
@@ -452,38 +450,24 @@ You can't import a Python file unless it has alphanumeric letters. Using lowerca
 ERROR (flake8) fix Python errors. 1 min/error
 ```
 
-[Flake8](https://flake8.pycqa.org/) reports Python errors with these plugins:
+[ruff](https://docs.astral.sh/ruff/) checks for flake8 errors with these rules:
 
-- [flake8-2020](https://pypi.org/project/flake8-2020): catches misuse of `sys.version` or `sys.version_info`
-- [flake8-blind-except](https://pypi.org/project/flake8-blind-except): catches blind (catch-all) exceptions
-- [flake8-bugbear](https://pypi.org/project/flake8-bugbear): catches potential bugs
-- [flake8-comprehensions](https://pypi.org/project/flake8-comprehensions): simplifies list comprehensions
-- [flake8-debugger](https://pypi.org/project/flake8-debugger): catches `pdb`, `ipdb` and `breakpoint()`
-- [flake8-print](https://pypi.org/project/flake8-print): catches print statements (use `logging` instead)
-- [pep8-naming](https://pypi.org/project/pep8-naming)
+- [pyflakes](https://docs.astral.sh/ruff/rules/#pyflakes-f)
+- [pycodestyle](https://docs.astral.sh/ruff/rules/#pycodestyle-e-w)
+- [flake8-2020](https://docs.astral.sh/ruff/rules/#flake8-2020-ytt): catches misuse of `sys.version` or `sys.version_info`
+- [flake8-bugbear](https://docs.astral.sh/ruff/rules/#flake8-bugbear-b): catches potential bugs
+- [flake8-comprehensions](https://docs.astral.sh/ruff/rules/#flake8-comprehensions-c4): simplifies list/dict comprehensions
+- [flake8-debugger](https://docs.astral.sh/ruff/rules/#flake8-debugger-t10): catches `pdb`, `ipdb` and `breakpoint()`
+- [flake8-print](https://docs.astral.sh/ruff/rules/#flake8-print-t20): catches print statements (use `logging` instead)
+- [pep8-naming](https://docs.astral.sh/ruff/rules/#pep8-naming-n): standardizes variable names
 
 Notes:
 
-- To ignore a specific line, add [`# noqa: <error-number>`](https://flake8.pycqa.org/en/latest/user/violations.html) at the end, e.g. `print("\n") # noqa: T201`
-- To ignore specific rules, add a [`.flake8`](https://flake8.pycqa.org/en/latest/user/configuration.html) file
-  - Make sure to use `extend-ignore=E203,E501` for consistency with [black](https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#flake8)
+- To run locally, use `ruff check --select E,W,F,YTT,B,C4,T10,T20,N`
+- To auto-fix, run `ruff check --select E,W,F,YTT,B,C4,T10,T20,N --fix`
+- To ignore a specific line, add [`# noqa: <error-number>`](https://docs.astral.sh/ruff/linter/#detecting-unused-suppression-comments) at the end, e.g. `print("\n") # noqa: T201`
+- To ignore specific rules, add to [ruff's `pyproject.toml`](https://docs.astral.sh/ruff/configuration/) file
 - To skip this check, use `builderrors --skip=flake8` (e.g. if you temporarily need the build to pass)
-
-<!-- DO NOT LIST COMMON ERRORS. It wastes space. It's self-explanatory. People can refer it online.
-
-Common errors:
-
-- **F841**: local variable 'x' is assigned to but never used. **Check if you forgot**, else don't assign it
-- **F401**: 'x' imported but unused. **Check if you forgot** to use the module. Else don't import it
-- **F821**: undefined name 'x' You used an uninitialized variable. That's wrong
-- **F811**: redefinition of unused 'x'. You assigned a variable and never used it. Then you're reassigning it. Or re-importing. Look carefully
-- **B901** or **B902**: blind except: statement. Trap **specific** exceptions. Blind exceptions can trap even syntax errors and confuse you later
-- **F601**: dictionary key 'x' repeated with different values. e.g. `{'x': 1, 'x': 2}`. That's wrong
-- **T001** or **T003**: print found -- just remove `print` in production code
-- **N806**: variable in function should be lowercase -- rename your variable
-- **N802** or **N803**: function and argument names should be lowercase
-
--->
 
 ## `bandit`
 
@@ -491,13 +475,11 @@ Common errors:
 ERROR (bandit) fix Python security errors. 30 min/error
 ```
 
-[Bandit](https://bandit.readthedocs.io/) reports security errors in Python.
+[ruff](https://docs.astral.sh/ruff/) checks for [Bandit](https://bandit.readthedocs.io/) security errors in Python.
 
 - Re-write the code based on advice from bandit
-- To ignore a specific line, add a [`# nosec`](https://bandit.readthedocs.io/en/latest/config.html#exclusions) at the end
-- To ignore specific rules, add a [`.bandit`](https://bandit.readthedocs.io/en/latest/config.html#bandit-settings) file
-- To only report errors with high confidence, use `builderrors --bandit-confidence=high` (or `medium`)
-- To only report errors with high severity, use `builderrors --bandit-severity=high` (or `medium`)
+- To ignore a specific line, add a [`# noqa: <error-number>`](https://docs.astral.sh/ruff/linter/#detecting-unused-suppression-comments) at the end
+  - To retain [`# nosec`](https://bandit.readthedocs.io/en/latest/config.html#exclusions) for `bandit`, use `# nosec # noqa: <error-number>`
 - To skip this check, use `builderrors --skip=bandit` (e.g. if there are too many false-positives)
 
 ## `eslint`
@@ -608,36 +590,12 @@ WARNING (npm-audit) avoid unsafe npm packages. 15 min/error
 WARNING (flake8-extra) improve Python code. 5 min/error
 ```
 
-[Flake8](https://flake8.pycqa.org/) reports Python warnings based on experimental plugins. These are **OPTIONAL but GOOD** to fix.
+[ruff](https://docs.astral.sh/ruff/) checks for additional flake8 errors. These are **OPTIONAL but GOOD** to fix.
 
 - [flake8-eradicate](https://pypi.org/project/flake8-eradicate): reports commented code
 - [flake8-simplify](https://pypi.org/project/flake8-simplify): suggests code simplifications
 
 You can fix these exactly like [flake8 errors](#flake8)
-
-<!-- DO NOT LIST COMMON ERRORS. It wastes space. It's self-explanatory. People can refer it online.
-
-Common errors:
-
-- **B001**: Do not use bare `except:`, it also catches unexpected events like memory errors, interrupts, system exit, and so on.  Prefer `except Exception:`.  If you're sure what you're doing, be explicit and write `except BaseException:`
-- **B006**: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting changes between them
-- **B007**: Loop control variable 'index' not used within the loop body. If this is intended, start the name with an underscore
-- **C401**: Unnecessary generator - rewrite as a set comprehension
-- **C402**: Unnecessary generator - rewrite as a dict comprehension
-- **C403**: Unnecessary list comprehension - rewrite as a set comprehension
-- **C408**: Unnecessary dict call - rewrite as a literal
-- **C414**: Unnecessary list call within sorted()
-- **C416**: Unnecessary list comprehension - rewrite using list()
-- **C417**: Unnecessary use of map - use a list comprehension instead
-- **E800**: Found commented out code
-- **SIM102**: Use a single if-statement instead of nested if-statements
-- **SIM105**: Use 'contextlib.suppress(...)'
-- **SIM114**: Use logical or ((a == b) or (c == d)) and a single body
-- **SIM118**: Use 'x in dict' instead of 'x in dict.keys()'
-- **SIM201**: Use 'i != 0' instead of 'not i == 0'
-- **SIM203**: Use 'table not in meta' instead of 'not table in meta'
-
--->
 
 ## `complexity`
 

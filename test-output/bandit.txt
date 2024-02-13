@@ -1,17 +1,17 @@
 
-ERROR (bandit) fix Python security errors. 10 min
+ERROR (bandit) fix Python security errors. 20 min
 HELP https://github.com/gramener/builderrors/#bandit
 
-    bandit_error.py:5: B608[bandit]: MEDIUM: Possible SQL injection vector through string-based query construction.
+    bandit_error.py:5:13: S608 Possible SQL injection vector through string-based query construction
+    Found 1 error.
 
 
 WARNING (pydoc) document Python code.
 HELP https://github.com/gramener/builderrors/#pydoc
 
-    bandit_error.py:1 at module level:
-            D100: Missing docstring in public module
-    bandit_error.py:4 in public function `insecure_query`:
-            D103: Missing docstring in public function
+    bandit_error.py:1:1: D100 Missing docstring in public module
+    bandit_error.py:4:5: D103 Missing docstring in public function
+    Found 2 errors.
 
 
 INFO (folders) review folder structure and files.
@@ -26,5 +26,5 @@ HELP https://github.com/gramener/builderrors/#code-size
       6  18 134 bandit_error.py
 
 ---------------------------------------------------------------------
-BUILD FAILED. 10 min to fix
+BUILD FAILED. 20 min to fix
 HELP https://github.com/gramener/builderrors

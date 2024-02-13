@@ -6,25 +6,12 @@ To fix, run: black . --skip-string-normalization --line-length=99
     would reformat test.py
 
 
-ERROR (flake8) fix Python errors. 1 min
-HELP https://github.com/gramener/builderrors/#flake8
-
-    test.py:2:3: E111 indentation is not a multiple of 4
-
-
-WARNING (flake8-extra) improve Python code.
-HELP https://github.com/gramener/builderrors/#flake8-extra
-
-    test.py:2:3: E111 indentation is not a multiple of 4
-
-
 WARNING (pydoc) document Python code.
 HELP https://github.com/gramener/builderrors/#pydoc
 
-    test.py:1 at module level:
-            D100: Missing docstring in public module
-    test.py:1 in public function `test`:
-            D103: Missing docstring in public function
+    test.py:1:1: D100 Missing docstring in public module
+    test.py:1:5: D103 Missing docstring in public function
+    Found 2 errors.
 
 
 INFO (folders) review folder structure and files.
@@ -39,5 +26,5 @@ HELP https://github.com/gramener/builderrors/#code-size
      2  4 23 test.py
 
 ---------------------------------------------------------------------
-BUILD FAILED. 3 min to fix
+BUILD FAILED. 2 min to fix
 HELP https://github.com/gramener/builderrors

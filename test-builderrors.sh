@@ -84,7 +84,7 @@ check stylelint
 check htmlhint
 check gitleaks
 check flake8-extra --skip=bandit  # Test --skip=* flags and that build passes
-check complexity --skip=npm-audit
+MAX_PY_COMPLEXITY=5 check complexity --skip=npm-audit
 check url-templates --only=url-templates  # Test --only= option
 check js-modules
 check npm-audit

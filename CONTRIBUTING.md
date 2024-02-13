@@ -8,16 +8,16 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
 - Git branching structure
 - [`nbqa`](https://pypi.org/project/nbqa/) for Jupyter notebooks -- applying flake8 may be too restrictive. Strongly recommend fixing, but it's not a check
 - Python checks
+  - [`ruff`](https://pypi.org/project/ruff) instead of flake8 + plugins. It's FAST and has many fixes
+    - [flake8-annotations](https://pypi.org/project/flake8-annotations) ⭐116
+    - [flake8-type-checking](https://pypi.org/project/flake8-type-checking) ⭐105. Lets you avoid importing libraries JUST for type-checking
+    - [flake8-cognitive-complexity](https://pypi.org/project/flake8-cognitive-complexity) ⭐54. More apt than McCabe complexity
+    - Incorporate bandit within ruff
   - [`blacken-docs`](https://pypi.org/project/blacken-docs/) for Python docstrings
   - [`pyupgrade`](https://pypi.org/project/pyupgrade/) for safe language-specific upgrades. Strongly recommend running, but it's not a check
-  - [`pyright`](https://github.com/microsoft/pyright) or
+  - [`pyright`](https://github.com/microsoft/pyright)
     [`mypy`](https://github.com/python/mypy) for Python static type checking
   - [`safety`](https://github.com/pyupio/safety) for Python security scanning
-- Flake8 plugins
-  - [flake8-annotations](https://pypi.org/project/flake8-annotations) ⭐116
-  - [flake8-type-checking](https://pypi.org/project/flake8-type-checking) ⭐105. Lets you avoid importing libraries JUST for type-checking
-  - [flake8-cognitive-complexity](https://pypi.org/project/flake8-cognitive-complexity) ⭐54. More apt than McCabe complexity
-  - [flake8-internal-name-import](https://pypi.org/project/flake8-internal-name-import) ⭐3. Check for imports that clash with internal names
 - [Python Typing](https://github.com/typeddjango/awesome-python-typing)
   - [pyre-check](https://pypi.org/project/pyre-check/) ⭐6.6k type checker
   - [MonkeyType](https://pypi.org/project/MonkeyType/) ⭐4.5k automatically adds type annotations

@@ -1,36 +1,32 @@
 
-ERROR (flake8) fix Python errors. 6 min
+ERROR (flake8) fix Python errors. 7 min
 HELP https://github.com/gramener/builderrors/#flake8
 
-    error.py:1:17: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
-    error.py:6:17: F841 local variable 'x' is assigned to but never used
-    error.py:6:21: C403 Unnecessary list comprehension - rewrite as a set comprehension.
-    error.py:6:25: C416 Unnecessary list comprehension - rewrite using list().
-    error.py:7:13: B001 Do not use bare `except:`, it also catches unexpected events like memory errors, interrupts, system exit, and so on.  Prefer excepting specific exceptions  If you're sure what you're doing, be explicit and write `except BaseException:`.
-    error.py:7:13: E722 do not use bare 'except'
+    error.py:1:17: B008 Do not perform function call `range` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
+    error.py:6:17: F841 Local variable `x` is assigned to but never used
+    error.py:6:21: C403 Unnecessary `list` comprehension (rewrite as a `set` comprehension)
+    error.py:6:25: C416 Unnecessary `list` comprehension (rewrite using `list()`)
+    error.py:7:13: E722 Do not use bare `except`
+    Found 5 errors.
+    No fixes available (3 hidden fixes can be enabled with the `--unsafe-fixes` option).
 
 
 WARNING (flake8-extra) improve Python code.
 HELP https://github.com/gramener/builderrors/#flake8-extra
 
-    error.py:1:17: B008 Do not perform function calls in argument defaults.  The call is performed only once at function definition time. All calls to your function will reuse the result of that definition-time function call.  If this is intended, assign the function call to a module-level variable and use that variable as a default value.
-    error.py:2:5: SIM102 Use a single if-statement instead of nested if-statements
-    error.py:4:13: SIM105 Use 'contextlib.suppress(Exception)'
-    error.py:5:1: E800 Found commented out code
-    error.py:6:17: F841 local variable 'x' is assigned to but never used
-    error.py:6:21: C403 Unnecessary list comprehension - rewrite as a set comprehension.
-    error.py:6:25: C416 Unnecessary list comprehension - rewrite using list().
-    error.py:7:13: B001 Do not use bare `except:`, it also catches unexpected events like memory errors, interrupts, system exit, and so on.  Prefer `except Exception:`.  If you're sure what you're doing, be explicit and write `except BaseException:`.
-    error.py:7:13: E722 do not use bare 'except'
+    error.py:2:5: SIM102 Use a single `if` statement instead of nested `if` statements
+    error.py:4:13: SIM105 Use `contextlib.suppress(Exception)` instead of `try`-`except`-`pass`
+    error.py:5:17: ERA001 Found commented-out code
+    Found 3 errors.
+    No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).
 
 
 WARNING (pydoc) document Python code.
 HELP https://github.com/gramener/builderrors/#pydoc
 
-    error.py:1 at module level:
-            D100: Missing docstring in public module
-    error.py:1 in public function `test`:
-            D103: Missing docstring in public function
+    error.py:1:1: D100 Missing docstring in public module
+    error.py:1:5: D103 Missing docstring in public function
+    Found 2 errors.
 
 
 INFO (folders) review folder structure and files.
@@ -45,5 +41,5 @@ HELP https://github.com/gramener/builderrors/#code-size
       8  20 203 error.py
 
 ---------------------------------------------------------------------
-BUILD FAILED. 6 min to fix
+BUILD FAILED. 7 min to fix
 HELP https://github.com/gramener/builderrors
