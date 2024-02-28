@@ -25,6 +25,7 @@ types = {
     "js-modules": "WARNING",
     "npm-audit": "WARNING",
     "flake8-extra": "WARNING",
+    "eslint-extra": "WARNING",
     "complexity": "WARNING",
     "url-templates": "WARNING",
     "pydoc": "WARNING",

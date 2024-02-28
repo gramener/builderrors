@@ -31,24 +31,25 @@ If you have more tests to suggest, please raise an [issue](https://github.com/gr
   - [eslint-formatter-summary](https://github.com/mhipszki/eslint-formatter-summary) ⭐37
 - ESLint rules to evaluate
   - `array-callback-return`
-  - `default-param-last`
-  - `no-array-constructor`
   - `no-constant-binary-expression`
   - `no-duplicate-imports`
-  - `no-invalid-this`
   - `no-lone-blocks`
-  - `no-lonely-if`
-  - `no-return-assign`
   - `no-self-compare`
   - `no-sequences`
-  - `no-template-curly-in-string`
-  - `no-unmodified-loop-condition`
   - `no-unneeded-ternary`
   - `no-unreachable-loop`
   - `no-unused-expressions`
-  - `no-use-before-define`
   - `no-useless-call`
   - `no-useless-return`
+- ESLint rules to evaluate
+  - `default-param-last`
+  - `no-array-constructor`
+  - `no-invalid-this`
+  - `no-lonely-if`
+  - `no-return-assign`
+  - `no-template-curly-in-string`
+  - `no-unmodified-loop-condition`
+  - `no-use-before-define`
   - `no-var`
   - `prefer-const`
   - `prefer-destructuring`

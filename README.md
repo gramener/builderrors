@@ -30,6 +30,7 @@ Run automated checks on repositories to improve code quality.
   - [WARNING (js-modules) use JavaScript modules](#js-modules)
   - [WARNING (npm-audit) avoid unsafe npm packages](#npm-audit)
   - [WARNING (flake8-extra) improve Python code](#flake8-extra)
+  - [WARNING (eslint-extra) improve JavaScript code](#eslint-extra)
   - [WARNING (complexity) review complex code](#complexity)
   - [WARNING (url-templates) use URLSearchParams to construct URLs](#url-templates)
   - [WARNING (pydoc) document Python code](#pydoc)
@@ -259,6 +260,7 @@ Here are list of [`--skip`](#skip-checks) options for checks:
 | `SKIP_NPM_AUDIT=1`       | `--skip=npm-audit`       | WARNING | Skip [npm audit](#npm-audit)             |
 | `SKIP_GITLEAKS=1`        | `--skip=gitleaks`        | WARNING | Skip [gitleaks](#gitleaks)               |
 | `SKIP_FLAKE8_EXTRA=1`    | `--skip=flake8-extra`    | WARNING | Skip [flake8 extra](#flake8-extra)       |
+| `SKIP_ESLINT_EXTRA=1`    | `--skip=eslint-extra`    | WARNING | Skip [eslint extra](#eslint-extra)       |
 | `SKIP_COMPLEXIY=1`       | `--skip=complexity`      | WARNING | Skip [complexity](#complexity)           |
 | `SKIP_DATA_BLOCKS=1`     | `--skip=data-blocks`     | WARNING | Skip [data-blocks](#data-blocks)         |
 | `SKIP_URL_TEMPLATES=1`   | `--skip=url-templates`   | WARNING | Skip [url-templates](#url-templates)     |
@@ -485,7 +487,7 @@ ERROR (bandit) fix Python security errors. 30 min/error
 ## `eslint`
 
 ```text
-ERROR (eslint) fix JavaScript errors. 30 sec/error
+ERROR (eslint) fix JavaScript errors. 10 sec/error
 ```
 
 [ESLint](https://eslint.org/) reports JavaScript errors in JS and HTML files -- including HTML templates.
@@ -596,6 +598,14 @@ WARNING (flake8-extra) improve Python code. 5 min/error
 - [flake8-simplify](https://pypi.org/project/flake8-simplify): suggests code simplifications
 
 You can fix these exactly like [flake8 errors](#flake8)
+
+## `eslint-extra`
+
+```text
+WARNING (eslint-extra) improve JavaScript code. 30 sec/error
+```
+
+[ESLint](https://eslint.org/) reports JavaScript warnings in JS and HTML files. These are **OPTIONAL but GOOD** to fix.
 
 ## `complexity`
 

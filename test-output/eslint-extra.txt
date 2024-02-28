@@ -1,0 +1,42 @@
+
+ERROR (eslint) fix JavaScript errors. 0 min
+HELP https://github.com/gramener/builderrors/#eslint
+To fix, run: npx eslint --fix
+
+    index.js:16:10: 'merge' is defined but never used. [Error/no-unused-vars]
+    index.js:17:10: 'find' is defined but never used. [Error/no-unused-vars]
+    index.js:43:5: 'i' is assigned a value but never used. [Error/no-unused-vars]
+    index.js:53:5: 'baz' is assigned a value but never used. [Error/no-unused-vars]
+
+
+WARNING (eslint-extra) improve JavaScript code.
+HELP https://github.com/gramener/builderrors/#eslint-extra
+
+    index.js:5:27: Array.prototype.reduce() expects a return value from function. [Error/array-callback-return]
+    index.js:13:10: Unexpected constant nullishness on the left-hand side of a `??` expression. [Error/no-constant-binary-expression]
+    index.js:17:1: 'module' import is duplicated. [Error/no-duplicate-imports]
+    index.js:20:1: Block is redundant. [Error/no-lone-blocks]
+    index.js:25:5: Comparing to itself is potentially pointless. [Error/no-self-compare]
+    index.js:33:10: Unnecessary use of boolean literals in conditional expression. [Error/no-unneeded-ternary]
+    index.js:36:1: Invalid loop. Its body allows only one iteration. [Error/no-unreachable-loop]
+    index.js:50:1: Unnecessary '.call()'. [Error/no-useless-call]
+    index.js:54:3: Unnecessary return statement. [Error/no-useless-return]
+
+
+INFO (folders) review folder structure and files.
+HELP https://github.com/gramener/builderrors/#folders
+
+    .gitignore
+    index.js
+    package-lock.json
+    package.json
+
+
+INFO (code-size) review largest PY/JS code.
+HELP https://github.com/gramener/builderrors/#code-size
+
+     57 155 937 index.js
+
+---------------------------------------------------------------------
+BUILD FAILED. 0 min to fix
+HELP https://github.com/gramener/builderrors

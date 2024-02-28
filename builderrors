@@ -284,7 +284,7 @@ check-stylelint() {
 if [[ -z "$SKIP_STYLELINT" ]]; then
   # stylelint uses v8-compile-cache. Disable it since there's nothing to cache on CI
   export DISABLE_V8_COMPILE_CACHE=1
-  # If user didn't skip default STYLELINT checks, and there's no .stylelint.*, use eslint from root
+  # If user didn't skip default STYLELINT checks, and there's no .stylelint.*, use styleint from root
   if [[ ! -n "$SKIP_STYLELINT_DEFAULT" ]] && ! compgen -G ".stylelintrc.*" > /dev/null; then
     cp "$SCRIPT_DIR/.stylelintrc.yml" .
     CREATED_STYLELINTRC=1
@@ -333,6 +333,31 @@ check-flake8-extra() {
   $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty ruff check --select "BLE,ERA,SIM"
 }
 check "$SKIP_FLAKE8_EXTRA" "$ERROR_FLAKE8_EXTRA" "flake8-extra" "5 min/error" "improve Python code" ""
+
+check-eslint-extra() {
+  # NOTE: we use existing .eslintrc if available. This helps identify the source type as module or script.
+  # BUT: we run plugins from the builderrors folder. This lets us use the no-data-blocks plugin without installing.
+  # PROBLEM: If .eslintrc has plugins NOT present in builderrors, the rules will fail
+  $GIT ls-files | grep -E '\.(html|js|mjs)$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty "$NODE_DIR/eslint" \
+    --parser-options ecmaVersion:latest \
+    --plugin html --plugin template \
+    --resolve-plugins-relative-to "$WIN_SCRIPT_DIR" \
+    --rule "array-callback-return: error" \
+    --rule "no-constant-binary-expression: error" \
+    --rule "no-duplicate-imports: error" \
+    --rule "no-lone-blocks: error" \
+    --rule "no-self-compare: error" \
+    --rule "no-sequences: error" \
+    --rule "no-unneeded-ternary: error" \
+    --rule "no-unreachable-loop: error" \
+    --rule "no-unused-expressions: error" \
+    --rule "no-useless-call: error" \
+    --rule "no-useless-return: error" \
+    --quiet \
+    --format unix 2>&1 | \
+    grep "array-callback-return\|no-constant-binary-expression\|no-duplicate-imports\|no-invalid-this\|no-lone-blocks\|no-self-compare\|no-sequences\|no-unneeded-ternary\|no-unreachable-loop\|no-unused-expressions\|no-useless-call\|no-useless-return"
+}
+check "$SKIP_ESLINT" "$ERROR_ESLINT_EXTRA" "eslint-extra" "30 sec/error" "improve JavaScript code" ""
 
 check-complexity() {
   # Add the complexity rule to default ESLINT_OPTIONS
