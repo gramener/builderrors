@@ -13,7 +13,6 @@ HELP https://github.com/gramener/builderrors/#complexity
     index.html:12:5: Function 'beta' has a complexity of 11. Maximum allowed is 10. [Error/complexity]
     complex.py:6:5: C901 `get_data` is too complex (8 > 5)
     complex.py:56:5: C901 `filter_values` is too complex (8 > 5)
-    Found 2 errors.
 
 
 WARNING (pydoc) document Python code.
@@ -21,7 +20,6 @@ HELP https://github.com/gramener/builderrors/#pydoc
 
     complex.py:1:1: D100 Missing docstring in public module
     complex.py:6:5: D103 Missing docstring in public function
-    Found 2 errors.
 
 
 INFO (folders) review folder structure and files.

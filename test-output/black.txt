@@ -11,7 +11,6 @@ HELP https://github.com/gramener/builderrors/#pydoc
 
     test.py:1:1: D100 Missing docstring in public module
     test.py:1:5: D103 Missing docstring in public function
-    Found 2 errors.
 
 
 INFO (folders) review folder structure and files.

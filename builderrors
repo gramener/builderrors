@@ -226,12 +226,12 @@ if ! compgen -G ".ruff.toml" > /dev/null && ! compgen -G "ruff.toml" > /dev/null
   RUFF_OPTIONS="--extend-select E,W,F,YTT,B,C4,T10,T20,N  --ignore E203,E501"
 fi
 check-flake8() {
-  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty ruff check $RUFF_OPTIONS
+  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty ruff check --quiet $RUFF_OPTIONS
 }
 check "$SKIP_FLAKE8" "$ERROR_FLAKE8" "flake8" "1 min/error" "fix Python errors" ""
 
 check-bandit() {
-  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty ruff check --select "S"
+  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty ruff check --quiet --select "S"
 }
 check "$SKIP_BANDIT" "$ERROR_BANDIT" "bandit" "10 min/error" "fix Python security errors" ""
 
@@ -330,7 +330,7 @@ if [[ -f "package-lock.json" ]]; then
 fi
 
 check-flake8-extra() {
-  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty ruff check --select "BLE,ERA,SIM"
+  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty ruff check --quiet --select "BLE,ERA,SIM"
 }
 check "$SKIP_FLAKE8_EXTRA" "$ERROR_FLAKE8_EXTRA" "flake8-extra" "5 min/error" "improve Python code" ""
 
@@ -367,7 +367,7 @@ check-complexity() {
     --quiet --format unix 2>&1 | \
     grep "Error/complexity"
   printf "[lint.mccabe]\nmax-complexity = ${MAX_PY_COMPLEXITY:-10}\n" > .ruff-complexity.toml
-  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty ruff check --config ".ruff-complexity.toml" --select C90
+  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty ruff check --quiet --config ".ruff-complexity.toml" --select C90
   rm .ruff-complexity.toml
 }
 check "$SKIP_COMPLEXITY" "$ERROR_COMPLEXITY" "complexity" "120 min/error" "review complex code" ""
@@ -378,7 +378,7 @@ check-url-templates() {
 check "$SKIP_URL_TEMPLATES" "$ERROR_URL_TEMPLATES" "url-templates" "5 min/error" "use URLSearchParams to construct URLs" ""
 
 check-pydoc() {
-  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty ruff check --select="D1"
+  $GIT ls-files | grep '\.py$' | sort | tr '\n' '\0' | xargs -0 --no-run-if-empty ruff check --quiet --select="D1"
 }
 check "$SKIP_PYDOC" "$ERROR_PYDOC" "pydoc" "15 min/error" "document Python code" ""
 

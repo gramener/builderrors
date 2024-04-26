@@ -31,7 +31,7 @@ HELP https://github.com/gramener/builderrors/#duplicate-lines
        file2.py [135:1 - 861:4]
 
 
-ERROR (flake8) fix Python errors. 18 min
+ERROR (flake8) fix Python errors. 16 min
 HELP https://github.com/gramener/builderrors/#flake8
 
     file1.py:58:22: B006 Do not use mutable data structures for argument defaults
@@ -50,8 +50,6 @@ HELP https://github.com/gramener/builderrors/#flake8
     file4.py:164:27: C408 Unnecessary `dict` call (rewrite as a literal)
     file5.py:164:27: C408 Unnecessary `dict` call (rewrite as a literal)
     file6.py:164:27: C408 Unnecessary `dict` call (rewrite as a literal)
-    Found 16 errors.
-    No fixes available (16 hidden fixes can be enabled with the `--unsafe-fixes` option).
 
 
 WARNING (flake8-extra) improve Python code.
@@ -68,8 +66,6 @@ HELP https://github.com/gramener/builderrors/#flake8-extra
     file6.py:499:20: BLE001 Do not catch blind exception: `Exception`
     file6.py:758:16: BLE001 Do not catch blind exception: `Exception`
     file6.py:904:16: BLE001 Do not catch blind exception: `Exception`
-    Found 11 errors.
-    No fixes available (2 hidden fixes can be enabled with the `--unsafe-fixes` option).
 
 
 WARNING (complexity) review complex code.
@@ -84,7 +80,6 @@ HELP https://github.com/gramener/builderrors/#complexity
     file4.py:460:9: C901 `run_sync` is too complex (11 > 10)
     file5.py:460:9: C901 `run_sync` is too complex (11 > 10)
     file6.py:460:9: C901 `run_sync` is too complex (11 > 10)
-    Found 9 errors.
 
 
 INFO (folders) review folder structure and files.
@@ -112,5 +107,5 @@ HELP https://github.com/gramener/builderrors/#code-size
        775   3258  31066 file3.py
 
 ---------------------------------------------------------------------
-BUILD FAILED. 423 min to fix
+BUILD FAILED. 421 min to fix
 HELP https://github.com/gramener/builderrors

@@ -1,5 +1,5 @@
 
-ERROR (flake8) fix Python errors. 7 min
+ERROR (flake8) fix Python errors. 5 min
 HELP https://github.com/gramener/builderrors/#flake8
 
     error.py:1:17: B008 Do not perform function call `range` in argument defaults; instead, perform the call within the function, or read the default from a module-level singleton variable
@@ -7,8 +7,6 @@ HELP https://github.com/gramener/builderrors/#flake8
     error.py:6:21: C403 Unnecessary `list` comprehension (rewrite as a `set` comprehension)
     error.py:6:25: C416 Unnecessary `list` comprehension (rewrite using `list()`)
     error.py:7:13: E722 Do not use bare `except`
-    Found 5 errors.
-    No fixes available (3 hidden fixes can be enabled with the `--unsafe-fixes` option).
 
 
 WARNING (flake8-extra) improve Python code.
@@ -17,8 +15,6 @@ HELP https://github.com/gramener/builderrors/#flake8-extra
     error.py:2:5: SIM102 Use a single `if` statement instead of nested `if` statements
     error.py:4:13: SIM105 Use `contextlib.suppress(Exception)` instead of `try`-`except`-`pass`
     error.py:5:17: ERA001 Found commented-out code
-    Found 3 errors.
-    No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).
 
 
 WARNING (pydoc) document Python code.
@@ -26,7 +22,6 @@ HELP https://github.com/gramener/builderrors/#pydoc
 
     error.py:1:1: D100 Missing docstring in public module
     error.py:1:5: D103 Missing docstring in public function
-    Found 2 errors.
 
 
 INFO (folders) review folder structure and files.
@@ -41,5 +36,5 @@ HELP https://github.com/gramener/builderrors/#code-size
       8  20 203 error.py
 
 ---------------------------------------------------------------------
-BUILD FAILED. 7 min to fix
+BUILD FAILED. 5 min to fix
 HELP https://github.com/gramener/builderrors
